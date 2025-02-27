@@ -14,7 +14,7 @@ public class Player : Character
     private float fire_rate;
     private Shooting shooting;
     private bool canShoot = true;
-    private bool isAlive = true;
+    private bool isAlive = false;
     [SerializeField]
     protected Vector2 spawnpoint;
     [SerializeField]
@@ -23,6 +23,8 @@ public class Player : Character
     private Text Record_Score_Text;
     [SerializeField]
     private GameOverMenu menu;
+    [SerializeField]
+    private Pause pause;
     [SerializeField]
     private Spawner spawner;
     // Start is called before the first frame update
@@ -50,10 +52,15 @@ public class Player : Character
         health = Mathf.Max(health, 0.0f);
         if(health==0)
         {
-            isAlive = false;
-            Debug.Log("Dead");
+            Die();
             menu.Show();
         }
+    }
+    public void Die()
+    {
+        isAlive = false;
+        Debug.Log("Dead");
+        
     }
     public void Heal(float points)
     {
@@ -77,6 +84,7 @@ public class Player : Character
     public void Respawn()
     {
         isAlive = true;
+        Time.timeScale = 1;
         menu.Hide();
         transform.position = new Vector2(spawnpoint.x, spawnpoint.y);
         transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -142,6 +150,11 @@ public class Player : Character
 
                 canShoot = false;
                 StartCoroutine(Timer());
+            }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (pause.get_state() == false) pause.TogglePause();
+                else pause.ResumeGame();
             }
         }
         

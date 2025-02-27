@@ -14,6 +14,8 @@ public class GameOverMenu : MonoBehaviour
     private Text ElapsedTime;
     [SerializeField]
     private Timer timer;
+    [SerializeField]
+    private StartPannel startPanel;
     // Start is called before the first frame update
     void Start()
     {
@@ -39,5 +41,11 @@ public class GameOverMenu : MonoBehaviour
         timer.resetTime();
         gameObject.SetActive(false);
     }
-    
+    public void MainMenu()
+    {
+        gameObject.SetActive(false);
+        startPanel.Show();
+
+    }
+
 }
