@@ -99,6 +99,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: FireRate
+  image: {fileID: 0}
+  TimeText: {fileID: 0}
+  time: 0
 --- !u!61 &6725867507875992945
 BoxCollider2D:
   m_ObjectHideFlags: 0

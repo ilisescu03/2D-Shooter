@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Collectible : MonoBehaviour
 {
     [SerializeField]
@@ -10,6 +10,7 @@ public class Collectible : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
+        
     }
     void Update()
     {
@@ -27,9 +28,10 @@ public class Collectible : MonoBehaviour
             }
             else if (type == "FireRate")
             {
-                   
+                    Powerup powerup=GameObject.Find("FireRate").GetComponent<Powerup>();
+                    powerup.StartTimer();
                     StartCoroutine(HandleFireRate());
-                    
+
             }
             else
             {
@@ -42,7 +44,7 @@ public class Collectible : MonoBehaviour
      
     private void Clear()
     {
-       if (player.get_state() == false) Destroy(gameObject);
+        if (player.get_state() == false) Destroy(gameObject);
     }
     private IEnumerator HandleFireRate()
     {
@@ -55,4 +57,5 @@ public class Collectible : MonoBehaviour
         Debug.Log("Fire rate reset");
         Destroy(gameObject);
     }
+    
 }
