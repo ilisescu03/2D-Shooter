@@ -31,6 +31,8 @@ public class Player : Character
     public int get_score() { return score; }
     public int get_record_score() { return record_score; }
     public bool get_state() { return isAlive; }
+    public void set_fire_rate(float value) { fire_rate = value; }
+    public float get_fire_rate() { return fire_rate; }
     protected override void Start()
     {
         shooting = GetComponent<Shooting>();

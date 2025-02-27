@@ -17,21 +17,42 @@ public class Collectible : MonoBehaviour
     }
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Player"&&type=="Health")
+        if(other.tag=="Player")
         {
-            
-            player.Heal(20);
-            Destroy(gameObject);
+            if (type == "Health")
+            {
+
+                player.Heal(20);
+                Destroy(gameObject);
+            }
+            else if (type == "FireRate")
+            {
+                   
+                    StartCoroutine(HandleFireRate());
+                    
+            }
+            else
+            {
+                    Debug.Log("Invalid collectible type!!");
+            }
         }
-        else
-        {
-            Debug.Log("Invalid collectible type!!");
-        }
-        
     }
+        
+        
+     
     private void Clear()
     {
-        if (player.get_state() == false) Destroy(gameObject);
+       if (player.get_state() == false) Destroy(gameObject);
     }
-
+    private IEnumerator HandleFireRate()
+    {
+        float value = player.get_fire_rate();
+        player.set_fire_rate(0.1f);
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        yield return new WaitForSeconds(5f);
+        player.set_fire_rate(value);
+        Debug.Log("Fire rate reset");
+        Destroy(gameObject);
+    }
 }
