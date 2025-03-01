@@ -15,6 +15,7 @@ public class Player : Character
     private Shooting shooting;
     private bool canShoot = true;
     private bool isAlive = false;
+    private bool invicibility = false;
     [SerializeField]
     protected Vector2 spawnpoint;
     [SerializeField]
@@ -26,13 +27,14 @@ public class Player : Character
     [SerializeField]
     private Pause pause;
     [SerializeField]
-    private Spawner spawner;
+    private EnemySpawner spawner;
     // Start is called before the first frame update
     public int get_score() { return score; }
     public int get_record_score() { return record_score; }
     public bool get_state() { return isAlive; }
     public void set_fire_rate(float value) { fire_rate = value; }
     public float get_fire_rate() { return fire_rate; }
+    public void set_invicibility(bool value) { invicibility = value; }
     protected override void Start()
     {
         shooting = GetComponent<Shooting>();
@@ -49,6 +51,7 @@ public class Player : Character
     }
     public void TakeDamage(float damage)
     {
+        if (invicibility) return;
         health -= damage;
         StartCoroutine(DamageEffect());
         health = Mathf.Max(health, 0.0f);
