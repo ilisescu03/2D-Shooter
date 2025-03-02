@@ -16,6 +16,7 @@ public class Player : Character
     private bool canShoot = true;
     private bool isAlive = false;
     private bool invicibility = false;
+  
     [SerializeField]
     protected Vector2 spawnpoint;
     [SerializeField]
@@ -46,6 +47,14 @@ public class Player : Character
     {
         GetInput();
         base.Update();
+        if (direction != Vector2.zero)
+        {
+            animator.SetBool("IsRunning", true);
+        }
+        else
+        {
+            animator.SetBool("IsRunning", false);
+        }
         healthbar.fillAmount = health / maxhealth;
 
     }

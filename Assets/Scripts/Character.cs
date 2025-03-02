@@ -13,13 +13,15 @@ public class Character : MonoBehaviour
     protected float health;
     [SerializeField]
     protected float maxhealth;
+    [SerializeField]
+    protected Animator animator;
 
     protected Vector2 direction;
     protected Vector2 rotateDirection;
     // Start is called before the first frame update
     protected virtual void Start()
     {
-   
+        
     }
 
     // Update is called once per frame
