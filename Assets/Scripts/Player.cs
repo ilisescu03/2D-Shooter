@@ -37,8 +37,11 @@ public class Player : Character
     public void set_invicibility(bool value) { invicibility = value; }
     protected override void Start()
     {
-        shooting = GetComponent<Shooting>();
         
+        shooting = GetComponent<Shooting>();
+        high_score =SaveManager.LoadHighScore();
+        uiManager.Set_Text(score, high_score);
+       
     }
 
     // Update is called once per frame
@@ -182,6 +185,13 @@ public class Player : Character
     {
         yield return new WaitForSeconds(fire_rate);
         canShoot = true;
+    }
+    public void Reset_Score()
+    {
+        SaveManager.ResetHighScore();
+        high_score = 0;
+        score = 0;
+        uiManager.Set_Text(score, high_score);
     }
     
 }
