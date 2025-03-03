@@ -594,14 +594,14 @@ RectTransform:
   m_GameObject: {fileID: 397845127}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.20320009, y: 0.20320009, z: 0.20320009}
+  m_LocalScale: {x: 0.34149808, y: 0.34149808, z: 0.34149808}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 514914094}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.30088043, y: 7.3264203}
+  m_AnchoredPosition: {x: -0.30088043, y: 7}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &397845129
@@ -2951,7 +2951,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &1295225998
 Transform:
   m_ObjectHideFlags: 0
@@ -2961,7 +2961,7 @@ Transform:
   m_GameObject: {fileID: 1295225996}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.018000007, y: 0.6770001, z: -0.17092189}
+  m_LocalPosition: {x: 0.018000007, y: 0.6770001, z: 0}
   m_LocalScale: {x: 0.088373706, y: 0.088373706, z: 0.088373706}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5538,7 +5538,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!4 &2123695794
 Transform:
   m_ObjectHideFlags: 0
@@ -5548,7 +5548,7 @@ Transform:
   m_GameObject: {fileID: 2123695790}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.17092189}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5759,17 +5759,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie
       objectReference: {fileID: 0}
-    - target: {fileID: 8750876655036881130, guid: 5a6ea9db582c544418f9027d3f875e3e, type: 3}
-      propertyPath: m_Radius
-      value: 0.24458265
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750876655036881130, guid: 5a6ea9db582c544418f9027d3f875e3e, type: 3}
-      propertyPath: m_Offset.x
-      value: -0.005681081
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750876655036881130, guid: 5a6ea9db582c544418f9027d3f875e3e, type: 3}
-      propertyPath: m_Offset.y
-      value: 0.15869215
+    - target: {fileID: 5104311288066620508, guid: 5a6ea9db582c544418f9027d3f875e3e, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
