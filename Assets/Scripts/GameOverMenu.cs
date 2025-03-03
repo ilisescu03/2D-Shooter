@@ -7,7 +7,7 @@ public class GameOverMenu : MonoBehaviour
     [SerializeField]
     private Text ScoreText;
     [SerializeField]
-    private Text RecordScoreText;
+    private Text HighScoreText;
     [SerializeField]
     private Player player;
     [SerializeField]
@@ -16,6 +16,7 @@ public class GameOverMenu : MonoBehaviour
     private Timer timer;
     [SerializeField]
     private StartPannel startPanel;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -25,8 +26,8 @@ public class GameOverMenu : MonoBehaviour
     {
         int score = player.get_score();
         ScoreText.text = "Your score:" + score;
-        int record_score = player.get_record_score();
-        RecordScoreText.text = "Record score:" + record_score;
+        int high_score = player.get_high_score();
+        HighScoreText.text = "High score:" + high_score;
         ElapsedTime.text = string.Format("You survived:{0:00}:{1:00}", timer.ret_mins(), timer.ret_secs());
     }
     public void Show()

@@ -7,7 +7,7 @@ public class StartPannel : MonoBehaviour
     [SerializeField]
     private Player player;
     [SerializeField]
-    private Text RecordScoreText;
+    private Text HighScoreText;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,7 +17,7 @@ public class StartPannel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RecordScoreText.text = "Record Score :" + player.get_record_score();
+        HighScoreText.text = "High Score :" + player.get_high_score();
     }
     public void Hide()
     {

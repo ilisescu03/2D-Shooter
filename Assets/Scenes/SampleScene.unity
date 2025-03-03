@@ -655,7 +655,7 @@ GameObject:
   - component: {fileID: 408766451}
   - component: {fileID: 408766453}
   m_Layer: 5
-  m_Name: Record Score 2
+  m_Name: High Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -713,7 +713,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Record score:0
+  m_Text: High score:0
 --- !u!222 &408766452
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7706,7 +7706,7 @@ GameObject:
   - component: {fileID: 1256202483}
   - component: {fileID: 1256202485}
   m_Layer: 5
-  m_Name: Record Score
+  m_Name: High Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7764,7 +7764,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Record Score:0
+  m_Text: High Score:0
 --- !u!222 &1256202484
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8731,6 +8731,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa937651b42860b4ea84b95ccbcff37b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  High_Score_Text: {fileID: 1256202483}
+  Score_Text: {fileID: 668979152}
 --- !u!1 &1575890210
 GameObject:
   m_ObjectHideFlags: 0
@@ -8893,7 +8895,7 @@ GameObject:
   - component: {fileID: 1588274478}
   - component: {fileID: 1588274481}
   m_Layer: 5
-  m_Name: Record Score 2 (1)
+  m_Name: High Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8932,7 +8934,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Record score:0
+  m_Text: High score:0
 --- !u!222 &1588274479
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9107,7 +9109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 2123695797}
-  RecordScoreText: {fileID: 1588274478}
+  HighScoreText: {fileID: 1588274478}
 --- !u!114 &1656397223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9642,7 +9644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ScoreText: {fileID: 1980183023}
-  RecordScoreText: {fileID: 408766451}
+  HighScoreText: {fileID: 408766451}
   player: {fileID: 2123695797}
   ElapsedTime: {fileID: 1185501993}
   timer: {fileID: 176926659}
@@ -10073,7 +10075,7 @@ GameObject:
   - component: {fileID: 1980183023}
   - component: {fileID: 1980183025}
   m_Layer: 5
-  m_Name: Score2
+  m_Name: Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10577,11 +10579,10 @@ MonoBehaviour:
   animator: {fileID: 2123695803}
   healthbar: {fileID: 27468745}
   score: 0
-  record_score: 0
+  high_score: 0
   fire_rate: 0.5
   spawnpoint: {x: 0, y: 0}
-  Score_Text: {fileID: 668979152}
-  Record_Score_Text: {fileID: 1256202483}
+  uiManager: {fileID: 1573765304}
   menu: {fileID: 1881242431}
   pause: {fileID: 1137970971}
   spawner: {fileID: 1895368391}

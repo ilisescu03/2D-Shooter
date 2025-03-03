@@ -9,7 +9,7 @@ public class Player : Character
     [SerializeField]
     private int score;
     [SerializeField]
-    private int record_score;
+    private int high_score;
     [SerializeField]
     private float fire_rate;
     private Shooting shooting;
@@ -19,10 +19,9 @@ public class Player : Character
   
     [SerializeField]
     protected Vector2 spawnpoint;
+
     [SerializeField]
-    private Text Score_Text;
-    [SerializeField]
-    private Text Record_Score_Text;
+    UIManager uiManager;
     [SerializeField]
     private GameOverMenu menu;
     [SerializeField]
@@ -31,7 +30,7 @@ public class Player : Character
     private EnemySpawner spawner;
     // Start is called before the first frame update
     public int get_score() { return score; }
-    public int get_record_score() { return record_score; }
+    public int get_high_score() { return high_score; }
     public bool get_state() { return isAlive; }
     public void set_fire_rate(float value) { fire_rate = value; }
     public float get_fire_rate() { return fire_rate; }
@@ -84,9 +83,8 @@ public class Player : Character
     public void Increase_Score(int points)
     {
         score += points;
-        if (score > record_score) record_score = score;
-        Score_Text.text = "Score:" + score;
-        Record_Score_Text.text = "Record Score:" + record_score;
+        if (score > high_score) high_score = score;
+        uiManager.Set_Text(score, high_score);
         if (score >= 100) spawner.set_spawnTime(8);
         if (score >= 200) spawner.set_spawnTime(6);
         if (score >= 350) spawner.set_spawnTime(5);
@@ -105,7 +103,7 @@ public class Player : Character
         health = maxhealth;
         score = 0;
         spawner.set_spawnTime(10);
-        Score_Text.text = "Score:" + score;
+        uiManager.Set_Text(score, high_score);
     }
     void GetInput()
     {
