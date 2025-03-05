@@ -16,7 +16,7 @@ public class Player : Character
     private bool canShoot = true;
     private bool isAlive = false;
     private bool invicibility = false;
-  
+    private float angle=2.5f;
     [SerializeField]
     protected Vector2 spawnpoint;
 
@@ -35,11 +35,20 @@ public class Player : Character
     public void set_fire_rate(float value) { fire_rate = value; }
     public float get_fire_rate() { return fire_rate; }
     public void set_invicibility(bool value) { invicibility = value; }
+    public void set_angle(int value)
+    {
+        angle += value;
+    }
+    public float get_angle()
+    {
+        return angle;
+    }
     protected override void Start()
     {
         
         shooting = GetComponent<Shooting>();
         high_score =SaveManager.LoadHighScore();
+        angle = SaveManager.LoadAngle();
         uiManager.Set_Text(score, high_score);
        
     }
@@ -133,11 +142,11 @@ public class Player : Character
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                transform.Rotate(0, 0, 2.5f);
+                transform.Rotate(0, 0, angle);
             }
             if (Input.GetKey(KeyCode.RightArrow))
             {
-                transform.Rotate(0, 0, -2.5f);
+                transform.Rotate(0, 0, -angle);
             }
             /*
             if (Input.GetKey(KeyCode.P))
@@ -186,9 +195,9 @@ public class Player : Character
         yield return new WaitForSeconds(fire_rate);
         canShoot = true;
     }
-    public void Reset_Score()
+    public void Reset_Data()
     {
-        SaveManager.ResetHighScore();
+        SaveManager.ResetData();
         high_score = 0;
         score = 0;
         uiManager.Set_Text(score, high_score);

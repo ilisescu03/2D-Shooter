@@ -10,6 +10,12 @@ public class UIManager : MonoBehaviour
     private Text Score_Text;
     [SerializeField]
     private GameObject warning;
+    [SerializeField]
+    private GameObject options;
+    [SerializeField]
+    private GameObject Gameplay;
+    [SerializeField]
+    private GameObject HUD;
     public void Set_Text(int score, int high_score)
     {
         Score_Text.text = "Score:" + score;
@@ -23,15 +29,40 @@ public class UIManager : MonoBehaviour
     {
         warning.SetActive(false);
     }
+    public void OptionsShow()
+    {
+        options.SetActive(true);
+    }
+    public void OptionsHide()
+    {
+        options.SetActive(false);
+    }
+    public void GameplayShow()
+    {
+        Gameplay.SetActive(true);
+    }
+    public void GameplayHide()
+    {
+        Gameplay.SetActive(false);
+    }
+    public void HUDChangeValue()
+    {
+        if (HUD.activeSelf)
+        {
+            HUD.SetActive(false);
+        }
+        else HUD.SetActive(true);
+    }
     public void Save()
     {
         Player player = FindObjectOfType<Player>();
         int high_score = player.get_high_score();
-        SaveManager.SaveHighScore(high_score);
+        float angle = player.get_angle();
+        SaveManager.SaveNewData(high_score, angle);
     }
     public void DeleteData()
     {
-        SaveManager.ResetHighScore();
+        SaveManager.ResetData();
 
         Quit();
     }

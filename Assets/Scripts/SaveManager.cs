@@ -6,9 +6,11 @@ using System.IO;
 public class SaveData
 {
     public int highScore;
-    public SaveData(int highScore)
+    public float newAngle;
+    public SaveData(int highScore, float newAngle)
     {
         this.highScore = highScore;
+        this.newAngle = newAngle;
     }
 }
 public static class SaveManager
@@ -33,14 +35,33 @@ public static class SaveManager
         }
         return 0;
     }
-    public static void SaveHighScore(int new_highScore)
+    public static float LoadAngle()
     {
-        SaveData data = new SaveData(new_highScore);
+        Debug.Log(Application.persistentDataPath);
+        if (File.Exists(path))
+        {
+            try
+            {
+                string json = File.ReadAllText(path);
+                SaveData data = JsonUtility.FromJson<SaveData>(json);
+                return data.newAngle;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("Failed to load save data");
+                return 0;
+            }
+        }
+        return 0;
+    }
+    public static void SaveNewData(int new_highScore, float new_angle)
+    {
+        SaveData data = new SaveData(new_highScore, new_angle);
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(path, json);
     }
-    public static void ResetHighScore()
+    public static void ResetData()
     {
-        SaveHighScore(0);
+        SaveNewData(0,2.5f);
     }
 }
