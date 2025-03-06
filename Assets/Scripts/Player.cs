@@ -142,11 +142,11 @@ public class Player : Character
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                transform.Rotate(0, 0, angle);
+                transform.Rotate(0, 0, 3.5f);
             }
             if (Input.GetKey(KeyCode.RightArrow))
             {
-                transform.Rotate(0, 0, -angle);
+                transform.Rotate(0, 0, -3.5f);
             }
             /*
             if (Input.GetKey(KeyCode.P))
