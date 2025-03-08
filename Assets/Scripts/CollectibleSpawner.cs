@@ -28,7 +28,7 @@ public class CollectibleSpawner : Spawner
     {
         while (true)
         {
-            spawnTime = Random.Range(30, 60);
+            spawnTime = Random.Range(20, 40);
             yield return new WaitForSeconds(spawnTime);
             getPosition();
 

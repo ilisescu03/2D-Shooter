@@ -10,7 +10,6 @@ public class Player : Character
     private int score;
     [SerializeField]
     private int high_score;
-    [SerializeField]
     private float fire_rate;
     private Shooting shooting;
     private bool canShoot = true;
@@ -19,7 +18,8 @@ public class Player : Character
     private float angle=2.5f;
     [SerializeField]
     protected Vector2 spawnpoint;
-
+    private int ammo;
+    private int maxammo;
     [SerializeField]
     UIManager uiManager;
     [SerializeField]
@@ -28,11 +28,20 @@ public class Player : Character
     private Pause pause;
     [SerializeField]
     private EnemySpawner spawner;
+    [SerializeField]
+    private Weapon weapon;
     // Start is called before the first frame update
     public int get_score() { return score; }
     public int get_high_score() { return high_score; }
     public bool get_state() { return isAlive; }
     public void set_fire_rate(float value) { fire_rate = value; }
+    public void setNewWeapon(int value, Weapon newWeapon) 
+    { 
+        maxammo = value;
+        ammo = value;
+        weapon = newWeapon;
+    }
+    
     public float get_fire_rate() { return fire_rate; }
     public void set_invicibility(bool value) { invicibility = value; }
     public void set_angle(int value)
@@ -45,7 +54,9 @@ public class Player : Character
     }
     protected override void Start()
     {
-        
+        maxammo = weapon.getAmmo();
+        fire_rate = weapon.getFireRate();
+        ammo = maxammo;
         shooting = GetComponent<Shooting>();
         high_score =SaveManager.LoadHighScore();
         angle = SaveManager.LoadAngle();
@@ -56,6 +67,7 @@ public class Player : Character
     // Update is called once per frame
     protected override void Update()
     {
+        uiManager.Set_Ammo_Text(ammo, maxammo);
         GetInput();
         base.Update();
         if (direction != Vector2.zero)
@@ -68,6 +80,10 @@ public class Player : Character
         }
         healthbar.fillAmount = health / maxhealth;
 
+    }
+    public void ResetAmmo()
+    {
+        ammo = maxammo;
     }
     public void TakeDamage(float damage)
     {
@@ -113,6 +129,7 @@ public class Player : Character
         transform.position = new Vector2(spawnpoint.x, spawnpoint.y);
         transform.rotation = Quaternion.Euler(0, 0, 0);
         health = maxhealth;
+        ammo = maxammo;
         score = 0;
         spawner.set_spawnTime(10);
         uiManager.Set_Text(score, high_score);
@@ -167,11 +184,11 @@ public class Player : Character
                 Respawn();
             }
             */
-            if (Input.GetKey(KeyCode.Space) && canShoot)
+            if (Input.GetKey(KeyCode.Space) && canShoot && ammo>0)
             {
 
                 shooting.Shoot();
-
+                ammo -= 1;
                 canShoot = false;
                 StartCoroutine(Timer());
             }

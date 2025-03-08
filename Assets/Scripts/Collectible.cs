@@ -26,25 +26,33 @@ public class Collectible : MonoBehaviour
                 player.Heal(20);
                 Destroy(gameObject);
             }
-            else if (type == "FireRate" || type == "Armor")
-            {
-                if (type == "FireRate")
-                {
-                    Powerup powerup = GameObject.Find("FireRate").GetComponent<Powerup>();
-                    powerup.StartTimer();
-                    StartCoroutine(HandleFireRate());
-                }
-                else if (type == "Armor")
-                {
-                    Powerup powerup = GameObject.Find("Armor").GetComponent<Powerup>();
-                    powerup.StartTimer();
-                    StartCoroutine(HandleArmor());
-
-                }
-            }
             else
             {
-                Debug.Log("Invalid collectible type!!");
+                if (type == "Ammo")
+                {
+                    player.ResetAmmo();
+                    Destroy(gameObject);
+                }
+                else if (type == "FireRate" || type == "Armor")
+                {
+                    if (type == "FireRate")
+                    {
+                        Powerup powerup = GameObject.Find("FireRate").GetComponent<Powerup>();
+                        powerup.StartTimer();
+                        StartCoroutine(HandleFireRate());
+                    }
+                    else if (type == "Armor")
+                    {
+                        Powerup powerup = GameObject.Find("Armor").GetComponent<Powerup>();
+                        powerup.StartTimer();
+                        StartCoroutine(HandleArmor());
+
+                    }
+                }
+                else
+                {
+                    Debug.Log("Invalid collectible type!!");
+                }
             }
         }
     }
