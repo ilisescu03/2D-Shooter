@@ -6,6 +6,9 @@ public class Enemy : Character
 {
     private bool isAttacking = false;
     private Player target;
+    private GameObject coin;
+    [SerializeField]
+    private GameObject coinPrefab;
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -35,7 +38,11 @@ public class Enemy : Character
 
 
     }
-   
+    public int GetCollectibleSpawnChance()
+    {
+        int value = Random.Range(0, 4);
+        return value;
+    }
     public void TakeDamage(float damage)
     {
         health -= damage;
@@ -43,6 +50,10 @@ public class Enemy : Character
         health = Mathf.Max(health, 0.0f);
         if (health == 0)
         {
+            if(GetCollectibleSpawnChance()==0)
+            {
+                coin = Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            }
             Destroy(gameObject);
             target.Increase_Score(25);
         }

@@ -7,6 +7,10 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text High_Score_Text;
     [SerializeField]
+    private Text GameplayCoinsNumber;
+    [SerializeField]
+    private Text ShopCoinsNumber;
+    [SerializeField]
     private Text AmmoText;
     [SerializeField]
     private Text Score_Text;
@@ -18,6 +22,18 @@ public class UIManager : MonoBehaviour
     private GameObject Gameplay;
     [SerializeField]
     private GameObject HUD;
+    [SerializeField]
+    private GameObject Shop;
+    [SerializeField]
+    private GameObject NotEnoughCoins;
+    public void NotEnoughCoinsShow()
+    {
+        NotEnoughCoins.SetActive(true);
+    }
+    public void NotEnoughCoinsHide()
+    {
+        NotEnoughCoins.SetActive(false);
+    }
     public void Set_Ammo_Text(int ammo, int maxammo)
     {
         AmmoText.text = ammo + "/" + maxammo;
@@ -26,6 +42,11 @@ public class UIManager : MonoBehaviour
     {
         Score_Text.text = "Score:" + score;
         High_Score_Text.text = "High Score:" + high_score;
+    }
+    public void SetCoinsText(int value)
+    {
+        GameplayCoinsNumber.text = value + " ";
+        ShopCoinsNumber.text = value + " ";
     }
     public void Show()
     {
@@ -42,6 +63,14 @@ public class UIManager : MonoBehaviour
     public void OptionsHide()
     {
         options.SetActive(false);
+    }
+    public void ShopShow()
+    {
+        Shop.SetActive(true);
+    }
+    public void ShopHide()
+    {
+        Shop.SetActive(false);
     }
     public void GameplayShow()
     {
@@ -64,7 +93,8 @@ public class UIManager : MonoBehaviour
         Player player = FindObjectOfType<Player>();
         int high_score = player.get_high_score();
         float angle = player.get_angle();
-        SaveManager.SaveNewData(high_score, angle);
+        int coins = player.get_coins();
+        SaveManager.SaveNewData(high_score, angle, coins );
     }
     public void DeleteData()
     {

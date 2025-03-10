@@ -27,7 +27,12 @@ public class Collectible : MonoBehaviour
                 Destroy(gameObject);
             }
             else
-            {
+            {   
+                if (type == "Coins")
+                {
+                    player.AddCoins(1);
+                    Destroy(gameObject);
+                }
                 if (type == "Ammo")
                 {
                     player.ResetAmmo();

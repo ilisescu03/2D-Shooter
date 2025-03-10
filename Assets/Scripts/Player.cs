@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class Player : Character
 {
     [SerializeField]
+    private int coins;
+    [SerializeField]
     private HealthBar healthbar;
     [SerializeField]
     private int score;
@@ -31,6 +33,7 @@ public class Player : Character
     [SerializeField]
     private Weapon weapon;
     // Start is called before the first frame update
+    public int get_coins() {  return coins; }
     public int get_score() { return score; }
     public int get_high_score() { return high_score; }
     public bool get_state() { return isAlive; }
@@ -48,6 +51,23 @@ public class Player : Character
     {
         angle += value;
     }
+    public void AddCoins(int value)
+    {
+        coins += value;
+    }
+    public bool RemoveCoins(int value)
+    {
+        if (value <= coins)
+        {
+            coins -= value;
+            return true;
+        }
+        else
+        {
+            uiManager.NotEnoughCoinsShow();
+            return false;
+        }
+    }
     public float get_angle()
     {
         return angle;
@@ -59,6 +79,7 @@ public class Player : Character
         ammo = maxammo;
         shooting = GetComponent<Shooting>();
         high_score =SaveManager.LoadHighScore();
+        coins = SaveManager.LoadCoins();
         angle = SaveManager.LoadAngle();
         uiManager.Set_Text(score, high_score);
        
@@ -68,6 +89,7 @@ public class Player : Character
     protected override void Update()
     {
         uiManager.Set_Ammo_Text(ammo, maxammo);
+        uiManager.SetCoinsText(coins);
         GetInput();
         base.Update();
         if (direction != Vector2.zero)

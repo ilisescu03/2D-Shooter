@@ -288,6 +288,7 @@ MonoBehaviour:
   health: 20
   maxhealth: 20
   animator: {fileID: 5518622145040285721}
+  coinPrefab: {fileID: 2143770215535479528, guid: 3ebd1af3dedd7f742b8e4451f8bb929d, type: 3}
 --- !u!95 &5518622145040285721
 Animator:
   serializedVersion: 5
