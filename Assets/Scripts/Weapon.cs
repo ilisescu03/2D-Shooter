@@ -18,15 +18,26 @@ public class Weapon : MonoBehaviour
     private float fireRate;
     [SerializeField]
     private Player player;
+    [SerializeField]
+    private GameObject WeaponObject;
     public bool Buy()
     {
         if (player.RemoveCoins(price)) isBought = true;
         else isBought = false;
         return isBought;
     }
+    public void SetSaved()
+    {
+        isBought = true;
+    }
     public void AssignToPlayer()
     {
-        player.setNewWeapon(maxAmmo, this);
+        player.setNewWeapon(maxAmmo, this, WeaponObject);
+        isEquiped = true;
+    }
+    public void Unassign()
+    {
+        isEquiped = false;
     }
     public int getAmmo()
     {

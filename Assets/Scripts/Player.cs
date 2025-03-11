@@ -32,17 +32,33 @@ public class Player : Character
     private EnemySpawner spawner;
     [SerializeField]
     private Weapon weapon;
+    [SerializeField]
+    private GameObject WeaponObject;
     // Start is called before the first frame update
     public int get_coins() {  return coins; }
     public int get_score() { return score; }
     public int get_high_score() { return high_score; }
     public bool get_state() { return isAlive; }
     public void set_fire_rate(float value) { fire_rate = value; }
-    public void setNewWeapon(int value, Weapon newWeapon) 
+    public void setNewWeapon(int value, Weapon newWeapon, GameObject _WeaponObject) 
     { 
         maxammo = value;
         ammo = value;
+        weapon.Unassign();
+        if (WeaponObject != null)
+        {
+            Destroy(WeaponObject);
+        }
+
+      
+        WeaponObject = Instantiate(_WeaponObject, transform.position, Quaternion.identity);
+        WeaponObject.transform.SetParent(transform);
+        WeaponObject.transform.localPosition = Vector3.zero; 
+        WeaponObject.transform.localRotation = Quaternion.identity;
+        WeaponObject.transform.localScale = new Vector3(-1, -1, 1);
+        if (!WeaponObject.activeSelf) WeaponObject.SetActive(true);
         weapon = newWeapon;
+        
     }
     
     public float get_fire_rate() { return fire_rate; }
