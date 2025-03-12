@@ -5,6 +5,8 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField]
+    private int ID;
+    [SerializeField]
     private int price;
     [SerializeField]
     private bool isBought;
@@ -20,19 +22,30 @@ public class Weapon : MonoBehaviour
     private Player player;
     [SerializeField]
     private GameObject WeaponObject;
+    [SerializeField]
+    private float Offset;
+    [SerializeField]
+    private SelectingWeapon selectingWeapon;
     public bool Buy()
     {
-        if (player.RemoveCoins(price)) isBought = true;
+        if (player.RemoveCoins(price))
+        {
+            isBought = true;
+            player.setBool(ID);
+        }
         else isBought = false;
         return isBought;
     }
     public void SetSaved()
     {
         isBought = true;
+        selectingWeapon.HideBuy();
     }
     public void AssignToPlayer()
     {
         player.setNewWeapon(maxAmmo, this, WeaponObject);
+        player.set_fire_rate(fireRate);
+        player.set_offset(Offset);
         isEquiped = true;
     }
     public void Unassign()

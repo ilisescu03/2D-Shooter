@@ -34,12 +34,20 @@ public class Player : Character
     private Weapon weapon;
     [SerializeField]
     private GameObject WeaponObject;
+    [SerializeField]
+    private float Offset;
+    [SerializeField]
+    private bool[] WeaponBools;
+    [SerializeField]
+    private WeaponsManager weaponsManager;
     // Start is called before the first frame update
     public int get_coins() {  return coins; }
     public int get_score() { return score; }
     public int get_high_score() { return high_score; }
     public bool get_state() { return isAlive; }
     public void set_fire_rate(float value) { fire_rate = value; }
+    public void set_offset(float value) { Offset = value; }
+    public void setBool(int index) { WeaponBools[index] = true; }
     public void setNewWeapon(int value, Weapon newWeapon, GameObject _WeaponObject) 
     { 
         maxammo = value;
@@ -88,6 +96,10 @@ public class Player : Character
     {
         return angle;
     }
+    public bool[] get_WeaponBools()
+    {
+        return WeaponBools;
+    }
     protected override void Start()
     {
         maxammo = weapon.getAmmo();
@@ -96,7 +108,17 @@ public class Player : Character
         shooting = GetComponent<Shooting>();
         high_score =SaveManager.LoadHighScore();
         coins = SaveManager.LoadCoins();
+        coins = 10000;
         angle = SaveManager.LoadAngle();
+        WeaponBools = SaveManager.LoadWeapons();
+        if(WeaponBools==null)
+        {
+            WeaponBools = new bool[3];
+        }
+        for(int i=0;i<WeaponBools.Length;i++)
+        {
+            if(WeaponBools[i]) weaponsManager.setActive(i);
+        }
         uiManager.Set_Text(score, high_score);
        
     }
@@ -225,7 +247,7 @@ public class Player : Character
             if (Input.GetKey(KeyCode.Space) && canShoot && ammo>0)
             {
 
-                shooting.Shoot();
+                shooting.Shoot(Offset);
                 ammo -= 1;
                 canShoot = false;
                 StartCoroutine(Timer());
