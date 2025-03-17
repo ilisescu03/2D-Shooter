@@ -4,15 +4,33 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private AudioSource musicSource;
+    [SerializeField]
+    private AudioSource SFXSource;
+
+    [SerializeField]
+    private AudioClip Reload;
+    [SerializeField]
+    private AudioClip ZombieSpawn;
+
+    [SerializeField]
+    private AudioClip Hurt;
+    public void PlaySFX(AudioClip clip)
     {
-        
+        SFXSource.PlayOneShot(clip);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void PlayReloadSFX()
     {
-        
+        SFXSource.PlayOneShot(Reload);
+    }
+    public void PlayZombieSpawn()
+    {
+        SFXSource.PlayOneShot(ZombieSpawn);
+    }
+    public void PlayHurt()
+    {
+        SFXSource.PlayOneShot(Hurt);
     }
 }

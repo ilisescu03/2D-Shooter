@@ -7,6 +7,8 @@ public class EnemySpawner : Spawner
     private GameObject enemy;
     [SerializeField]
     private GameObject enemyPrefab;
+    [SerializeField]
+    private AudioManager audioMananger;
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -32,6 +34,7 @@ public class EnemySpawner : Spawner
     }
     void Spawn()
     {
+        audioMananger.PlayZombieSpawn();
         enemy = Instantiate(enemyPrefab, SpawnPoint, Quaternion.identity);
     }
     IEnumerator SpawnLoop()

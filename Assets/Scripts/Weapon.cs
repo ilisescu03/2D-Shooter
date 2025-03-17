@@ -5,6 +5,8 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField]
+    private AudioClip gunShot;
+    [SerializeField]
     private int ammoPerRound;
     [SerializeField]
     private int ID;
@@ -45,7 +47,7 @@ public class Weapon : MonoBehaviour
     }
     public void AssignToPlayer()
     {
-        player.setNewWeapon(maxAmmo, ammoPerRound, this, WeaponObject);
+        player.setNewWeapon(maxAmmo, ammoPerRound, this, WeaponObject, gunShot);
         player.set_fire_rate(fireRate);
         player.set_offset(Offset);
         isEquiped = true;

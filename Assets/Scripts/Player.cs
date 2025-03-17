@@ -49,9 +49,11 @@ public class Player : Character
 
     private float mintime = 6;
     private float maxtime = 12;
-
+    [SerializeField]
+    private AudioClip gunShot;
     private int scoreCount=0;
-    
+    [SerializeField]
+    private AudioManager audioManager;
     // Start is called before the first frame update
     public int get_coins() {  return coins; }
     public int get_score() { return score; }
@@ -60,9 +62,9 @@ public class Player : Character
     public void set_fire_rate(float value) { fire_rate = value; }
     public void set_offset(float value) { Offset = value; }
     public void setBool(int index) { WeaponBools[index] = true; }
-    public void setNewWeapon(int value, int value2, Weapon newWeapon, GameObject _WeaponObject) 
+    public void setNewWeapon(int value, int value2, Weapon newWeapon, GameObject _WeaponObject, AudioClip clip) 
     {
-      
+        gunShot = clip;
         maxammo = value-value2;
         ammoPerRound = value2;
         ammo = ammoPerRound;
@@ -116,7 +118,7 @@ public class Player : Character
     }
     protected override void Start()
     {
-
+        Time.timeScale = 0;
         MAXValue = Random.Range(75, 225);
         fire_rate = weapon.getFireRate();
        // ammoPerRound = weapon.getAmmoPerRound();
@@ -296,11 +298,12 @@ public class Player : Character
             */
             if (Input.GetKeyDown(KeyCode.R)&&!pause.get_state())
             {
+                audioManager.PlayReloadSFX();
                 Reload();
             }
             if (Input.GetKey(KeyCode.Space) && canShoot && ammo>0 && !pause.get_state())
             {
-
+                audioManager.PlaySFX(gunShot);
                 shooting.Shoot(Offset);
                 ammo -= 1;
                 canShoot = false;
@@ -316,6 +319,7 @@ public class Player : Character
     }
     IEnumerator DamageEffect()
     {
+        audioManager.PlayHurt();
         SpriteRenderer effect = GetComponent<SpriteRenderer>();
         effect.color = Color.red;
         yield return new WaitForSeconds(0.2f);

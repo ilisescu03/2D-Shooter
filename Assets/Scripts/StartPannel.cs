@@ -21,11 +21,13 @@ public class StartPannel : MonoBehaviour
     }
     public void Hide()
     {
+        Time.timeScale = 1;
         gameObject.SetActive(false);
         player.Respawn();
     }
     public void Show()
     {
+        Time.timeScale = 0;
         gameObject.SetActive(true);
         player.Die();
     }
