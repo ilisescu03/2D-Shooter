@@ -5,6 +5,8 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField]
+    private int ammoPerRound;
+    [SerializeField]
     private int ID;
     [SerializeField]
     private int price;
@@ -43,7 +45,7 @@ public class Weapon : MonoBehaviour
     }
     public void AssignToPlayer()
     {
-        player.setNewWeapon(maxAmmo, this, WeaponObject);
+        player.setNewWeapon(maxAmmo, ammoPerRound, this, WeaponObject);
         player.set_fire_rate(fireRate);
         player.set_offset(Offset);
         isEquiped = true;
@@ -55,6 +57,10 @@ public class Weapon : MonoBehaviour
     public int getAmmo()
     {
         return maxAmmo;
+    }
+    public int getAmmoPerRound()
+    {
+        return ammoPerRound;
     }
     public float getFireRate()
     {

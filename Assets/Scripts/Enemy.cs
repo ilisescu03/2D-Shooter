@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Enemy : Character
 {
+    [SerializeField]
+    private int ID;
+    [SerializeField]
+    private int ScorePoints;
     private bool isAttacking = false;
     private Player target;
     private GameObject coin;
@@ -55,7 +59,7 @@ public class Enemy : Character
                 coin = Instantiate(coinPrefab, transform.position, Quaternion.identity);
             }
             Destroy(gameObject);
-            target.Increase_Score(25);
+            target.Increase_Score(ScorePoints);
         }
     }
     IEnumerator DamageEffect()

@@ -6,14 +6,18 @@ public class Spawner : MonoBehaviour
 {
     protected Vector2 SpawnPoint;
     
-    
+    //
     [SerializeField]
     protected float spawnTime;
-    
+    [SerializeField]
+    protected float minTime;
+    [SerializeField]
+    protected float maxTime;
     protected Player player;
-    public void set_spawnTime(float value)
+    public void set_spawnTime(float _minValue, float _maxValue)
     {
-        spawnTime = value;
+        minTime = _minValue;
+        maxTime = _maxValue;
         
     }
     // Start is called before the first frame update
@@ -21,6 +25,10 @@ public class Spawner : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
 
+    }
+    protected virtual void Update()
+    {
+        spawnTime = Random.Range(minTime, maxTime);
     }
 
     

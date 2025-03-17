@@ -20,6 +20,11 @@ public class Pause : MonoBehaviour
     {
         
     }
+    /*
+    public void set_state(bool value)
+    {
+        isPaused = value;
+    }*/
     public bool get_state()
     {
         return isPaused;
@@ -39,6 +44,7 @@ public class Pause : MonoBehaviour
     public void MainMenu()
     {
        gameObject.SetActive(false);
+        isPaused = false;
         player.Die();
         startPanel.Show();
 

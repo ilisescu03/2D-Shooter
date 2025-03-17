@@ -15,6 +15,8 @@ public class GameOverMenu : MonoBehaviour
     [SerializeField]
     private Timer timer;
     [SerializeField]
+    private Timer timer2;
+    [SerializeField]
     private StartPannel startPanel;
     
     // Start is called before the first frame update

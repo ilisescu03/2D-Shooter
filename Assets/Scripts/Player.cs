@@ -22,6 +22,7 @@ public class Player : Character
     protected Vector2 spawnpoint;
     private int ammo;
     private int maxammo;
+
     [SerializeField]
     UIManager uiManager;
     [SerializeField]
@@ -40,6 +41,17 @@ public class Player : Character
     private bool[] WeaponBools;
     [SerializeField]
     private WeaponsManager weaponsManager;
+    [SerializeField]
+    private int ammoPerRound;
+    private int MAXValue;
+    [SerializeField]
+    private Timer timer;
+
+    private float mintime = 6;
+    private float maxtime = 12;
+
+    private int scoreCount=0;
+    
     // Start is called before the first frame update
     public int get_coins() {  return coins; }
     public int get_score() { return score; }
@@ -48,10 +60,12 @@ public class Player : Character
     public void set_fire_rate(float value) { fire_rate = value; }
     public void set_offset(float value) { Offset = value; }
     public void setBool(int index) { WeaponBools[index] = true; }
-    public void setNewWeapon(int value, Weapon newWeapon, GameObject _WeaponObject) 
-    { 
-        maxammo = value;
-        ammo = value;
+    public void setNewWeapon(int value, int value2, Weapon newWeapon, GameObject _WeaponObject) 
+    {
+      
+        maxammo = value-value2;
+        ammoPerRound = value2;
+        ammo = ammoPerRound;
         weapon.Unassign();
         if (WeaponObject != null)
         {
@@ -102,9 +116,16 @@ public class Player : Character
     }
     protected override void Start()
     {
-        maxammo = weapon.getAmmo();
+
+        MAXValue = Random.Range(75, 225);
         fire_rate = weapon.getFireRate();
-        ammo = maxammo;
+       // ammoPerRound = weapon.getAmmoPerRound();
+        maxammo = weapon.getAmmo() - ammoPerRound;
+        ammo = ammoPerRound;
+        if (ammo == 0 && maxammo > 0)
+        {
+            Reload();
+        }
         shooting = GetComponent<Shooting>();
         high_score =SaveManager.LoadHighScore();
         coins = SaveManager.LoadCoins();
@@ -120,7 +141,7 @@ public class Player : Character
             if(WeaponBools[i]) weaponsManager.setActive(i);
         }
         uiManager.Set_Text(score, high_score);
-       
+        uiManager.Set_Ammo_Text(ammo, maxammo);
     }
 
     // Update is called once per frame
@@ -140,10 +161,13 @@ public class Player : Character
         }
         healthbar.fillAmount = health / maxhealth;
 
+        if (!isAlive) spawner.set_spawnTime(6, 12);
+
     }
     public void ResetAmmo()
     {
-        ammo = maxammo;
+        ammo = weapon.getAmmoPerRound();
+        maxammo = weapon.getAmmo() - weapon.getAmmoPerRound();
     }
     public void TakeDamage(float damage)
     {
@@ -171,15 +195,24 @@ public class Player : Character
     public void Increase_Score(int points)
     {
         score += points;
+        scoreCount+=points;
+        
+        if(scoreCount>=MAXValue)
+        {
+            mintime /= 1.25f;
+            maxtime /= 1.25f;
+            if(mintime<1||maxtime<1)
+            {
+                mintime *= 1.2f;
+                maxtime *= 1.2f;
+            }
+            scoreCount = 0;
+            MAXValue = Random.Range(40, 100);
+            spawner.set_spawnTime(mintime, maxtime);
+        }
         if (score > high_score) high_score = score;
         uiManager.Set_Text(score, high_score);
-        if (score >= 100) spawner.set_spawnTime(8);
-        if (score >= 200) spawner.set_spawnTime(6);
-        if (score >= 350) spawner.set_spawnTime(5);
-        if (score >= 500) spawner.set_spawnTime(3);
-        if(score>=550) spawner.set_spawnTime(2);
-        if(score>=700) spawner.set_spawnTime(1.5f);
-        if(score>=1000) spawner.set_spawnTime(1);
+        
     }
     public void Respawn()
     {
@@ -189,10 +222,30 @@ public class Player : Character
         transform.position = new Vector2(spawnpoint.x, spawnpoint.y);
         transform.rotation = Quaternion.Euler(0, 0, 0);
         health = maxhealth;
-        ammo = maxammo;
+        ammo = weapon.getAmmoPerRound();
+        maxammo = weapon.getAmmo() - ammo;
+        if (ammo == 0 && maxammo > 0)
+        {
+            Reload();
+        }
         score = 0;
-        spawner.set_spawnTime(10);
+        spawner.set_spawnTime(8,16);
         uiManager.Set_Text(score, high_score);
+    }
+    public void Reload()
+    {
+        if (maxammo - ammoPerRound >= 0)
+        {
+            
+            maxammo = maxammo - ammoPerRound +ammo;
+            ammo = ammoPerRound;
+        }
+        if(maxammo-ammoPerRound<0&&maxammo!=0)
+        {
+            ammo = ammoPerRound - maxammo + ammo;
+            maxammo = 0;
+
+        }
     }
     void GetInput()
     {
@@ -239,12 +292,13 @@ public class Player : Character
             {
                 Increase_Score(10);
             }
-            if (Input.GetKey(KeyCode.R))
-            {
-                Respawn();
-            }
+            
             */
-            if (Input.GetKey(KeyCode.Space) && canShoot && ammo>0)
+            if (Input.GetKeyDown(KeyCode.R)&&!pause.get_state())
+            {
+                Reload();
+            }
+            if (Input.GetKey(KeyCode.Space) && canShoot && ammo>0 && !pause.get_state())
             {
 
                 shooting.Shoot(Offset);

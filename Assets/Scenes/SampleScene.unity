@@ -3277,7 +3277,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
@@ -4473,6 +4473,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bb3fadf9e7761488ee9a06956aa02b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ammoPerRound: 15
   ID: 0
   price: 0
   isBought: 1
@@ -5242,6 +5243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bb3fadf9e7761488ee9a06956aa02b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ammoPerRound: 25
   ID: 1
   price: 100
   isBought: 0
@@ -5502,6 +5504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bb3fadf9e7761488ee9a06956aa02b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ammoPerRound: 35
   ID: 2
   price: 250
   isBought: 0
@@ -17447,6 +17450,7 @@ MonoBehaviour:
   player: {fileID: 2123695797}
   ElapsedTime: {fileID: 1185501993}
   timer: {fileID: 176926659}
+  timer2: {fileID: 0}
   startPanel: {fileID: 1656397222}
 --- !u!1 &1883954983
 GameObject:
@@ -17589,6 +17593,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnTime: 10
+  minTime: 8
+  maxTime: 16
   enemyPrefab: {fileID: 4967893090089294526, guid: 5a6ea9db582c544418f9027d3f875e3e, type: 3}
 --- !u!114 &1895368392
 MonoBehaviour:
@@ -17603,6 +17609,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnTime: 0
+  minTime: 0
+  maxTime: 0
   collectiblePrefab:
   - {fileID: 355983739276232199, guid: fad70cae712cb8b4683ff87814ca2f98, type: 3}
   - {fileID: 1785383149216630667, guid: 02c411cdcb40e9c468b6aed0cb011f8f, type: 3}
@@ -19004,8 +19012,10 @@ MonoBehaviour:
   weapon: {fileID: 3784595315518618571, guid: 8945d7a7670dde44cb9186a005d0fafb, type: 3}
   WeaponObject: {fileID: 576644748}
   Offset: 0
-  WeaponBools: 000000
+  WeaponBools: 010000
   weaponsManager: {fileID: 965098131}
+  ammoPerRound: 15
+  timer: {fileID: 176926659}
 --- !u!50 &2123695799
 Rigidbody2D:
   serializedVersion: 4
@@ -19423,6 +19433,10 @@ PrefabInstance:
       propertyPath: coinPrefab
       value: 
       objectReference: {fileID: 2143770215535479528, guid: 3ebd1af3dedd7f742b8e4451f8bb929d, type: 3}
+    - target: {fileID: 3696673402717950552, guid: 5a6ea9db582c544418f9027d3f875e3e, type: 3}
+      propertyPath: ScorePoints
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 4967893090089294526, guid: 5a6ea9db582c544418f9027d3f875e3e, type: 3}
       propertyPath: m_Name
       value: Zombie
