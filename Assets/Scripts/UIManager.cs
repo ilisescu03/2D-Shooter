@@ -21,6 +21,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject Gameplay;
     [SerializeField]
+    private GameObject Video;
+    [SerializeField]
     private GameObject HUD;
     [SerializeField]
     private GameObject Shop;
@@ -85,6 +87,14 @@ public class UIManager : MonoBehaviour
     public void GameplayShow()
     {
         Gameplay.SetActive(true);
+    }
+    public void VideoHide()
+    {
+        Video.SetActive(false);
+    }
+    public void VideoShow()
+    {
+        Video.SetActive(true);
     }
     public void GameplayHide()
     {

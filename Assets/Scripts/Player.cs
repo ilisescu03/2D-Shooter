@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Player : Character
 {
+    private bool AutoSave = false;
     [SerializeField]
     private int WaveIndex;
     [SerializeField]
@@ -58,6 +59,7 @@ public class Player : Character
     private AudioManager audioManager;
     // Start is called before the first frame update
     public void set_InfiniteFire(bool value) { InfiniteFire = value; }
+    public void set_AutoSave(bool value) { AutoSave = value; }
     public int get_Wave_Index() { return WaveIndex; }
     public int get_coins() {  return coins; }
     public int get_score() { return score; }
@@ -153,7 +155,9 @@ public class Player : Character
     // Update is called once per frame
     protected override void Update()
     {
-        if(!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
+        if (AutoSave) { uiManager.Save(); }
+       // else Debug.Log("Autosave is off");
+        if (!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
         uiManager.SetCoinsText(coins);
         GetInput();
         base.Update();

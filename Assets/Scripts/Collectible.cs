@@ -69,7 +69,7 @@ public class Collectible : MonoBehaviour
      
     private void Clear()
     {
-    //  if (player.get_state() == false) Destroy(gameObject);
+      if (player.get_state() == false) Destroy(gameObject);
     }
     private IEnumerator HandleArmor()
     {
