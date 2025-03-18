@@ -26,9 +26,19 @@ public class UIManager : MonoBehaviour
     private GameObject Shop;
     [SerializeField]
     private GameObject NotEnoughCoins;
+    private string temporaryText;
     public void NotEnoughCoinsShow()
     {
         NotEnoughCoins.SetActive(true);
+    }
+    public void HideAmmoText()
+    {
+        temporaryText = AmmoText.text;
+        AmmoText.text="";
+    }
+    public void ShowAmmoText()
+    {
+        AmmoText.text = temporaryText;
     }
     public void NotEnoughCoinsHide()
     {

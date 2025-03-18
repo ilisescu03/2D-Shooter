@@ -1,9 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 public class Player : Character
 {
+    [SerializeField]
+    private int WaveIndex;
     [SerializeField]
     private int coins;
     [SerializeField]
@@ -46,7 +48,7 @@ public class Player : Character
     private int MAXValue;
     [SerializeField]
     private Timer timer;
-
+    private bool InfiniteFire = false;
     private float mintime = 6;
     private float maxtime = 12;
     [SerializeField]
@@ -55,6 +57,8 @@ public class Player : Character
     [SerializeField]
     private AudioManager audioManager;
     // Start is called before the first frame update
+    public void set_InfiniteFire(bool value) { InfiniteFire = value; }
+    public int get_Wave_Index() { return WaveIndex; }
     public int get_coins() {  return coins; }
     public int get_score() { return score; }
     public int get_high_score() { return high_score; }
@@ -149,7 +153,7 @@ public class Player : Character
     // Update is called once per frame
     protected override void Update()
     {
-        uiManager.Set_Ammo_Text(ammo, maxammo);
+        if(!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
         uiManager.SetCoinsText(coins);
         GetInput();
         base.Update();
@@ -186,6 +190,7 @@ public class Player : Character
     public void Die()
     {
         isAlive = false;
+        WaveIndex = 1;
         Debug.Log("Dead");
         
     }
@@ -212,6 +217,13 @@ public class Player : Character
             MAXValue = Random.Range(40, 100);
             spawner.set_spawnTime(mintime, maxtime);
         }
+        if (score > 1500 && WaveIndex==1)
+        {
+            WaveIndex = 2;
+            mintime = 4f;
+            maxtime = 8f;
+            spawner.set_spawnTime(mintime, maxtime);
+        }
         if (score > high_score) high_score = score;
         uiManager.Set_Text(score, high_score);
         
@@ -230,6 +242,7 @@ public class Player : Character
         {
             Reload();
         }
+        WaveIndex = 1;
         score = 0;
         spawner.set_spawnTime(8,16);
         uiManager.Set_Text(score, high_score);
@@ -301,11 +314,13 @@ public class Player : Character
                 audioManager.PlayReloadSFX();
                 Reload();
             }
-            if (Input.GetKey(KeyCode.Space) && canShoot && ammo>0 && !pause.get_state())
+            if (Input.GetKey(KeyCode.Space) && ((canShoot && ammo>0 && !pause.get_state()&& !InfiniteFire)||(canShoot&&InfiniteFire)))
             {
+                
+                Debug.Log("FireRate:" + fire_rate);
                 audioManager.PlaySFX(gunShot);
                 shooting.Shoot(Offset);
-                ammo -= 1;
+                if(!InfiniteFire) ammo -= 1;
                 canShoot = false;
                 StartCoroutine(Timer());
             }
@@ -328,7 +343,10 @@ public class Player : Character
     IEnumerator Timer()
     {
         yield return new WaitForSeconds(fire_rate);
-        canShoot = true;
+   
+        
+           canShoot = true;
+        
     }
     public void Reset_Data()
     {

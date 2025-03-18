@@ -98,10 +98,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d8c1f40891a1cd47bbb080224e378d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: FireRate
-  image: {fileID: 0}
-  TimeText: {fileID: 0}
-  time: 0
+  type: InfiniteFire
 --- !u!61 &6725867507875992945
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -138,7 +135,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 20.48, y: 20.48}
+    oldSize: {x: 16, y: 16}
     newSize: {x: 16.83, y: 16.83}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

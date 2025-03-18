@@ -7,9 +7,12 @@ public class Collectible : MonoBehaviour
     [SerializeField]
     private string type;
     private Player player;
+    
+    private UIManager uiManager;
     void Start()
     {
         player = FindObjectOfType<Player>();
+        uiManager = FindObjectOfType<UIManager>();
         
     }
     void Update()
@@ -38,13 +41,13 @@ public class Collectible : MonoBehaviour
                     player.ResetAmmo();
                     Destroy(gameObject);
                 }
-                else if (type == "FireRate" || type == "Armor")
+                else if (type == "InfiniteFire" || type == "Armor")
                 {
-                    if (type == "FireRate")
+                    if (type == "InfiniteFire")
                     {
-                        Powerup powerup = GameObject.Find("FireRate").GetComponent<Powerup>();
+                        Powerup powerup = GameObject.Find("InfiniteFire").GetComponent<Powerup>();
                         powerup.StartTimer();
-                        StartCoroutine(HandleFireRate());
+                        StartCoroutine(HandleInfiniteFire());
                     }
                     else if (type == "Armor")
                     {
@@ -66,7 +69,7 @@ public class Collectible : MonoBehaviour
      
     private void Clear()
     {
-      if (player.get_state() == false) Destroy(gameObject);
+    //  if (player.get_state() == false) Destroy(gameObject);
     }
     private IEnumerator HandleArmor()
     {
@@ -78,14 +81,18 @@ public class Collectible : MonoBehaviour
         Debug.Log("Armor reset");
         Destroy(gameObject);
     }
-    private IEnumerator HandleFireRate()
+    private IEnumerator HandleInfiniteFire()
     {
+        uiManager.HideAmmoText();
         float value = player.get_fire_rate();
-        player.set_fire_rate(0.1f);
+        player.set_fire_rate(0.04f);
+        player.set_InfiniteFire(true);
         GetComponent<SpriteRenderer>().enabled = false;
         GetComponent<Collider2D>().enabled = false;
         yield return new WaitForSeconds(5f);
         player.set_fire_rate(value);
+        player.set_InfiniteFire(false);
+        uiManager.ShowAmmoText();
         Debug.Log("Fire rate reset");
         Destroy(gameObject);
     }
