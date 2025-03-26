@@ -68,5 +68,9 @@ public class Weapon : MonoBehaviour
     {
         return fireRate;
     }
+    public float getOffset()
+    {
+        return Offset;
+    }
    
 }

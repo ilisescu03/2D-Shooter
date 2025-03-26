@@ -16,11 +16,17 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField]
     private AudioClip Hurt;
+
+    [SerializeField]
+    private AudioClip MinigunShot;
     public void PlaySFX(AudioClip clip)
     {
         SFXSource.PlayOneShot(clip);
     }
-
+    public void PlayMinigun()
+    {
+        SFXSource.PlayOneShot(MinigunShot);
+    }
     public void PlayReloadSFX()
     {
         SFXSource.PlayOneShot(Reload);

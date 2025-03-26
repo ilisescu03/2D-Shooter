@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text Score_Text;
     [SerializeField]
+    private Text Wave_Text;
+    [SerializeField]
     private GameObject warning;
     [SerializeField]
     private GameObject options;
@@ -50,10 +52,11 @@ public class UIManager : MonoBehaviour
     {
         AmmoText.text = ammo + "/" + maxammo;
     }
-    public void Set_Text(int score, int high_score)
+    public void Set_Text(int score, int high_score, int index)
     {
         Score_Text.text = "Score:" + score;
         High_Score_Text.text = "High Score:" + high_score;
+        Wave_Text.text = "Wave:" + index;
     }
     public void SetCoinsText(int value)
     {

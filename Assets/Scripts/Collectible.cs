@@ -85,6 +85,7 @@ public class Collectible : MonoBehaviour
     {
         uiManager.HideAmmoText();
         float value = player.get_fire_rate();
+        player.enableMinigun(true);
         player.set_fire_rate(0.04f);
         player.set_InfiniteFire(true);
         GetComponent<SpriteRenderer>().enabled = false;
@@ -92,6 +93,7 @@ public class Collectible : MonoBehaviour
         yield return new WaitForSeconds(5f);
         player.set_fire_rate(value);
         player.set_InfiniteFire(false);
+        player.enableMinigun(false);
         uiManager.ShowAmmoText();
         Debug.Log("Fire rate reset");
         Destroy(gameObject);

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class Player : Character
 {
     private bool AutoSave = false;
+    private bool isUsingMinigun = false;
     [SerializeField]
     private int WaveIndex;
     [SerializeField]
@@ -25,7 +26,7 @@ public class Player : Character
     protected Vector2 spawnpoint;
     private int ammo;
     private int maxammo;
-
+    private int LayerIndex=0;
     [SerializeField]
     UIManager uiManager;
     [SerializeField]
@@ -50,8 +51,8 @@ public class Player : Character
     [SerializeField]
     private Timer timer;
     private bool InfiniteFire = false;
-    private float mintime = 6;
-    private float maxtime = 12;
+    private float mintime = 4;
+    private float maxtime = 8;
     [SerializeField]
     private AudioClip gunShot;
     private int scoreCount=0;
@@ -59,6 +60,24 @@ public class Player : Character
     private AudioManager audioManager;
     // Start is called before the first frame update
     public void set_InfiniteFire(bool value) { InfiniteFire = value; }
+    public void setLayerIndex(int value1, int value2)
+    {
+        animator.SetLayerWeight(0, value1);
+        animator.SetLayerWeight(1, value2);
+        if (value1 > value2) LayerIndex = 0;
+        else LayerIndex = 1;
+
+    }
+    public bool IsUsingMinigun()
+    {
+        return isUsingMinigun;
+    }
+    public void enableMinigun(bool state)
+    {
+        
+        if (state) { animator.SetLayerWeight(1, 1); isUsingMinigun = true;  WeaponObject.SetActive(false); }
+        else { animator.SetLayerWeight(1, 0); isUsingMinigun = false; WeaponObject.SetActive(true); }
+    }
     public void set_AutoSave(bool value) { AutoSave = value; }
     public int get_Wave_Index() { return WaveIndex; }
     public int get_coins() {  return coins; }
@@ -148,7 +167,7 @@ public class Player : Character
         {
             if(WeaponBools[i]) weaponsManager.setActive(i);
         }
-        uiManager.Set_Text(score, high_score);
+        uiManager.Set_Text(score, high_score, WaveIndex);
         uiManager.Set_Ammo_Text(ammo, maxammo);
     }
 
@@ -171,7 +190,7 @@ public class Player : Character
         }
         healthbar.fillAmount = health / maxhealth;
 
-        if (!isAlive) spawner.set_spawnTime(6, 12);
+        if (!isAlive) spawner.set_spawnTime(4, 8);
 
     }
     public void ResetAmmo()
@@ -214,8 +233,8 @@ public class Player : Character
             maxtime /= 1.25f;
             if(mintime<1||maxtime<1)
             {
-                mintime *= 1.2f;
-                maxtime *= 1.2f;
+                mintime = 1f;
+                maxtime = 1f;
             }
             scoreCount = 0;
             MAXValue = Random.Range(40, 100);
@@ -224,12 +243,12 @@ public class Player : Character
         if (score > 1500 && WaveIndex==1)
         {
             WaveIndex = 2;
-            mintime = 4f;
-            maxtime = 8f;
+            mintime = 3f;
+            maxtime = 6f;
             spawner.set_spawnTime(mintime, maxtime);
         }
         if (score > high_score) high_score = score;
-        uiManager.Set_Text(score, high_score);
+        uiManager.Set_Text(score, high_score, WaveIndex);
         
     }
     public void Respawn()
@@ -248,8 +267,8 @@ public class Player : Character
         }
         WaveIndex = 1;
         score = 0;
-        spawner.set_spawnTime(8,16);
-        uiManager.Set_Text(score, high_score);
+        spawner.set_spawnTime(4,8);
+        uiManager.Set_Text(score, high_score, WaveIndex);
     }
     public void Reload()
     {
@@ -322,7 +341,8 @@ public class Player : Character
             {
                 
                 Debug.Log("FireRate:" + fire_rate);
-                audioManager.PlaySFX(gunShot);
+                if(!isUsingMinigun) audioManager.PlaySFX(gunShot);
+                else audioManager.PlayMinigun();
                 shooting.Shoot(Offset);
                 if(!InfiniteFire) ammo -= 1;
                 canShoot = false;
@@ -357,7 +377,7 @@ public class Player : Character
         SaveManager.ResetData();
         high_score = 0;
         score = 0;
-        uiManager.Set_Text(score, high_score);
+        uiManager.Set_Text(score, high_score, WaveIndex);
     }
     
 }
