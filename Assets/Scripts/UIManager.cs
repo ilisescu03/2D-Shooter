@@ -23,6 +23,10 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject Gameplay;
     [SerializeField]
+    private GameObject Controls;
+    [SerializeField]
+    private GameObject AimControls;
+    [SerializeField]
     private GameObject Video;
     [SerializeField]
     private GameObject HUD;
@@ -30,6 +34,8 @@ public class UIManager : MonoBehaviour
     private GameObject Shop;
     [SerializeField]
     private GameObject NotEnoughCoins;
+    [SerializeField]
+    private ControlsManager controlsManager;
     private string temporaryText;
     public void NotEnoughCoinsShow()
     {
@@ -39,6 +45,10 @@ public class UIManager : MonoBehaviour
     {
         temporaryText = AmmoText.text;
         AmmoText.text="";
+    }
+    public void SetControlsIndex(int index)
+    {
+        controlsManager.set_ControlsIndex(index);
     }
     public void ShowAmmoText()
     {
@@ -90,6 +100,22 @@ public class UIManager : MonoBehaviour
     public void GameplayShow()
     {
         Gameplay.SetActive(true);
+    }
+    public void ControlsShow()
+    {
+        Controls.SetActive(true);
+    }
+    public void ControlsHide()
+    {
+        Controls.SetActive(false);
+    }
+    public void AimControlsShow()
+    {
+        AimControls.SetActive(true);
+    }
+    public void AimControlsHide()
+    {
+        AimControls.SetActive(false);
     }
     public void VideoHide()
     {

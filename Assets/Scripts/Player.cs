@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 public class Player : Character
 {
+    [SerializeField]
+    private int ControlsIndex;
     private bool AutoSave = false;
     private bool isUsingMinigun = false;
     [SerializeField]
@@ -58,8 +60,11 @@ public class Player : Character
     private int scoreCount=0;
     [SerializeField]
     private AudioManager audioManager;
+    [SerializeField]
+    private CursorManager cursorManager;
     // Start is called before the first frame update
     public void set_InfiniteFire(bool value) { InfiniteFire = value; }
+    public void set_ControlsIndex(int value) { if(value==0||value==1) ControlsIndex = value; }
     public void setLayerIndex(int value1, int value2)
     {
         animator.SetLayerWeight(0, value1);
@@ -143,6 +148,8 @@ public class Player : Character
     }
     protected override void Start()
     {
+        cursorManager.SetCursorTexture(new Vector2(16, 16));
+        
         Time.timeScale = 0;
         MAXValue = Random.Range(75, 225);
         fire_rate = weapon.getFireRate();
@@ -174,6 +181,8 @@ public class Player : Character
     // Update is called once per frame
     protected override void Update()
     {
+        if(isAlive&&!pause.get_state()&&ControlsIndex==1) cursorManager.SetTargetTexture(new Vector2(16, 16));
+        else cursorManager.SetCursorTexture(new Vector2(16, 16));
         if (AutoSave) { uiManager.Save(); }
        // else Debug.Log("Autosave is off");
         if (!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
@@ -308,13 +317,22 @@ public class Player : Character
             {
                 direction += Vector2.right;
             }
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (Input.GetKey(KeyCode.LeftArrow)&&ControlsIndex==0)
             {
                 transform.Rotate(0, 0, 3.5f);
             }
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.RightArrow)&&ControlsIndex==0)
             {
                 transform.Rotate(0, 0, -3.5f);
+            }
+            if (ControlsIndex == 1&&!pause.get_state())
+            {
+                Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                mousePos.z = 0f;
+
+                Vector3 direction = mousePos - transform.position;
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0, 0, angle-90f);
             }
             /*
             if (Input.GetKey(KeyCode.P))
@@ -337,7 +355,7 @@ public class Player : Character
                 audioManager.PlayReloadSFX();
                 Reload();
             }
-            if (Input.GetKey(KeyCode.Space) && ((canShoot && ammo>0 && !pause.get_state()&& !InfiniteFire)||(canShoot&&InfiniteFire)))
+            if (ControlsIndex==0&&Input.GetKey(KeyCode.Space) && ((canShoot && ammo>0 && !pause.get_state()&& !InfiniteFire)||(canShoot&&InfiniteFire)))
             {
                 
                 Debug.Log("FireRate:" + fire_rate);
@@ -345,6 +363,17 @@ public class Player : Character
                 else audioManager.PlayMinigun();
                 shooting.Shoot(Offset);
                 if(!InfiniteFire) ammo -= 1;
+                canShoot = false;
+                StartCoroutine(Timer());
+            }
+            if (ControlsIndex == 1 && Input.GetMouseButton(0) && ((canShoot && ammo > 0 && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
+            {
+
+                Debug.Log("FireRate:" + fire_rate);
+                if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
+                else audioManager.PlayMinigun();
+                shooting.Shoot(Offset);
+                if (!InfiniteFire) ammo -= 1;
                 canShoot = false;
                 StartCoroutine(Timer());
             }

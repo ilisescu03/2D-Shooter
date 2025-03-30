@@ -35,6 +35,7 @@ public class GameOverMenu : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
+        Time.timeScale = 0;
         timer.stop_timer();
     }
 
@@ -42,6 +43,7 @@ public class GameOverMenu : MonoBehaviour
     public void Hide()
     {
         timer.resetTime();
+        Time.timeScale = 1;
         gameObject.SetActive(false);
     }
     public void MainMenu()
