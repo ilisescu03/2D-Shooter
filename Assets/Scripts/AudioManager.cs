@@ -19,6 +19,18 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField]
     private AudioClip MinigunShot;
+
+    [SerializeField]
+    private AudioClip emptyGun;
+
+    [SerializeField]
+    private AudioClip CoinCollect;
+
+
+    [SerializeField]
+    private AudioClip Purchase;
+
+
     public void PlaySFX(AudioClip clip)
     {
         SFXSource.PlayOneShot(clip);
@@ -38,5 +50,17 @@ public class AudioManager : MonoBehaviour
     public void PlayHurt()
     {
         SFXSource.PlayOneShot(Hurt);
+    }
+    public void PlayEmptySFX()
+    {
+        SFXSource.PlayOneShot(emptyGun);
+    }
+    public void PlayPurchaseSFX()
+    {
+        SFXSource.PlayOneShot(Purchase);
+    }
+    public void PlayCollectSFX()
+    {
+        SFXSource.PlayOneShot(CoinCollect);
     }
 }

@@ -36,7 +36,21 @@ public class UIManager : MonoBehaviour
     private GameObject NotEnoughCoins;
     [SerializeField]
     private ControlsManager controlsManager;
+    [SerializeField]
+    private GameObject[] SelectFrame;
     private string temporaryText;
+   
+    public void SetSelectFrame(int index)
+    {
+        for (int i = 0; i < SelectFrame.Length; i++)
+        {
+            if (i == index)
+            {
+                SelectFrame[i].SetActive(true);
+            }
+            else SelectFrame[i].SetActive(false);
+        }
+    }
     public void NotEnoughCoinsShow()
     {
         NotEnoughCoins.SetActive(true);
@@ -88,6 +102,10 @@ public class UIManager : MonoBehaviour
     public void OptionsHide()
     {
         options.SetActive(false);
+    }
+    public bool isOptionsActive()
+    {
+        return options.activeSelf;
     }
     public void ShopShow()
     {

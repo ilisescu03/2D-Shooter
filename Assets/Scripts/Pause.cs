@@ -9,6 +9,8 @@ public class Pause : MonoBehaviour
     private StartPannel startPanel;
     [SerializeField]
     private Player player;
+    [SerializeField]
+    private UIManager uiManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +42,11 @@ public class Pause : MonoBehaviour
         isPaused = false;
         Time.timeScale = 1;
         gameObject.SetActive(false);
+        uiManager.OptionsHide();
+        uiManager.GameplayHide();
+        uiManager.ControlsHide();
+        uiManager.AimControlsHide();
+        uiManager.VideoHide();
     }
     public void MainMenu()
     {

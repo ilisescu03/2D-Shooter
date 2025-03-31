@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 public class Player : Character
 {
     [SerializeField]
@@ -62,7 +63,23 @@ public class Player : Character
     private AudioManager audioManager;
     [SerializeField]
     private CursorManager cursorManager;
+    [SerializeField]
+    private Button button;
+    private Vector3 lastMousePosition;
+    private bool isMouseMoving=false;
     // Start is called before the first frame update
+    void CheckMouseMovement()
+    {
+        if (Input.mousePosition != lastMousePosition)
+        {
+            isMouseMoving = true;
+        }
+        else
+        {
+            isMouseMoving = false;
+        }
+        lastMousePosition = Input.mousePosition;
+    }
     public void set_InfiniteFire(bool value) { InfiniteFire = value; }
     public void set_ControlsIndex(int value) { if(value==0||value==1) ControlsIndex = value; }
     public void setLayerIndex(int value1, int value2)
@@ -124,12 +141,14 @@ public class Player : Character
     public void AddCoins(int value)
     {
         coins += value;
+        audioManager.PlayCollectSFX();
     }
     public bool RemoveCoins(int value)
     {
         if (value <= coins)
         {
             coins -= value;
+            audioManager.PlayPurchaseSFX();
             return true;
         }
         else
@@ -145,6 +164,24 @@ public class Player : Character
     public bool[] get_WeaponBools()
     {
         return WeaponBools;
+    }
+    bool IsCursorOverButton()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, results);
+
+        foreach (var result in results)
+        {
+            if (result.gameObject == button.gameObject)
+                return true;
+        }
+
+        return false;
     }
     protected override void Start()
     {
@@ -181,8 +218,13 @@ public class Player : Character
     // Update is called once per frame
     protected override void Update()
     {
-        if(isAlive&&!pause.get_state()&&ControlsIndex==1) cursorManager.SetTargetTexture(new Vector2(16, 16));
-        else cursorManager.SetCursorTexture(new Vector2(16, 16));
+        CheckMouseMovement();
+        if (isAlive&&!pause.get_state()&&ControlsIndex==1&&!IsCursorOverButton()) cursorManager.SetTargetTexture(new Vector2(16, 16));
+        if (isAlive && !pause.get_state() && ControlsIndex == 1 && IsCursorOverButton()) cursorManager.SetCursorTexture(new Vector2(16, 16));
+        if(isAlive && !pause.get_state() && ControlsIndex == 0 && isMouseMoving) cursorManager.SetCursorTexture(new Vector2(16, 16));
+        if (isAlive && !pause.get_state() && ControlsIndex == 0 && !isMouseMoving) cursorManager.SetNoCursorTexture(new Vector2(16, 16));
+
+        if(!isAlive||pause.get_state()) cursorManager.SetCursorTexture(new Vector2(16, 16));
         if (AutoSave) { uiManager.Save(); }
        // else Debug.Log("Autosave is off");
         if (!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
@@ -355,32 +397,48 @@ public class Player : Character
                 audioManager.PlayReloadSFX();
                 Reload();
             }
-            if (ControlsIndex==0&&Input.GetKey(KeyCode.Space) && ((canShoot && ammo>0 && !pause.get_state()&& !InfiniteFire)||(canShoot&&InfiniteFire)))
+            if (ControlsIndex == 0 && Input.GetKey(KeyCode.Space) && ((canShoot && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
             {
-                
-                Debug.Log("FireRate:" + fire_rate);
-                if(!isUsingMinigun) audioManager.PlaySFX(gunShot);
-                else audioManager.PlayMinigun();
-                shooting.Shoot(Offset);
-                if(!InfiniteFire) ammo -= 1;
-                canShoot = false;
-                StartCoroutine(Timer());
+                if (ammo > 0)
+                {
+                    Debug.Log("FireRate:" + fire_rate);
+                    if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
+                    else audioManager.PlayMinigun();
+                    shooting.Shoot(Offset);
+                    if (!InfiniteFire) ammo -= 1;
+                    canShoot = false;
+                    StartCoroutine(Timer());
+                }
+                else
+                {
+                    audioManager.PlayEmptySFX();
+                    canShoot = false;
+                    StartCoroutine(Timer());
+                }
             }
-            if (ControlsIndex == 1 && Input.GetMouseButton(0) && ((canShoot && ammo > 0 && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
+            if (!IsCursorOverButton() && ControlsIndex == 1 && Input.GetMouseButton(0) && ((canShoot && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
             {
-
-                Debug.Log("FireRate:" + fire_rate);
-                if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
-                else audioManager.PlayMinigun();
-                shooting.Shoot(Offset);
-                if (!InfiniteFire) ammo -= 1;
-                canShoot = false;
-                StartCoroutine(Timer());
-            }
+                    if (ammo > 0)
+                    {
+                        Debug.Log("FireRate:" + fire_rate);
+                        if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
+                        else audioManager.PlayMinigun();
+                        shooting.Shoot(Offset);
+                        if (!InfiniteFire) ammo -= 1;
+                        canShoot = false;
+                        StartCoroutine(Timer());
+                    }
+                    else
+                    {
+                        audioManager.PlayEmptySFX();
+                    canShoot = false;
+                    StartCoroutine(Timer());
+                }
+                }
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (pause.get_state() == false) pause.TogglePause();
-                else pause.ResumeGame();
+                else { pause.ResumeGame(); }
             }
         }
         

@@ -8,6 +8,12 @@ public class CursorManager : MonoBehaviour
     Texture2D cursorTexture;
     [SerializeField]
     Texture2D targetTexture;
+    [SerializeField]
+    Texture2D noCoursor;
+    public void SetNoCursorTexture(Vector2 hotspot)
+    {
+        Cursor.SetCursor(noCoursor, hotspot, CursorMode.Auto);
+    }
     public void SetCursorTexture(Vector2 hotspot)
     {
         Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
