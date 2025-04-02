@@ -67,6 +67,8 @@ public class Player : Character
     private Button button;
     private Vector3 lastMousePosition;
     private bool isMouseMoving=false;
+    private bool isInitialized = false;
+    private bool isReloading = false;
     // Start is called before the first frame update
     void CheckMouseMovement()
     {
@@ -145,10 +147,11 @@ public class Player : Character
     }
     public bool RemoveCoins(int value)
     {
+        
         if (value <= coins)
         {
             coins -= value;
-            audioManager.PlayPurchaseSFX();
+            if (isInitialized) audioManager.PlayPurchaseSFX();
             return true;
         }
         else
@@ -200,7 +203,7 @@ public class Player : Character
         shooting = GetComponent<Shooting>();
         high_score =SaveManager.LoadHighScore();
         coins = SaveManager.LoadCoins();
-        coins = 10000;
+        coins = 500;
         angle = SaveManager.LoadAngle();
         WeaponBools = SaveManager.LoadWeapons();
         if(WeaponBools==null)
@@ -213,11 +216,13 @@ public class Player : Character
         }
         uiManager.Set_Text(score, high_score, WaveIndex);
         uiManager.Set_Ammo_Text(ammo, maxammo);
+        isInitialized = true;
     }
 
     // Update is called once per frame
     protected override void Update()
     {
+        
         CheckMouseMovement();
         if (isAlive&&!pause.get_state()&&ControlsIndex==1&&!IsCursorOverButton()) cursorManager.SetTargetTexture(new Vector2(16, 16));
         if (isAlive && !pause.get_state() && ControlsIndex == 1 && IsCursorOverButton()) cursorManager.SetCursorTexture(new Vector2(16, 16));
@@ -335,6 +340,13 @@ public class Player : Character
             maxammo = 0;
 
         }
+        isReloading = false;
+    }
+    public IEnumerator Reloading()
+    {
+        isReloading = true;
+        yield return new WaitForSeconds(2f);
+        Reload();
     }
     void GetInput()
     {
@@ -392,12 +404,12 @@ public class Player : Character
             }
             
             */
-            if (Input.GetKeyDown(KeyCode.R)&&!pause.get_state())
+            if (Input.GetKeyDown(KeyCode.R)&&!Input.GetKey(KeyCode.Space)&&!pause.get_state())
             {
                 audioManager.PlayReloadSFX();
-                Reload();
+                StartCoroutine(Reloading());
             }
-            if (ControlsIndex == 0 && Input.GetKey(KeyCode.Space) && ((canShoot && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
+            if (ControlsIndex == 0 && Input.GetKey(KeyCode.Space)&&!isReloading&& ((canShoot && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
             {
                 if (ammo > 0)
                 {
@@ -416,7 +428,7 @@ public class Player : Character
                     StartCoroutine(Timer());
                 }
             }
-            if (!IsCursorOverButton() && ControlsIndex == 1 && Input.GetMouseButton(0) && ((canShoot && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
+            if (!IsCursorOverButton() && ControlsIndex == 1 && Input.GetMouseButton(0) && !isReloading && ((canShoot && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
             {
                     if (ammo > 0)
                     {
