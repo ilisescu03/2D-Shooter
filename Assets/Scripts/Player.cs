@@ -69,6 +69,9 @@ public class Player : Character
     private bool isMouseMoving=false;
     private bool isInitialized = false;
     private bool isReloading = false;
+    [SerializeField]
+    private Keybinds keybinds;
+    
     // Start is called before the first frame update
     void CheckMouseMovement()
     {
@@ -188,8 +191,9 @@ public class Player : Character
     }
     protected override void Start()
     {
+        keybinds.InitializeKeys();
         cursorManager.SetCursorTexture(new Vector2(16, 16));
-        
+        uiManager.HideReloading();
         Time.timeScale = 0;
         MAXValue = Random.Range(75, 225);
         fire_rate = weapon.getFireRate();
@@ -341,75 +345,60 @@ public class Player : Character
 
         }
         isReloading = false;
+        uiManager.HideReloading();
     }
     public IEnumerator Reloading()
     {
         isReloading = true;
+        uiManager.ShowReloading();
         yield return new WaitForSeconds(2f);
         Reload();
     }
     void GetInput()
     {
-
-        //Primeste de la tastatura input
+        // Primeste de la tastatura input
         if (isAlive)
         {
             direction = Vector2.zero;
-            if (Input.GetKey(KeyCode.W))
+            if (Input.GetKey(keybinds.keys["Up"]))
             {
                 direction += Vector2.up;
             }
-            if (Input.GetKey(KeyCode.S))
+            if (Input.GetKey(keybinds.keys["Down"]))
             {
                 direction += Vector2.down;
             }
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(keybinds.keys["Left"]))
             {
                 direction += Vector2.left;
             }
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(keybinds.keys["Right"]))
             {
                 direction += Vector2.right;
             }
-            if (Input.GetKey(KeyCode.LeftArrow)&&ControlsIndex==0)
+            if (Input.GetKey(KeyCode.LeftArrow) && ControlsIndex == 0)
             {
                 transform.Rotate(0, 0, 3.5f);
             }
-            if (Input.GetKey(KeyCode.RightArrow)&&ControlsIndex==0)
+            if (Input.GetKey(KeyCode.RightArrow) && ControlsIndex == 0)
             {
                 transform.Rotate(0, 0, -3.5f);
             }
-            if (ControlsIndex == 1&&!pause.get_state())
+            if (ControlsIndex == 1 && !pause.get_state())
             {
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 mousePos.z = 0f;
 
                 Vector3 direction = mousePos - transform.position;
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0, 0, angle-90f);
+                transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
             }
-            /*
-            if (Input.GetKey(KeyCode.P))
-            {
-                TakeDamage(10);
-            }
-            
-            if (Input.GetKey(KeyCode.O))
-            {
-                Heal(10);
-            }
-            if (Input.GetKey(KeyCode.X))
-            {
-                Increase_Score(10);
-            }
-            
-            */
-            if (Input.GetKeyDown(KeyCode.R)&&!Input.GetKey(KeyCode.Space)&&!pause.get_state())
+            if (Input.GetKeyDown(KeyCode.R) && !Input.GetKey(KeyCode.Space) && !pause.get_state())
             {
                 audioManager.PlayReloadSFX();
                 StartCoroutine(Reloading());
             }
-            if (ControlsIndex == 0 && Input.GetKey(KeyCode.Space)&&!isReloading&& ((canShoot && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
+            if (ControlsIndex == 0 && Input.GetKey(KeyCode.Space) && !isReloading && ((canShoot && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
             {
                 if (ammo > 0)
                 {
@@ -430,31 +419,31 @@ public class Player : Character
             }
             if (!IsCursorOverButton() && ControlsIndex == 1 && Input.GetMouseButton(0) && !isReloading && ((canShoot && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
             {
-                    if (ammo > 0)
-                    {
-                        Debug.Log("FireRate:" + fire_rate);
-                        if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
-                        else audioManager.PlayMinigun();
-                        shooting.Shoot(Offset);
-                        if (!InfiniteFire) ammo -= 1;
-                        canShoot = false;
-                        StartCoroutine(Timer());
-                    }
-                    else
-                    {
-                        audioManager.PlayEmptySFX();
+                if (ammo > 0)
+                {
+                    Debug.Log("FireRate:" + fire_rate);
+                    if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
+                    else audioManager.PlayMinigun();
+                    shooting.Shoot(Offset);
+                    if (!InfiniteFire) ammo -= 1;
                     canShoot = false;
                     StartCoroutine(Timer());
                 }
+                else
+                {
+                    audioManager.PlayEmptySFX();
+                    canShoot = false;
+                    StartCoroutine(Timer());
                 }
+            }
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (pause.get_state() == false) pause.TogglePause();
                 else { pause.ResumeGame(); }
             }
         }
-        
     }
+
     IEnumerator DamageEffect()
     {
         audioManager.PlayHurt();

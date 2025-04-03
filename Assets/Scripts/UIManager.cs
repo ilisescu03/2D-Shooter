@@ -29,7 +29,11 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject Video;
     [SerializeField]
+    private GameObject Audio;
+    [SerializeField]
     private GameObject HUD;
+    [SerializeField]
+    private GameObject Keybinds;
     [SerializeField]
     private GameObject Shop;
     [SerializeField]
@@ -39,7 +43,24 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject[] SelectFrame;
     private string temporaryText;
-   
+    [SerializeField]
+    private GameObject ReloadingImage;
+    private void Update()
+    {
+        if (ReloadingImage.activeSelf)
+        {
+            ReloadingImage.transform.Rotate(0, 0, 135 * Time.deltaTime);
+        }
+
+    }
+    public void ShowReloading()
+    {
+        ReloadingImage.SetActive(true);
+    }
+    public void HideReloading()
+    {
+        ReloadingImage.SetActive(false);
+    }
     public void SetSelectFrame(int index)
     {
         for (int i = 0; i < SelectFrame.Length; i++)
@@ -50,6 +71,14 @@ public class UIManager : MonoBehaviour
             }
             else SelectFrame[i].SetActive(false);
         }
+    }
+    public void KeybindsShow()
+    {
+        Keybinds.SetActive(true);
+    }
+    public void KeybindsHide()
+    {
+        Keybinds.SetActive(false);
     }
     public void NotEnoughCoinsShow()
     {
@@ -102,6 +131,14 @@ public class UIManager : MonoBehaviour
     public void OptionsHide()
     {
         options.SetActive(false);
+    }
+    public void AudioShow()
+    {
+        Audio.SetActive(true);
+    }
+    public void AudioHide()
+    {
+        Audio.SetActive(false);
     }
     public bool isOptionsActive()
     {
