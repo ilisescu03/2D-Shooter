@@ -6926,6 +6926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bb3fadf9e7761488ee9a06956aa02b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 11
   gunShot: {fileID: 8300000, guid: c37e5185ffbf31d448baeea8199a8e33, type: 3}
   ammoPerRound: 15
   ID: 0
@@ -8156,6 +8157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bb3fadf9e7761488ee9a06956aa02b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 10
   gunShot: {fileID: 8300000, guid: cd46969cab3a30945995a5c67f108288, type: 3}
   ammoPerRound: 25
   ID: 1
@@ -8706,6 +8708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99bb3fadf9e7761488ee9a06956aa02b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 9
   gunShot: {fileID: 8300000, guid: 0e21d916305bb4c4d802f27866724480, type: 3}
   ammoPerRound: 35
   ID: 2

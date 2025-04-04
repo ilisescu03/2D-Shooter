@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Shooting : MonoBehaviour
 {
+    
     [SerializeField]
     private Transform origin;
     [SerializeField]
@@ -42,13 +43,15 @@ public class Shooting : MonoBehaviour
     {
 
     }
-    public void Shoot(float Offset)
+    
+    public void Shoot(float Offset, float damage)
     {
 
 
         if (!player.IsUsingMinigun())
         {
             bullet = Instantiate(bulletPrefab, origin.position + origin.up * Offset, origin.rotation);
+            bullet.GetComponent<Bullet>().setDamage(damage);
             rb = bullet.GetComponent<Rigidbody2D>();
             rb.AddForce(origin.up * bulletForce, ForceMode2D.Impulse);
 

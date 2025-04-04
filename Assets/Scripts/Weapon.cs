@@ -5,6 +5,8 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField]
+    private float damage;
+    [SerializeField]
     private AudioClip gunShot;
     [SerializeField]
     private int ammoPerRound;
@@ -50,6 +52,7 @@ public class Weapon : MonoBehaviour
         player.setNewWeapon(maxAmmo, ammoPerRound, this, WeaponObject, gunShot);
         player.set_fire_rate(fireRate);
         player.set_offset(Offset);
+        player.setDamage(damage);
         isEquiped = true;
     }
     public void Unassign()
@@ -72,5 +75,8 @@ public class Weapon : MonoBehaviour
     {
         return Offset;
     }
-   
+    public float getDamage()
+    {
+        return damage;
+    }
 }

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    private float damage=10f;
+    public void setDamage(float damage)
+    {
+        this.damage = damage;
+    }
     public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Wall")
@@ -21,7 +26,7 @@ public class Bullet : MonoBehaviour
         if(other.tag=="Enemy")
         {
             Enemy enemy = other.GetComponent<Enemy>();
-            enemy.TakeDamage(10);
+            enemy.TakeDamage(damage);
             Destroy(gameObject);
         }
     }

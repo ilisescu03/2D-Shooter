@@ -51,6 +51,7 @@ public class Player : Character
     [SerializeField]
     private int ammoPerRound;
     private int MAXValue;
+    private float ShootingDamage;
     [SerializeField]
     private Timer timer;
     private bool InfiniteFire = false;
@@ -116,6 +117,7 @@ public class Player : Character
     public void set_fire_rate(float value) { fire_rate = value; }
     public void set_offset(float value) { Offset = value; }
     public void setBool(int index) { WeaponBools[index] = true; }
+    public void setDamage(float value) { ShootingDamage = value; }
     public void setNewWeapon(int value, int value2, Weapon newWeapon, GameObject _WeaponObject, AudioClip clip) 
     {
         gunShot = clip;
@@ -199,7 +201,8 @@ public class Player : Character
         Time.timeScale = 0;
         MAXValue = Random.Range(75, 225);
         fire_rate = weapon.getFireRate();
-       // ammoPerRound = weapon.getAmmoPerRound();
+        ShootingDamage = weapon.getDamage();
+        // ammoPerRound = weapon.getAmmoPerRound();
         maxammo = weapon.getAmmo() - ammoPerRound;
         ammo = ammoPerRound;
         if (ammo == 0 && maxammo > 0)
@@ -418,7 +421,7 @@ public class Player : Character
                     Debug.Log("FireRate:" + fire_rate);
                     if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
                     else audioManager.PlayMinigun();
-                    shooting.Shoot(Offset);
+                    shooting.Shoot(Offset, ShootingDamage);
                     if (!InfiniteFire) ammo -= 1;
                     canShoot = false;
                     StartCoroutine(Timer());
@@ -437,7 +440,7 @@ public class Player : Character
                     Debug.Log("FireRate:" + fire_rate);
                     if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
                     else audioManager.PlayMinigun();
-                    shooting.Shoot(Offset);
+                    shooting.Shoot(Offset, ShootingDamage);
                     if (!InfiniteFire) ammo -= 1;
                     canShoot = false;
                     StartCoroutine(Timer());
