@@ -9,7 +9,9 @@ public class AudioManager : MonoBehaviour
     private AudioSource musicSource;
     [SerializeField]
     private AudioSource SFXSource;
-   [SerializeField]
+    [SerializeField]
+    private Slider masterSlider;
+    [SerializeField]
     private Slider musicSlider;
     [SerializeField]
     private Slider SFXSlider;
@@ -57,6 +59,11 @@ public class AudioManager : MonoBehaviour
         {
             musicSource.Stop();
         }
+    }
+    public void SetMasterVolume()
+    {
+        float volume = masterSlider.value;
+        audioMixer.SetFloat("master", Mathf.Log10(volume) * 20);
     }
     public void SetMusicVolume()
     {

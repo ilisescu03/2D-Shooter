@@ -343,17 +343,19 @@ public class Player : Character
     }
     public void Reload()
     {
-        if (maxammo - ammoPerRound >= 0)
+        if (maxammo > 0)
         {
-            
-            maxammo = maxammo - ammoPerRound +ammo;
-            ammo = ammoPerRound;
-        }
-        if(maxammo-ammoPerRound<0&&maxammo!=0)
-        {
-            ammo = ammoPerRound - maxammo + ammo;
-            maxammo = 0;
+            int ammoNeeded = ammoPerRound - ammo;
+            if (maxammo >= ammoNeeded)
+            {
 
+                maxammo -= ammoNeeded;
+                ammo += ammoNeeded;
+            }
+            else {
+                ammo += maxammo;
+                maxammo = 0;
+            }
         }
         isReloading = false;
         uiManager.HideReloading();
