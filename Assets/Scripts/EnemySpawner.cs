@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class EnemySpawner : Spawner
 {
+    int prefabIndex=0;
     private GameObject enemy;
     [SerializeField]
     private GameObject[] enemyPrefab;
-    [SerializeField]
-    private GameObject[] activeEnemyPrefab;
+
+    private List<GameObject> activeEnemyPrefab;
     [SerializeField]
     private AudioManager audioMananger;
 
@@ -16,14 +17,33 @@ public class EnemySpawner : Spawner
     protected override void Start()
     {
         base.Start();
+        activeEnemyPrefab = new List<GameObject>();
+        activeEnemyPrefab.Add(enemyPrefab[prefabIndex]);
+        StopAllCoroutines();
         StartCoroutine(SpawnLoop());
     }
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
-        if (player.get_Wave_Index() == 1) activeEnemyPrefab = new GameObject[] { enemyPrefab[0] };
-        if(player.get_Wave_Index()==2) activeEnemyPrefab = new GameObject[] { enemyPrefab[0], enemyPrefab[1] };
+        
+    }
+    public void insertInVector()
+    {
+        if (prefabIndex+ 1 < enemyPrefab.Length)
+        {
+
+            prefabIndex++;
+            activeEnemyPrefab.Add(enemyPrefab[prefabIndex]);
+
+        }
+       
+    }
+    public void clearVector()
+    {
+        activeEnemyPrefab.Clear();
+        prefabIndex = 0;
+        activeEnemyPrefab.Add(enemyPrefab[prefabIndex]);
     }
     float getValue(float min, float max, float excluded_min, float excluded_max)
     {
@@ -43,7 +63,7 @@ public class EnemySpawner : Spawner
     void Spawn()
     {
         audioMananger.PlayZombieSpawn();
-        int index = Random.Range(0, activeEnemyPrefab.Length);
+        int index = Random.Range(0, activeEnemyPrefab.Count);
         enemy = Instantiate(activeEnemyPrefab[index], SpawnPoint, Quaternion.identity);
     }
     IEnumerator SpawnLoop()

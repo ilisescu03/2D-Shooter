@@ -59,6 +59,8 @@ public class Player : Character
     [SerializeField]
     private AudioClip gunShot;
     private int scoreCount=0;
+    private int scoreCount2 = 0;
+    private int changeWave = 1200;
     [SerializeField]
     private AudioManager audioManager;
     [SerializeField]
@@ -274,6 +276,10 @@ public class Player : Character
     {
         isAlive = false;
         WaveIndex = 1;
+        scoreCount2 = 0;
+        scoreCount = 0;
+        spawner.clearVector();
+        changeWave = 1200;
         Debug.Log("Dead");
         
     }
@@ -286,7 +292,7 @@ public class Player : Character
     {
         score += points;
         scoreCount+=points;
-        
+        scoreCount2 += points;
         if(scoreCount>=MAXValue)
         {
             mintime /= 1.25f;
@@ -297,12 +303,16 @@ public class Player : Character
                 maxtime = 1f;
             }
             scoreCount = 0;
+
             MAXValue = Random.Range(40, 100);
             spawner.set_spawnTime(mintime, maxtime);
         }
-        if (score > 1500 && WaveIndex==1)
+        if (scoreCount2 >= changeWave)
         {
-            WaveIndex = 2;
+            WaveIndex ++;
+            scoreCount2 = 0;
+            changeWave += 1200;
+            spawner.insertInVector();
             mintime = 3f;
             maxtime = 6f;
             spawner.set_spawnTime(mintime, maxtime);
@@ -327,6 +337,7 @@ public class Player : Character
         }
         WaveIndex = 1;
         score = 0;
+        
         spawner.set_spawnTime(4,8);
         uiManager.Set_Text(score, high_score, WaveIndex);
     }
