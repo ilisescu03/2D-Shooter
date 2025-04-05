@@ -45,6 +45,8 @@ public class UIManager : MonoBehaviour
     private string temporaryText;
     [SerializeField]
     private GameObject ReloadingImage;
+    [SerializeField]
+    private GameObject StatsPannel;
     private void Update()
     {
         if (ReloadingImage.activeSelf)
@@ -52,6 +54,14 @@ public class UIManager : MonoBehaviour
             ReloadingImage.transform.Rotate(0, 0, 135 * Time.deltaTime);
         }
 
+    }
+    public void ShowStatsPannel()
+    {
+        StatsPannel.SetActive(true);
+    }
+    public void HideStatsPannel()
+    {
+        StatsPannel.SetActive(false);
     }
     public void ShowReloading()
     {
