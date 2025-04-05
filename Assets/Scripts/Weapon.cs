@@ -5,6 +5,8 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField]
+    private SpriteRenderer spriteRenderer;
+    [SerializeField]
     private float damage;
     [SerializeField]
     private AudioClip gunShot;
@@ -42,6 +44,11 @@ public class Weapon : MonoBehaviour
         else isBought = false;
         return isBought;
     }
+    
+    public Sprite getSprite()
+    {
+        return spriteRenderer.sprite;
+    }
     public void SetSaved()
     {
         isBought = true;
@@ -58,6 +65,10 @@ public class Weapon : MonoBehaviour
     public void Unassign()
     {
         isEquiped = false;
+    }
+    public string getName()
+    {
+        return name;
     }
     public int getAmmo()
     {

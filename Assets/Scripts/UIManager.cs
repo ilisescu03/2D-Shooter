@@ -55,9 +55,10 @@ public class UIManager : MonoBehaviour
         }
 
     }
-    public void ShowStatsPannel()
+    public void ShowStatsPannel(Weapon weapon)
     {
         StatsPannel.SetActive(true);
+        StatsPannel.GetComponent<WeaponStats>().SetStats(weapon);
     }
     public void HideStatsPannel()
     {

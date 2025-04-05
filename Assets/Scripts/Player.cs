@@ -118,6 +118,7 @@ public class Player : Character
     public void set_offset(float value) { Offset = value; }
     public void setBool(int index) { WeaponBools[index] = true; }
     public void setDamage(float value) { ShootingDamage = value; }
+    public Weapon getCurrentWeapon() { return weapon; }
     public void setNewWeapon(int value, int value2, Weapon newWeapon, GameObject _WeaponObject, AudioClip clip) 
     {
         gunShot = clip;
