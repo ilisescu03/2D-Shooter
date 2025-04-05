@@ -40,9 +40,24 @@ public class AudioManager : MonoBehaviour
     private AudioClip MainMenuMusic;
 
     public AudioMixer audioMixer;
+
+    [SerializeField]
+    private GameObject startPannel;
     void Start()
     {
         SetMusicVolume();
+    }
+    void Update()
+    {
+        if(!musicSource.isPlaying&&startPannel.activeSelf)
+        {
+            musicSource.clip = MainMenuMusic;
+            musicSource.Play();
+        }
+        if (musicSource.isPlaying && !startPannel.activeSelf)
+        {
+            musicSource.Stop();
+        }
     }
     public void PlayMainMenuMusic()
     {

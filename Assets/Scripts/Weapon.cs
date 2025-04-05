@@ -34,6 +34,18 @@ public class Weapon : MonoBehaviour
     private float Offset;
     [SerializeField]
     private SelectingWeapon selectingWeapon;
+    [SerializeField]
+    private float fireRatePercentage;
+    [SerializeField]
+    private float damagePercentage;
+    public float getFireRatePercentage()
+    {
+        return fireRatePercentage;
+    }
+    public float getDamagePercentage()
+    {
+        return damagePercentage;
+    }
     public bool Buy()
     {
         if (player.RemoveCoins(price))

@@ -19,8 +19,8 @@ public class WeaponStats : MonoBehaviour
         weapon = _weapon;
         WeaponIcon.sprite = weapon.getSprite();
         WeaponName.text = weapon.getName();
-        FireRateFill.fillAmount = weapon.getFireRate() / 10;
-        DamageFill.fillAmount = weapon.getDamage() / 100;
+        FireRateFill.fillAmount = weapon.getFireRatePercentage() / 100;
+        DamageFill.fillAmount = weapon.getDamagePercentage() / 100;
     }
     // Start is called before the first frame update
     void Start()

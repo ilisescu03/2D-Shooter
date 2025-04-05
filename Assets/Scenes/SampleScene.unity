@@ -2712,6 +2712,8 @@ MonoBehaviour:
   WeaponObject: {fileID: 7739962509644464778, guid: bbf3feac737f07a478f0f2f26b356ebc, type: 3}
   Offset: 0
   selectingWeapon: {fileID: 695930303}
+  fireRatePercentage: 0
+  damagePercentage: 0
 --- !u!114 &238019341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5980,7 +5982,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
   m_Name: 
@@ -7888,6 +7890,8 @@ MonoBehaviour:
   WeaponObject: {fileID: 7739962509644464778, guid: bbf3feac737f07a478f0f2f26b356ebc, type: 3}
   Offset: 0
   selectingWeapon: {fileID: 695930303}
+  fireRatePercentage: 23
+  damagePercentage: 40
 --- !u!1 &702526138
 GameObject:
   m_ObjectHideFlags: 0
@@ -9120,6 +9124,8 @@ MonoBehaviour:
   WeaponObject: {fileID: 5735661732026128959, guid: 27a2d806d3f9ac946aacdc484b5f6960, type: 3}
   Offset: 0
   selectingWeapon: {fileID: 783062072}
+  fireRatePercentage: 40
+  damagePercentage: 35
 --- !u!114 &783062074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9674,6 +9680,8 @@ MonoBehaviour:
   WeaponObject: {fileID: 1586008877620069424, guid: 70d6e18ef10777d4e98231d99ad2782d, type: 3}
   Offset: 0.1
   selectingWeapon: {fileID: 839118254}
+  fireRatePercentage: 70
+  damagePercentage: 30
 --- !u!114 &839118256
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18365,6 +18373,7 @@ MonoBehaviour:
   Purchase: {fileID: 8300000, guid: 4b49c83e19db6834682945262e5a2a9f, type: 3}
   MainMenuMusic: {fileID: 8300000, guid: 5504a10a82cdc27419bca48e8909e7af, type: 3}
   audioMixer: {fileID: 24100000, guid: b16c4e7914aea0a41b2e0329d850bb1a, type: 2}
+  startPannel: {fileID: 1656397220}
 --- !u!1 &1227026174
 GameObject:
   m_ObjectHideFlags: 0
