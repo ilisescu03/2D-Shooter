@@ -108,6 +108,11 @@ public class Player : Character
         if (state) { animator.SetLayerWeight(1, 1); isUsingMinigun = true;  WeaponObject.SetActive(false); }
         else { animator.SetLayerWeight(1, 0); isUsingMinigun = false; WeaponObject.SetActive(true); }
     }
+    public bool nextWave()
+    {
+        if (scoreCount2 >= changeWave) return true;
+        else return false;
+    }
     public void set_AutoSave(bool value) { AutoSave = value; }
     public int get_Wave_Index() { return WaveIndex; }
     public int get_coins() {  return coins; }
@@ -284,6 +289,10 @@ public class Player : Character
         scoreCount = 0;
         spawner.clearVector();
         changeWave = 1200;
+        spawner.set_spawnTime(4, 8);
+        spawner.ResetNumberOfZombies();
+        mintime = 4;
+        maxtime = 8;
         Debug.Log("Dead");
         
     }
@@ -427,7 +436,14 @@ public class Player : Character
                     canShoot = false;
                     StartCoroutine(Timer());
                 }
-                else
+                if(ammo==0 && isUsingMinigun)
+                {
+                    audioManager.PlayMinigun();
+                    shooting.Shoot(Offset, ShootingDamage);
+                    canShoot = false;
+                    StartCoroutine(Timer());
+                }
+                if(ammo==0 && !isUsingMinigun)
                 {
                     audioManager.PlayEmptySFX();
                     canShoot = false;
@@ -446,7 +462,14 @@ public class Player : Character
                     canShoot = false;
                     StartCoroutine(Timer());
                 }
-                else
+                if (ammo == 0 && isUsingMinigun)
+                {
+                    audioManager.PlayMinigun();
+                    shooting.Shoot(Offset, ShootingDamage);
+                    canShoot = false;
+                    StartCoroutine(Timer());
+                }
+                if (ammo == 0 && !isUsingMinigun)
                 {
                     audioManager.PlayEmptySFX();
                     canShoot = false;

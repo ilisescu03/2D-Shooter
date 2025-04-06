@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class EnemySpawner : Spawner
 {
-    int prefabIndex=0;
+    private int prefabIndex=0;
     private GameObject enemy;
     [SerializeField]
     private GameObject[] enemyPrefab;
-
+    private int numberOfZombies;
     private List<GameObject> activeEnemyPrefab;
     [SerializeField]
     private AudioManager audioMananger;
@@ -16,6 +16,7 @@ public class EnemySpawner : Spawner
     // Start is called before the first frame update
     protected override void Start()
     {
+        numberOfZombies = 0;
         base.Start();
         activeEnemyPrefab = new List<GameObject>();
         activeEnemyPrefab.Add(enemyPrefab[prefabIndex]);
@@ -27,6 +28,10 @@ public class EnemySpawner : Spawner
     {
         base.Update();
         
+    }
+    public void ResetNumberOfZombies()
+    {
+        numberOfZombies = 0;
     }
     public void insertInVector()
     {
@@ -65,7 +70,13 @@ public class EnemySpawner : Spawner
         audioMananger.PlayZombieSpawn();
         int index = Random.Range(0, activeEnemyPrefab.Count);
         enemy = Instantiate(activeEnemyPrefab[index], SpawnPoint, Quaternion.identity);
+        numberOfZombies++;
     }
+    public void DecreaseZombies()
+    {
+        numberOfZombies--;
+    }
+    
     IEnumerator SpawnLoop()
     {
         while (true)
@@ -73,7 +84,7 @@ public class EnemySpawner : Spawner
             yield return new WaitForSeconds(spawnTime);
             getPosition();
 
-            Spawn();
+            if(numberOfZombies<=50) Spawn();
         }
 
     }

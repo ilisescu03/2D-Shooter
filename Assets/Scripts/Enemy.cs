@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Enemy : Character
 {
+
+    private EnemySpawner enemySpawner;
     [SerializeField]
     private int ID;
     [SerializeField]
@@ -17,6 +19,7 @@ public class Enemy : Character
     protected override void Start()
     {
         target = FindObjectOfType<Player>();
+        enemySpawner = FindObjectOfType<EnemySpawner>();
     }
 
     // Update is called once per frame
@@ -27,6 +30,10 @@ public class Enemy : Character
         FixedAttack();
         Clear();
         base.Update();
+        if(target.nextWave())
+        {
+            Destroy(gameObject);
+        }
         
     }
     private void Clear()
@@ -58,6 +65,7 @@ public class Enemy : Character
             {
                 coin = Instantiate(coinPrefab, transform.position, Quaternion.identity);
             }
+            enemySpawner.DecreaseZombies();
             Destroy(gameObject);
             target.Increase_Score(ScorePoints);
         }
