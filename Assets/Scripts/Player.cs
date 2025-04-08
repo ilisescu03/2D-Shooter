@@ -55,8 +55,8 @@ public class Player : Character
     [SerializeField]
     private Timer timer;
     private bool InfiniteFire = false;
-    private float mintime = 4;
-    private float maxtime = 8;
+    private float mintime = 3.5f;
+    private float maxtime = 7f;
     [SerializeField]
     private AudioClip gunShot;
     private int scoreCount=0;
@@ -261,7 +261,7 @@ public class Player : Character
         }
         healthbar.fillAmount = health / maxhealth;
 
-        if (!isAlive) spawner.set_spawnTime(4, 8);
+        if (!isAlive) spawner.set_spawnTime(3.5f, 7f);
 
     }
     public void ResetAmmo()
@@ -289,10 +289,10 @@ public class Player : Character
         scoreCount = 0;
         spawner.clearVector();
         changeWave = 1200;
-        spawner.set_spawnTime(4, 8);
+        spawner.set_spawnTime(3.5f, 7f);
         spawner.ResetNumberOfZombies();
-        mintime = 4;
-        maxtime = 8;
+        mintime = 3.5f;
+        maxtime = 7f;
         Debug.Log("Dead");
         
     }
@@ -310,10 +310,10 @@ public class Player : Character
         {
             mintime /= 1.25f;
             maxtime /= 1.25f;
-            if(mintime<1||maxtime<1)
+            if(mintime<0.75f||maxtime<0.75f)
             {
-                mintime = 1f;
-                maxtime = 1f;
+                mintime = 0.75f;
+                maxtime = 0.75f;
             }
             scoreCount = 0;
 

@@ -15,8 +15,8 @@ public class CollectibleSpawner : Spawner
     }
     void getPosition()
     {
-        float x = Random.Range(-8f, 8f);
-        float y = Random.Range(-4.06f, 4.06f);
+        float x = Random.Range(-11f, 11f);
+        float y = Random.Range(-6.5f, 6.5f);
         SpawnPoint = new Vector2(x, y);
     }
     void Spawn()

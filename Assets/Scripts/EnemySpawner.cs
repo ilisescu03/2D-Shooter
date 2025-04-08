@@ -63,7 +63,7 @@ public class EnemySpawner : Spawner
     }
     void getPosition()
     {
-        SpawnPoint = new Vector2(getValue(-8f, 8f, -4.07f, 4.07f), getValue(-4.06f, 4.06f, -1.9f, 1.9f));
+        SpawnPoint = new Vector2(getValue(-11f, 11f, -6.5f, 6.5f), getValue(-4f, 4f, -1f, 1f));
     }
     void Spawn()
     {
@@ -84,7 +84,7 @@ public class EnemySpawner : Spawner
             yield return new WaitForSeconds(spawnTime);
             getPosition();
 
-            if(numberOfZombies<=50) Spawn();
+            if(numberOfZombies<=80) Spawn();
         }
 
     }
