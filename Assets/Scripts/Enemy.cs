@@ -77,7 +77,14 @@ public class Enemy : Character
         yield return new WaitForSeconds(0.2f);
         effect.color = Color.white;
     }
-    
+    public static void ClearAll()
+    {
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
+        foreach (Enemy enemy in enemies)
+        {
+            Destroy(enemy.gameObject);
+        }
+    }
     public void FixedAttack()
     {
         if (Vector2.Distance(transform.position, target.transform.position) < 0.8f)

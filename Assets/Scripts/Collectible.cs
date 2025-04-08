@@ -2,18 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 public class Collectible : MonoBehaviour
 {
     [SerializeField]
     private string type;
     private Player player;
-    
+  
+    private Light2D light2D;
     private UIManager uiManager;
     void Start()
     {
         player = FindObjectOfType<Player>();
         uiManager = FindObjectOfType<UIManager>();
-        
+        light2D= gameObject.GetComponentInChildren<Light2D>();
+
     }
     void Update()
     {
@@ -75,6 +78,7 @@ public class Collectible : MonoBehaviour
     {
         player.set_invicibility(true);
         GetComponent<SpriteRenderer>().enabled = false;
+        light2D.enabled = false;
         GetComponent<Collider2D>().enabled = false;
         yield return new WaitForSeconds(5f);
         player.set_invicibility(false);
@@ -89,6 +93,7 @@ public class Collectible : MonoBehaviour
         player.set_fire_rate(0.04f);
         player.set_InfiniteFire(true);
         GetComponent<SpriteRenderer>().enabled = false;
+        light2D.enabled = false;
         GetComponent<Collider2D>().enabled = false;
         yield return new WaitForSeconds(5f);
         player.set_fire_rate(value);

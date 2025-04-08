@@ -323,6 +323,8 @@ public class Player : Character
         if (scoreCount2 >= changeWave)
         {
             WaveIndex ++;
+            Enemy.ClearAll();
+            spawner.ResetNumberOfZombies();
             scoreCount2 = 0;
             changeWave += 1200;
             spawner.insertInVector();
