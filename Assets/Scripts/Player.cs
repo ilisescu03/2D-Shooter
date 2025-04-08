@@ -231,6 +231,7 @@ public class Player : Character
         }
         uiManager.Set_Text(score, high_score, WaveIndex);
         uiManager.Set_Ammo_Text(ammo, maxammo);
+        uiManager.HideCountdownText();
         isInitialized = true;
     }
 
@@ -248,6 +249,7 @@ public class Player : Character
         if (AutoSave) { uiManager.Save(); }
        // else Debug.Log("Autosave is off");
         if (!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
+        uiManager.Set_Text(score, high_score, WaveIndex);
         uiManager.SetCoinsText(coins);
         GetInput();
         base.Update();
@@ -322,19 +324,34 @@ public class Player : Character
         }
         if (scoreCount2 >= changeWave)
         {
-            WaveIndex ++;
-            Enemy.ClearAll();
-            spawner.ResetNumberOfZombies();
-            scoreCount2 = 0;
-            changeWave += 1200;
-            spawner.insertInVector();
-            mintime = 3f;
-            maxtime = 6f;
-            spawner.set_spawnTime(mintime, maxtime);
+            StartCoroutine(CountdownToNextWave());
         }
         if (score > high_score) high_score = score;
-        uiManager.Set_Text(score, high_score, WaveIndex);
         
+        
+    }
+    private IEnumerator CountdownToNextWave()
+    {
+        spawner.DisableSpawn();
+        uiManager.ShowCountdownText();
+        Enemy.ClearAll();
+        spawner.ResetNumberOfZombies();
+        scoreCount2 = 0;
+        for (int i=10; i>0;i--)
+        {
+            uiManager.SetCountdownText(i);
+            if (i == 1) { WaveIndex++; }
+            yield return new WaitForSeconds(1f);
+        }
+ 
+        
+        changeWave += 1200;
+        spawner.insertInVector();
+        mintime = 3f;
+        maxtime = 6f;
+        spawner.set_spawnTime(mintime, maxtime);
+        spawner.EnableSpawn();
+        uiManager.HideCountdownText();
     }
     public void Respawn()
     {

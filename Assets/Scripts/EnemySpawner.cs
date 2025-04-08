@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemySpawner : Spawner
 {
+    private bool spawnEnabled = true;
     private int prefabIndex=0;
     private GameObject enemy;
     [SerializeField]
@@ -28,6 +29,17 @@ public class EnemySpawner : Spawner
     {
         base.Update();
         
+    }
+    public void DisableSpawn()
+    {
+        spawnEnabled = false;
+        StopAllCoroutines();
+    }
+    public void EnableSpawn()
+    {
+        spawnEnabled = true;
+        StopAllCoroutines();
+        StartCoroutine(SpawnLoop());
     }
     public void ResetNumberOfZombies()
     {
@@ -84,7 +96,7 @@ public class EnemySpawner : Spawner
             yield return new WaitForSeconds(spawnTime);
             getPosition();
 
-            if(numberOfZombies<=80) Spawn();
+            if(numberOfZombies<=80&&spawnEnabled) Spawn();
         }
 
     }

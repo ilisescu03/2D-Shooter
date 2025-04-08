@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text Wave_Text;
     [SerializeField]
+    private Text CountdownText;
+    [SerializeField]
     private GameObject warning;
     [SerializeField]
     private GameObject options;
@@ -121,6 +123,18 @@ public class UIManager : MonoBehaviour
         Score_Text.text = "Score:" + score;
         High_Score_Text.text = "High Score:" + high_score;
         Wave_Text.text = "Wave:" + index;
+    }
+    public void ShowCountdownText()
+    {
+        CountdownText.gameObject.SetActive(true);
+    }
+    public void HideCountdownText()
+    {
+        CountdownText.gameObject.SetActive(false);
+    }
+    public void SetCountdownText(int value)
+    {
+        CountdownText.text = "Next Wave: " + value; 
     }
     public void SetCoinsText(int value)
     {
