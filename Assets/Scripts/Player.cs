@@ -74,7 +74,8 @@ public class Player : Character
     private bool isReloading = false;
     [SerializeField]
     private Keybinds keybinds;
-    
+    private bool countingDown = false;
+    private float countdown = 0f;
     // Start is called before the first frame update
     void CheckMouseMovement()
     {
@@ -262,7 +263,23 @@ public class Player : Character
             animator.SetBool("IsRunning", false);
         }
         healthbar.fillAmount = health / maxhealth;
-
+        if (countingDown)
+        {
+            countdown -= Time.deltaTime;
+            uiManager.SetCountdownText(Mathf.CeilToInt(countdown));
+            if (countdown <= 0f)
+            {
+                countingDown = false;
+                WaveIndex++;
+                changeWave += 1200;
+                spawner.insertInVector();
+                mintime = 3f;
+                maxtime = 6f;
+                spawner.set_spawnTime(mintime, maxtime);
+                spawner.EnableSpawn();
+                uiManager.HideCountdownText();
+            }
+        }
         if (!isAlive) spawner.set_spawnTime(3.5f, 7f);
 
     }
@@ -324,34 +341,21 @@ public class Player : Character
         }
         if (scoreCount2 >= changeWave)
         {
-            StartCoroutine(CountdownToNextWave());
+            StartCountdown();
         }
         if (score > high_score) high_score = score;
         
         
     }
-    private IEnumerator CountdownToNextWave()
+    private void StartCountdown()
     {
+        countingDown = true;
+        countdown = 10f;
         spawner.DisableSpawn();
         uiManager.ShowCountdownText();
         Enemy.ClearAll();
         spawner.ResetNumberOfZombies();
         scoreCount2 = 0;
-        for (int i=10; i>0;i--)
-        {
-            uiManager.SetCountdownText(i);
-            if (i == 1) { WaveIndex++; }
-            yield return new WaitForSeconds(1f);
-        }
- 
-        
-        changeWave += 1200;
-        spawner.insertInVector();
-        mintime = 3f;
-        maxtime = 6f;
-        spawner.set_spawnTime(mintime, maxtime);
-        spawner.EnableSpawn();
-        uiManager.HideCountdownText();
     }
     public void Respawn()
     {

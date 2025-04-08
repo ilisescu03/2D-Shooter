@@ -85,6 +85,10 @@ public class UIManager : MonoBehaviour
             else SelectFrame[i].SetActive(false);
         }
     }
+    public void Fullscreen(bool isFullscreen)
+    {
+        Screen.fullScreen = isFullscreen;
+    }
     public void KeybindsShow()
     {
         Keybinds.SetActive(true);
