@@ -123,15 +123,15 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: 'Tilemap '
     originalName: 
-    pivot: {x: 1.3636364, y: -0.74107146}
+    pivot: {x: 0.5, y: -0.3541667}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 704
-      height: 448
+      width: 1920
+      height: 576
     spriteID: 19a24d200e466d647858c7b393ddd8df
     spriteBone: []
     spriteOutline: []
@@ -155,9 +155,9 @@ ScriptedImporter:
       additiveSortOrder: 0
       cellRect:
         x: 0
-        y: 332
-        width: 704
-        height: 448
+        y: 204
+        width: 1920
+        height: 576
       spriteId: 19a24d200e466d647858c7b393ddd8df
     linkedCells: []
     parentIndex: -1
