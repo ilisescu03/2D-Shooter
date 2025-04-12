@@ -78,6 +78,7 @@ public class Shooting : MonoBehaviour
       
         StartCoroutine(DisableEffect());
     }
+
     private IEnumerator DisableEffect()
     {
         if(player.get_fire_rate()<0.1f) yield return new WaitForSeconds(player.get_fire_rate());

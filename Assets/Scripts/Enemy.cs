@@ -54,22 +54,26 @@ public class Enemy : Character
         int value = Random.Range(0, 4);
         return value;
     }
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, Collider2D other)
     {
-        health -= damage;
-        StartCoroutine(DamageEffect());
-        health = Mathf.Max(health, 0.0f);
-        if (health == 0)
+        if (other.tag != "Wall")
         {
-            if(GetCollectibleSpawnChance()==0)
+            health -= damage;
+            StartCoroutine(DamageEffect());
+            health = Mathf.Max(health, 0.0f);
+            if (health == 0)
             {
-                coin = Instantiate(coinPrefab, transform.position, Quaternion.identity);
+                if (GetCollectibleSpawnChance() == 0)
+                {
+                    coin = Instantiate(coinPrefab, transform.position, Quaternion.identity);
+                }
+                enemySpawner.DecreaseZombies();
+                Destroy(gameObject);
+                target.Increase_Score(ScorePoints);
             }
-            enemySpawner.DecreaseZombies();
-            Destroy(gameObject);
-            target.Increase_Score(ScorePoints);
         }
     }
+    
     IEnumerator DamageEffect()
     {
         SpriteRenderer effect = GetComponent<SpriteRenderer>();

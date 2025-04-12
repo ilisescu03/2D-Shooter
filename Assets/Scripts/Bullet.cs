@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour
     }
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.tag == "Wall")
+        if (other.tag == "Wall"||other.tag=="Edge")
         {
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             rb.velocity = Vector2.zero;
@@ -23,10 +23,10 @@ public class Bullet : MonoBehaviour
             }
             Destroy(gameObject);
         }
-        if(other.tag=="Enemy")
+        if(other.tag=="Enemy" )
         {
             Enemy enemy = other.GetComponent<Enemy>();
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(damage, other);
             Destroy(gameObject);
         }
     }
