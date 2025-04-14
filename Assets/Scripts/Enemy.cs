@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -50,11 +50,34 @@ public class Enemy : Character
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
             transform.rotation = Quaternion.Euler(0, 0, angle);
         }
+       else
+    {
+        // Coliziune detectată, încercăm să ocolim
+        Vector2 perpendicularDirection = Vector2.Perpendicular(direction); // Direcție perpendiculară pe direcția actuală
+        Vector2 leftCheck = transform.position + (Vector3)(perpendicularDirection * 0.5f);
+        Vector2 rightCheck = transform.position - (Vector3)(perpendicularDirection * 0.5f);
+
+        // Verificăm dacă putem merge în stânga sau în dreapta
+        bool canMoveLeft = !Physics2D.Raycast(leftCheck, direction, 1f, LayerMask.GetMask("Wall"));
+        bool canMoveRight = !Physics2D.Raycast(rightCheck, direction, 1f, LayerMask.GetMask("Wall"));
+
+        if (canMoveLeft)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, leftCheck, speed * Time.deltaTime);
+            transform.rotation = Quaternion.Euler(0, 0, 90f); // Rotim in stanga
+            }
+        else if (canMoveRight)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, rightCheck, speed * Time.deltaTime);
+                transform.rotation = Quaternion.Euler(0, 0, -90f); // Rotim in dreapta
+            }
         else
         {
-            Vector2 backwardDirection = -direction; // Direc?ia opus?
+            // Dacă nu putem ocoli, ne mișcăm înapoi
+            Vector2 backwardDirection = -direction;
             transform.position = Vector2.MoveTowards(transform.position, transform.position + (Vector3)backwardDirection, speed * Time.deltaTime);
         }
+    }
 
 
     }
