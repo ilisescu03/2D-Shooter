@@ -147,7 +147,7 @@ Transform:
   m_GameObject: {fileID: 2979401495806202208}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 3.6526926, y: -9.423477, z: 0}
+  m_LocalPosition: {x: -7.126818, y: -0.8339256, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -277,6 +277,7 @@ MonoBehaviour:
   pause: {fileID: 0}
   spawner: {fileID: 0}
   weapon: {fileID: 0}
+  weapons: []
   WeaponObject: {fileID: 4974739628075813654}
   Offset: 0
   WeaponBools: 010000

@@ -10,7 +10,8 @@ public class SaveData
     public float newAngle;
     public int newCoins;
     public bool[] weaponBools;
-    public SaveData(int highScore, float newAngle, int newCoins, bool[] weaponBools)
+    public int weaponID;
+    public SaveData(int highScore, float newAngle, int newCoins, bool[] weaponBools, int weaponID)
     {
         this.highScore = highScore;
         this.newAngle = newAngle;
@@ -20,11 +21,32 @@ public class SaveData
         {
             this.weaponBools[i] = weaponBools[i];
         }
+        this.weaponID = weaponID;
     }
 }
 public static class SaveManager
 {
     private static string path = Application.persistentDataPath + "/save.json";
+    public static int LoadWeapon()
+    {
+        Debug.Log(Application.persistentDataPath);
+        if (File.Exists(path))
+        {
+            try
+            {
+                string json = File.ReadAllText(path);
+                SaveData data = JsonUtility.FromJson<SaveData>(json);
+                return data.weaponID;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("Failed to load save data");
+                return 0;
+            }
+           
+        }
+        return 0;
+    }
     public static bool[] LoadWeapons()
     {
         Debug.Log(Application.persistentDataPath);
@@ -101,14 +123,14 @@ public static class SaveManager
         }
         return 0;
     }
-    public static void SaveNewData(int new_highScore, float new_angle, int new_coins, bool[] new_WeaponBools)
+    public static void SaveNewData(int new_highScore, float new_angle, int new_coins, bool[] new_WeaponBools, int new_WeaponID)
     {
-        SaveData data = new SaveData(new_highScore, new_angle, new_coins, new_WeaponBools);
+        SaveData data = new SaveData(new_highScore, new_angle, new_coins, new_WeaponBools, new_WeaponID);
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(path, json);
     }
     public static void ResetData()
     {
-        SaveNewData(0,2.5f,0, new bool[3]);
+        SaveNewData(0,2.5f,0, new bool[3], 0);
     }
 }

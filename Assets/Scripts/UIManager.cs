@@ -228,7 +228,8 @@ public class UIManager : MonoBehaviour
         float angle = player.get_angle();
         int coins = player.get_coins();
         bool[] WeaponBools = player.get_WeaponBools();
-        SaveManager.SaveNewData(high_score, angle, coins,  WeaponBools);
+        int WeaponID = player.getWeaponID();
+        SaveManager.SaveNewData(high_score, angle, coins,  WeaponBools, WeaponID);
     }
     public void DeleteData()
     {

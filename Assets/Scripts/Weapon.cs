@@ -66,12 +66,18 @@ public class Weapon : MonoBehaviour
         isBought = true;
         selectingWeapon.HideBuy();
     }
+    public void SetEquiped()
+    {
+        isEquiped = true;
+        selectingWeapon.ShowSelected();
+    }
     public void AssignToPlayer()
     {
         player.setNewWeapon(maxAmmo, ammoPerRound, this, WeaponObject, gunShot);
         player.set_fire_rate(fireRate);
         player.set_offset(Offset);
         player.setDamage(damage);
+        
         isEquiped = true;
     }
     public void Unassign()
@@ -101,5 +107,9 @@ public class Weapon : MonoBehaviour
     public float getDamage()
     {
         return damage;
+    }
+    public int getID()
+    {
+        return ID;
     }
 }

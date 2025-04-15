@@ -42,6 +42,8 @@ using UnityEngine.EventSystems;
         [SerializeField]
         private Weapon weapon;
         [SerializeField]
+        private Weapon[] weapons;
+        [SerializeField]
         private GameObject WeaponObject;
         [SerializeField]
         private float Offset;
@@ -128,6 +130,15 @@ using UnityEngine.EventSystems;
         public void setBool(int index) { WeaponBools[index] = true; }
         public void setDamage(float value) { ShootingDamage = value; }
         public Weapon getCurrentWeapon() { return weapon; }
+        public int getWeaponID()
+        {
+            return weapon.getID();
+    }
+    public void LoadWeaponByID(int value)
+        {
+            weaponsManager.AssignToPlayer(value);
+            weaponsManager.SetEquiped(value);
+    }
         public void setNewWeapon(int value, int value2, Weapon newWeapon, GameObject _WeaponObject, AudioClip clip)
         {
             gunShot = clip;
@@ -225,7 +236,8 @@ using UnityEngine.EventSystems;
             coins = 500;
             angle = SaveManager.LoadAngle();
             WeaponBools = SaveManager.LoadWeapons();
-            if (WeaponBools == null)
+            LoadWeaponByID(SaveManager.LoadWeapon());
+        if (WeaponBools == null)
             {
                 WeaponBools = new bool[3];
             }
