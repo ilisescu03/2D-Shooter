@@ -26,7 +26,7 @@ public class Enemy : Character
     protected override void Update()
     {
         
-        FollowPlayer();
+        //FollowPlayer();
         FixedAttack();
         Clear();
         base.Update();
@@ -40,6 +40,7 @@ public class Enemy : Character
     {
         if (target.get_state()==false) Destroy(gameObject);
     }
+    /*
     private void FollowPlayer()
     {
         Vector2 direction = (target.transform.position - transform.position).normalized;
@@ -81,6 +82,7 @@ public class Enemy : Character
 
 
     }
+     */
     public int GetCollectibleSpawnChance()
     {
         int value = Random.Range(0, 4);
@@ -105,7 +107,7 @@ public class Enemy : Character
             }
         }
     }
-    
+   
     IEnumerator DamageEffect()
     {
         SpriteRenderer effect = GetComponent<SpriteRenderer>();
@@ -123,7 +125,7 @@ public class Enemy : Character
     }
     public void FixedAttack()
     {
-        if (Vector2.Distance(transform.position, target.transform.position) < 0.8f)
+        if (Vector2.Distance(transform.position, target.transform.position) < 1f)
         {
             if (!isAttacking)
             {
