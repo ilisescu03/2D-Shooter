@@ -15,9 +15,28 @@ public class CollectibleSpawner : Spawner
     }
     void getPosition()
     {
-        float x = Random.Range(-11f, 11f);
-        float y = Random.Range(-6.5f, 6.5f);
-        SpawnPoint = new Vector2(x, y);
+        int maxattempts = 10;
+        int attempts = 0;
+        bool positionValid = false;
+        while (!positionValid && attempts < maxattempts)
+        {
+            float x = Random.Range(-40f, 20f);
+            float y = Random.Range(-20f, 20f);
+            Vector2 potentialPosition = new Vector2(x, y);
+            Collider2D hit = Physics2D.OverlapPoint(potentialPosition, LayerMask.GetMask("Obstacle"));
+            if (hit==null)
+            {
+                SpawnPoint = potentialPosition;
+                positionValid = true;
+            }
+            attempts++;
+        }
+        if (!positionValid)
+        {
+            Debug.Log("Nu am gasit o pozitie valida dupa " + maxattempts + " incercari.");
+            SpawnPoint = Vector2.zero;
+        }
+
     }
     void Spawn()
     {
@@ -28,7 +47,7 @@ public class CollectibleSpawner : Spawner
     {
         while (true)
         {
-            spawnTime = Random.Range(20, 40);
+            spawnTime = Random.Range(15, 30);
             yield return new WaitForSeconds(spawnTime);
             getPosition();
 

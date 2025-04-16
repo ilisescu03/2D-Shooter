@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Enemy : Character
 {
-
+    [SerializeField]
+    private float audioRadius;
+    private bool isPlayerInRange = false;
     private EnemySpawner enemySpawner;
     [SerializeField]
     private int ID;
@@ -15,11 +17,18 @@ public class Enemy : Character
     private GameObject coin;
     [SerializeField]
     private GameObject coinPrefab;
+    private AudioSource audioSource;
     // Start is called before the first frame update
     protected override void Start()
     {
+        audioSource = gameObject.GetComponent<AudioSource>();
         target = FindObjectOfType<Player>();
         enemySpawner = FindObjectOfType<EnemySpawner>();
+        if (isPlayerinRangeAtStart())
+        {
+            audioSource.Play();
+        }
+        
     }
 
     // Update is called once per frame
@@ -34,7 +43,45 @@ public class Enemy : Character
         {
             Destroy(gameObject);
         }
+        CheckPlayerInRange();
         
+    }
+    public bool isPlayerinRangeAtStart()
+    {
+        if (Vector2.Distance(transform.position, target.transform.position) <= audioRadius) { isPlayerInRange = true; return true; }
+        else { isPlayerInRange = false; return false; }
+    }
+    public void CheckPlayerInRange()
+    {
+        if(Vector2.Distance(transform.position, target.transform.position) <= audioRadius)
+        {
+            isPlayerInRange = true;
+            StartCoroutine(PlayAudioCoroutine());
+        }
+        else
+        {
+            isPlayerInRange = false;
+            StopCoroutine(PlayAudioCoroutine());
+        }
+       
+    }
+    public IEnumerator PlayAudioCoroutine()
+    {
+       // audioSource = gameObject.GetComponent<AudioSource>();
+        yield return new WaitForSeconds(GetRandomAudioPlayTime());
+        if(isPlayerInRange&&!audioSource.isPlaying)
+        {
+            audioSource.Play();
+        }
+        
+
+
+
+    }
+    public int GetRandomAudioPlayTime()
+    {
+        int value = Random.Range(10, 30);
+        return value;
     }
     private void Clear()
     {

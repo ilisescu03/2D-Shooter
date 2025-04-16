@@ -58,8 +58,8 @@ using UnityEngine.EventSystems;
         [SerializeField]
         private Timer timer;
         private bool InfiniteFire = false;
-        private float mintime = 3.5f;
-        private float maxtime = 7f;
+        private float mintime = 2.5f;
+        private float maxtime = 5f;
         [SerializeField]
         private AudioClip gunShot;
         private int scoreCount = 0;
@@ -232,8 +232,9 @@ using UnityEngine.EventSystems;
             }
             shooting = GetComponent<Shooting>();
             high_score = SaveManager.LoadHighScore();
+            coins = 0;
             coins = SaveManager.LoadCoins();
-            coins = 500;
+            
             angle = SaveManager.LoadAngle();
             WeaponBools = SaveManager.LoadWeapons();
             LoadWeaponByID(SaveManager.LoadWeapon());
@@ -291,8 +292,8 @@ using UnityEngine.EventSystems;
                     WaveIndex++;
                     changeWave += 1200;
                     spawner.insertInVector();
-                    mintime = 3f;
-                    maxtime = 6f;
+                    mintime = 2f;
+                    maxtime = 4f;
                     spawner.set_spawnTime(mintime, maxtime);
                     spawner.EnableSpawn();
                     uiManager.HideCountdownText();
@@ -328,8 +329,8 @@ using UnityEngine.EventSystems;
             changeWave = 1200;
             spawner.set_spawnTime(3.5f, 7f);
             spawner.ResetNumberOfZombies();
-            mintime = 3.5f;
-            maxtime = 7f;
+            mintime = 2.5f;
+            maxtime = 5f;
             Debug.Log("Dead");
 
         }
@@ -347,10 +348,10 @@ using UnityEngine.EventSystems;
             {
                 mintime /= 1.25f;
                 maxtime /= 1.25f;
-                if (mintime < 0.75f || maxtime < 0.75f)
+                if (mintime < 0.4f || maxtime < 0.4f)
                 {
-                    mintime = 0.75f;
-                    maxtime = 0.75f;
+                    mintime = 0.4f;
+                    maxtime = 0.4f;
                 }
                 scoreCount = 0;
 
@@ -392,7 +393,7 @@ using UnityEngine.EventSystems;
             WaveIndex = 1;
             score = 0;
 
-            spawner.set_spawnTime(4, 8);
+            spawner.set_spawnTime(2.5f, 5);
             uiManager.Set_Text(score, high_score, WaveIndex);
         }
         public void Reload()

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -75,11 +75,41 @@ public class EnemySpawner : Spawner
     }
     void getPosition()
     {
-        SpawnPoint = new Vector2(getValue(-11f, 11f, -6.5f, 6.5f), getValue(-4f, 4f, -1f, 1f));
+        int maxAttempts = 10; // Numărul maxim de încercări pentru a găsi o poziție validă
+        int attempts = 0;
+        bool positionValid = false;
+
+        while (!positionValid && attempts < maxAttempts)
+        {
+            // Generează o poziție aleatorie
+            Vector2 potentialPosition = new Vector2(
+                getValue(-42f, 23f, -6.5f, 6.5f),
+                getValue(-20f, 20f, -1f, 1f)
+            );
+
+            // Verifică dacă există un collider cu layer-ul "Obstacle" în poziția generată
+            Collider2D hit = Physics2D.OverlapPoint(potentialPosition, LayerMask.GetMask("Obstacle"));
+
+            if (hit == null)
+            {
+                // Dacă nu există obstacole, poziția este validă
+                SpawnPoint = potentialPosition;
+                positionValid = true;
+            }
+
+            attempts++;
+        }
+
+        if (!positionValid)
+        {
+            Debug.LogWarning("Nu s-a găsit o poziție validă pentru spawn după " + maxAttempts + " încercări.");
+            SpawnPoint = Vector2.zero; // Poziție fallback
+        }
     }
+
     void Spawn()
     {
-        audioMananger.PlayZombieSpawn();
+       // audioMananger.PlayZombieSpawn();
         int index = Random.Range(0, activeEnemyPrefab.Count);
         enemy = Instantiate(activeEnemyPrefab[index], SpawnPoint, Quaternion.identity);
         numberOfZombies++;
