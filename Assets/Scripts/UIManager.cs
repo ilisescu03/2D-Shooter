@@ -5,6 +5,10 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [SerializeField]
+    private Toggle AutoSaveToggle;
+    [SerializeField]
+    private Toggle FullscreenToggle;
+    [SerializeField]
     private Text High_Score_Text;
     [SerializeField]
     private Text GameplayCoinsNumber;
@@ -49,6 +53,18 @@ public class UIManager : MonoBehaviour
     private GameObject ReloadingImage;
     [SerializeField]
     private GameObject StatsPannel;
+    private void Start()
+    {
+        if(Screen.fullScreen)
+        {
+           FullscreenToggle.isOn = true;
+        }
+        else
+        {
+            FullscreenToggle.isOn = false;
+        }
+
+    }
     private void Update()
     {
         if (ReloadingImage.activeSelf)
@@ -83,6 +99,17 @@ public class UIManager : MonoBehaviour
                 SelectFrame[i].SetActive(true);
             }
             else SelectFrame[i].SetActive(false);
+        }
+    }
+    public void ToggleAutoSaveButton(bool value)
+    {
+        if(value==true)
+        {
+            AutoSaveToggle.isOn = true;
+        }
+        else
+        {
+            AutoSaveToggle.isOn = false;
         }
     }
     public void Fullscreen(bool isFullscreen)
@@ -229,7 +256,9 @@ public class UIManager : MonoBehaviour
         int coins = player.get_coins();
         bool[] WeaponBools = player.get_WeaponBools();
         int WeaponID = player.getWeaponID();
-        SaveManager.SaveNewData(high_score, angle, coins,  WeaponBools, WeaponID);
+        int AimControlsIndex = player.get_AimControlsIndex();
+        bool AutoSave = AutoSaveToggle.isOn;
+        SaveManager.SaveNewData(high_score, angle, coins,  WeaponBools, WeaponID, AimControlsIndex, AutoSave);
     }
     public void DeleteData()
     {

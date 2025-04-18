@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class Enemy : Character
 {
-    [SerializeField]
-    private float audioRadius;
-    private bool isPlayerInRange = false;
+
+   
     private EnemySpawner enemySpawner;
     [SerializeField]
     private int ID;
@@ -24,10 +23,9 @@ public class Enemy : Character
         audioSource = gameObject.GetComponent<AudioSource>();
         target = FindObjectOfType<Player>();
         enemySpawner = FindObjectOfType<EnemySpawner>();
-        if (isPlayerinRangeAtStart())
-        {
-            audioSource.Play();
-        }
+       
+        audioSource.Play();
+        
         
     }
 
@@ -43,33 +41,16 @@ public class Enemy : Character
         {
             Destroy(gameObject);
         }
-        CheckPlayerInRange();
+        StartCoroutine(PlayAudioCoroutine());
         
     }
-    public bool isPlayerinRangeAtStart()
-    {
-        if (Vector2.Distance(transform.position, target.transform.position) <= audioRadius) { isPlayerInRange = true; return true; }
-        else { isPlayerInRange = false; return false; }
-    }
-    public void CheckPlayerInRange()
-    {
-        if(Vector2.Distance(transform.position, target.transform.position) <= audioRadius)
-        {
-            isPlayerInRange = true;
-            StartCoroutine(PlayAudioCoroutine());
-        }
-        else
-        {
-            isPlayerInRange = false;
-            StopCoroutine(PlayAudioCoroutine());
-        }
-       
-    }
+ 
+    
     public IEnumerator PlayAudioCoroutine()
     {
        // audioSource = gameObject.GetComponent<AudioSource>();
         yield return new WaitForSeconds(GetRandomAudioPlayTime());
-        if(isPlayerInRange&&!audioSource.isPlaying)
+        if(!audioSource.isPlaying)
         {
             audioSource.Play();
         }
@@ -80,7 +61,7 @@ public class Enemy : Character
     }
     public int GetRandomAudioPlayTime()
     {
-        int value = Random.Range(10, 30);
+        int value = Random.Range(5, 25);
         return value;
     }
     private void Clear()

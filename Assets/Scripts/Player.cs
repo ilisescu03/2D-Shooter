@@ -134,6 +134,10 @@ using UnityEngine.EventSystems;
         {
             return weapon.getID();
     }
+    public int get_AimControlsIndex()
+    {
+        return ControlsIndex;
+    }
     public void LoadWeaponByID(int value)
         {
             weaponsManager.AssignToPlayer(value);
@@ -234,8 +238,12 @@ using UnityEngine.EventSystems;
             high_score = SaveManager.LoadHighScore();
             coins = 0;
             coins = SaveManager.LoadCoins();
-            
-            angle = SaveManager.LoadAngle();
+            ControlsIndex=SaveManager.LoadAimControlsIndex();
+            if (ControlsIndex == 0) { uiManager.SetSelectFrame(1); }
+            else { uiManager.SetSelectFrame(0); }
+        AutoSave = SaveManager.LoadAutoSave();
+        uiManager.ToggleAutoSaveButton(AutoSave);
+        angle = SaveManager.LoadAngle();
             WeaponBools = SaveManager.LoadWeapons();
             LoadWeaponByID(SaveManager.LoadWeapon());
         if (WeaponBools == null)
@@ -301,6 +309,12 @@ using UnityEngine.EventSystems;
             }
             if (!isAlive) spawner.set_spawnTime(3.5f, 7f);
 
+        }
+        public void DeleteData()
+        {
+        AutoSave = false;
+        uiManager.ToggleAutoSaveButton(AutoSave);
+        uiManager.DeleteData();
         }
         public void ResetAmmo()
         {

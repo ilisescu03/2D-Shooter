@@ -45,7 +45,12 @@ public class AudioManager : MonoBehaviour
     private GameObject startPannel;
     void Start()
     {
+        if(!musicSource.isPlaying)
+        {
+            SFXSource.Stop();
+        }
         SetMusicVolume();
+
     }
     void Update()
     {

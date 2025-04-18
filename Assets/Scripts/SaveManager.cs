@@ -11,22 +11,64 @@ public class SaveData
     public int newCoins;
     public bool[] weaponBools;
     public int weaponID;
-    public SaveData(int highScore, float newAngle, int newCoins, bool[] weaponBools, int weaponID)
+    public int aimControlsIndex;
+    public bool autoSave;
+    public SaveData(int highScore, float newAngle, int newCoins, bool[] weaponBools, int weaponID, int aimControlsIndex, bool autoSave)
     {
         this.highScore = highScore;
         this.newAngle = newAngle;
         this.newCoins = newCoins;
         this.weaponBools = new bool[weaponBools.Length];
+        this.autoSave = autoSave;
         for (int i=0;i<weaponBools.Length;i++)
         {
             this.weaponBools[i] = weaponBools[i];
         }
         this.weaponID = weaponID;
+        this.aimControlsIndex = aimControlsIndex;
     }
 }
 public static class SaveManager
 {
     private static string path = Application.persistentDataPath + "/save.json";
+    public static bool LoadAutoSave()
+    {
+        Debug.Log(Application.persistentDataPath);
+        if(File.Exists(path))
+        {
+            try
+            {
+                string json = File.ReadAllText(path);
+                SaveData data = JsonUtility.FromJson<SaveData>(json);
+                return data.autoSave;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("Failed to load save data");
+                return false;
+            }
+        }
+        return false;
+    }
+    public static int LoadAimControlsIndex()
+    {
+        Debug.Log(Application.persistentDataPath);
+        if (File.Exists(path))
+        {
+            try
+            {
+                string json = File.ReadAllText(path);
+                SaveData data = JsonUtility.FromJson<SaveData>(json);
+                return data.aimControlsIndex;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("Failed to load save data");
+                return 0;
+            }
+        }
+        return 0;
+    }
     public static int LoadWeapon()
     {
         Debug.Log(Application.persistentDataPath);
@@ -123,14 +165,14 @@ public static class SaveManager
         }
         return 0;
     }
-    public static void SaveNewData(int new_highScore, float new_angle, int new_coins, bool[] new_WeaponBools, int new_WeaponID)
+    public static void SaveNewData(int new_highScore, float new_angle, int new_coins, bool[] new_WeaponBools, int new_WeaponID, int new_aimControlsIndex, bool new_autoSave)
     {
-        SaveData data = new SaveData(new_highScore, new_angle, new_coins, new_WeaponBools, new_WeaponID);
+        SaveData data = new SaveData(new_highScore, new_angle, new_coins, new_WeaponBools, new_WeaponID, new_aimControlsIndex, new_autoSave);
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(path, json);
     }
     public static void ResetData()
     {
-        SaveNewData(0,2.5f,0, new bool[3], 0);
+        SaveNewData(0,2.5f,0, new bool[3], 0, 0, false);
     }
 }
