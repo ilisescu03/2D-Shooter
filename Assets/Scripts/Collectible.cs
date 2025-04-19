@@ -41,7 +41,7 @@ public class Collectible : MonoBehaviour
                 }
                 if (type == "Ammo")
                 {
-                    player.ResetAmmo();
+                    player.AmmoSupply();
                     Destroy(gameObject);
                 }
                 else if (type == "InfiniteFire" || type == "Armor")

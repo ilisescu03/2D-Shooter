@@ -316,10 +316,9 @@ using UnityEngine.EventSystems;
         uiManager.ToggleAutoSaveButton(AutoSave);
         uiManager.DeleteData();
         }
-        public void ResetAmmo()
+        public void AmmoSupply()
         {
-            ammo = weapon.getAmmoPerRound();
-            maxammo = weapon.getAmmo() - weapon.getAmmoPerRound();
+            maxammo += 100;
         }
         public void TakeDamage(float damage)
         {
