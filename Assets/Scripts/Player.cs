@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
     public class Player : Character
     {
+        public float angleSliderValue;
+
         [SerializeField]
         private int ControlsIndex;
         private bool AutoSave = false;
@@ -25,6 +27,8 @@ using UnityEngine.EventSystems;
         private bool canShoot = true;
         private bool isAlive = false;
         private bool invicibility = false;
+        
+
         private float angle = 2.5f;
         [SerializeField]
         protected Vector2 spawnpoint;
@@ -168,9 +172,17 @@ using UnityEngine.EventSystems;
 
         public float get_fire_rate() { return fire_rate; }
         public void set_invicibility(bool value) { invicibility = value; }
-        public void set_angle(int value)
+        public void set_angle(float value)
         {
-            angle += value;
+        float x1 = 1f, y1 = 5f;
+        float x2 = 0.5f, y2 = 2.5f;
+
+       
+        float m = (y2 - y1) / (x2 - x1);
+
+       
+        float b = y1 - m * x1;
+        angle = m * value + b;
         }
         public void AddCoins(int value)
         {
@@ -244,7 +256,9 @@ using UnityEngine.EventSystems;
         AutoSave = SaveManager.LoadAutoSave();
         uiManager.ToggleAutoSaveButton(AutoSave);
         angle = SaveManager.LoadAngle();
-            WeaponBools = SaveManager.LoadWeapons();
+        uiManager.SetRotationSensitivity(angleSliderValue);
+
+        WeaponBools = SaveManager.LoadWeapons();
             LoadWeaponByID(SaveManager.LoadWeapon());
         if (WeaponBools == null)
             {
@@ -276,7 +290,8 @@ using UnityEngine.EventSystems;
             if (!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
             uiManager.Set_Text(score, high_score, WaveIndex);
             uiManager.SetCoinsText(coins);
-            GetInput();
+            set_angle(angleSliderValue);
+        GetInput();
             base.Update();
              
             prefab.transform.position = transform.position;
@@ -460,11 +475,11 @@ using UnityEngine.EventSystems;
                 }
                 if (Input.GetKey(KeyCode.LeftArrow) && ControlsIndex == 0)
                 {
-                    transform.Rotate(0, 0, 3.5f);
+                    transform.Rotate(0, 0, angle);
                 }
                 if (Input.GetKey(KeyCode.RightArrow) && ControlsIndex == 0)
                 {
-                    transform.Rotate(0, 0, -3.5f);
+                    transform.Rotate(0, 0, -angle);
                 }
                 if (ControlsIndex == 1 && !pause.get_state())
                 {

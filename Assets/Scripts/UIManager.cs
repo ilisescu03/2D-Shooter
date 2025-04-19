@@ -43,6 +43,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject Shop;
     [SerializeField]
+    private Slider RotationSensitivity;
+    [SerializeField]
     private GameObject NotEnoughCoins;
     [SerializeField]
     private ControlsManager controlsManager;
@@ -65,6 +67,7 @@ public class UIManager : MonoBehaviour
         }
 
     }
+    
     private void Update()
     {
         if (ReloadingImage.activeSelf)
@@ -72,6 +75,18 @@ public class UIManager : MonoBehaviour
             ReloadingImage.transform.Rotate(0, 0, 135 * Time.deltaTime);
         }
 
+    }
+    public void OnRotationSensitivityChanged()
+    {
+        Player player = FindObjectOfType<Player>();
+        if (player != null)
+        {
+            player.angleSliderValue = RotationSensitivity.value;
+        }
+    }
+    public void SetRotationSensitivity(float value)
+    { 
+        RotationSensitivity.value = value;
     }
     public void ShowStatsPannel(Weapon weapon)
     {
