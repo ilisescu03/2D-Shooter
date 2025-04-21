@@ -27,8 +27,8 @@ using UnityEngine.EventSystems;
         private bool canShoot = true;
         private bool isAlive = false;
         private bool invicibility = false;
-        
 
+        private bool inBarrierRange = false;
         private float angle = 2.5f;
         [SerializeField]
         protected Vector2 spawnpoint;
@@ -231,6 +231,10 @@ using UnityEngine.EventSystems;
 
             return false;
         }
+        public bool isPlayerInBarrierRange()
+        {
+        return inBarrierRange;
+        }
         protected override void Start()
         {
             keybinds.InitializeKeys();
@@ -272,9 +276,14 @@ using UnityEngine.EventSystems;
             uiManager.Set_Text(score, high_score, WaveIndex);
             uiManager.Set_Ammo_Text(ammo, maxammo);
             uiManager.HideCountdownText();
+      
             isInitialized = true;
         }
-
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+        if (other.tag == "Trigger") inBarrierRange = true;
+        else inBarrierRange = false;
+        }
         // Update is called once per frame
         protected override void Update()
         {
@@ -326,6 +335,8 @@ using UnityEngine.EventSystems;
             if (!isAlive) spawner.set_spawnTime(3.5f, 7f);
 
         }
+        
+       
         public void DeleteData()
         {
         AutoSave = false;

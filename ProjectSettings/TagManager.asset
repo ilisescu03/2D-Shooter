@@ -8,6 +8,7 @@ TagManager:
   - Wall
   - Enemy
   - Edge
+  - Trigger
   layers:
   - Default
   - TransparentFX

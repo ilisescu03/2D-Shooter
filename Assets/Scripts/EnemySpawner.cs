@@ -30,6 +30,14 @@ public class EnemySpawner : Spawner
         base.Update();
         
     }
+    public List<GameObject> getEnemiesList()
+    {
+        return activeEnemyPrefab;
+    }
+    public int getNumberOfZombies()
+    {
+        return numberOfZombies;
+    }
     public void DisableSpawn()
     {
         spawnEnabled = false;
@@ -106,7 +114,10 @@ public class EnemySpawner : Spawner
             SpawnPoint = Vector2.zero; // Poziție fallback
         }
     }
-
+    public bool IsSpawnEnabled()
+    {
+        return spawnEnabled;
+    }
     void Spawn()
     {
        // audioMananger.PlayZombieSpawn();
@@ -118,7 +129,10 @@ public class EnemySpawner : Spawner
     {
         numberOfZombies--;
     }
-    
+    public void IncreaseZombies()
+    {
+        numberOfZombies++;
+    }
     IEnumerator SpawnLoop()
     {
         while (true)
