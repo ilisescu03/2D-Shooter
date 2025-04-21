@@ -100,6 +100,7 @@ using UnityEngine.EventSystems;
         }
         public void set_InfiniteFire(bool value) { InfiniteFire = value; }
         public void set_ControlsIndex(int value) { if (value == 0 || value == 1) ControlsIndex = value; }
+        
         public void setLayerIndex(int value1, int value2)
         {
             animator.SetLayerWeight(0, value1);
@@ -255,7 +256,7 @@ using UnityEngine.EventSystems;
             else { uiManager.SetSelectFrame(0); }
         AutoSave = SaveManager.LoadAutoSave();
         uiManager.ToggleAutoSaveButton(AutoSave);
-        angle = SaveManager.LoadAngle();
+        angleSliderValue = SaveManager.LoadNewAngleSliderValue();
         uiManager.SetRotationSensitivity(angleSliderValue);
 
         WeaponBools = SaveManager.LoadWeapons();
@@ -397,7 +398,7 @@ using UnityEngine.EventSystems;
         private void StartCountdown()
         {
             countingDown = true;
-            countdown = 10f;
+            countdown = 30f;
             spawner.DisableSpawn();
             uiManager.ShowCountdownText();
             Enemy.ClearAll();

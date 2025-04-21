@@ -43,7 +43,12 @@ public class Powerup : MonoBehaviour
         while (time > 0)
         {
             time -= Time.deltaTime;
-            TimeText.text = time.ToString("F2");
+            if (time < 0) TimeText.text = "0";
+            else
+            {
+                TimeText.text = time.ToString("F2");
+            }
+            
             yield return null;
         }
         time = aux;

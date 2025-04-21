@@ -267,13 +267,13 @@ public class UIManager : MonoBehaviour
     {
         Player player = FindObjectOfType<Player>();
         int high_score = player.get_high_score();
-        float angle = player.get_angle();
+        float _angleSliderValue = player.angleSliderValue;
         int coins = player.get_coins();
         bool[] WeaponBools = player.get_WeaponBools();
         int WeaponID = player.getWeaponID();
         int AimControlsIndex = player.get_AimControlsIndex();
         bool AutoSave = AutoSaveToggle.isOn;
-        SaveManager.SaveNewData(high_score, angle, coins,  WeaponBools, WeaponID, AimControlsIndex, AutoSave);
+        SaveManager.SaveNewData(high_score, _angleSliderValue, coins,  WeaponBools, WeaponID, AimControlsIndex, AutoSave);
     }
     public void DeleteData()
     {

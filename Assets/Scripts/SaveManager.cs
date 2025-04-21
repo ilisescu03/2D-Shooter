@@ -7,16 +7,16 @@ using System.IO;
 public class SaveData
 {
     public int highScore;
-    public float newAngle;
+    public float newAngleSliderValue;
     public int newCoins;
     public bool[] weaponBools;
     public int weaponID;
     public int aimControlsIndex;
     public bool autoSave;
-    public SaveData(int highScore, float newAngle, int newCoins, bool[] weaponBools, int weaponID, int aimControlsIndex, bool autoSave)
+    public SaveData(int highScore, float newAngleSliderValue, int newCoins, bool[] weaponBools, int weaponID, int aimControlsIndex, bool autoSave)
     {
         this.highScore = highScore;
-        this.newAngle = newAngle;
+        this.newAngleSliderValue = newAngleSliderValue;
         this.newCoins = newCoins;
         this.weaponBools = new bool[weaponBools.Length];
         this.autoSave = autoSave;
@@ -146,7 +146,7 @@ public static class SaveManager
         }
         return 0;
     }
-    public static float LoadAngle()
+    public static float LoadNewAngleSliderValue()
     {
         Debug.Log(Application.persistentDataPath);
         if (File.Exists(path))
@@ -155,7 +155,7 @@ public static class SaveManager
             {
                 string json = File.ReadAllText(path);
                 SaveData data = JsonUtility.FromJson<SaveData>(json);
-                return data.newAngle;
+                return data.newAngleSliderValue;
             }
             catch (System.Exception e)
             {
@@ -165,14 +165,14 @@ public static class SaveManager
         }
         return 0;
     }
-    public static void SaveNewData(int new_highScore, float new_angle, int new_coins, bool[] new_WeaponBools, int new_WeaponID, int new_aimControlsIndex, bool new_autoSave)
+    public static void SaveNewData(int new_highScore, float new_AngleSliderValue, int new_coins, bool[] new_WeaponBools, int new_WeaponID, int new_aimControlsIndex, bool new_autoSave)
     {
-        SaveData data = new SaveData(new_highScore, new_angle, new_coins, new_WeaponBools, new_WeaponID, new_aimControlsIndex, new_autoSave);
+        SaveData data = new SaveData(new_highScore, new_AngleSliderValue, new_coins, new_WeaponBools, new_WeaponID, new_aimControlsIndex, new_autoSave);
         string json = JsonUtility.ToJson(data);
         File.WriteAllText(path, json);
     }
     public static void ResetData()
     {
-        SaveNewData(0,2.5f,0, new bool[3], 0, 0, false);
+        SaveNewData(0,0.7f,0, new bool[3], 0, 0, false);
     }
 }
