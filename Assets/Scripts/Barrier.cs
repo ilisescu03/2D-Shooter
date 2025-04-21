@@ -8,6 +8,7 @@ public class Barrier : MonoBehaviour
     private GameObject Builtbarrier;
     [SerializeField]
     private Player player;
+    private Coroutine damageCoroutine;
     [SerializeField]
     private Collider2D Trigger;
     private float health = 1000f;
@@ -25,13 +26,14 @@ public class Barrier : MonoBehaviour
     void Update()
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        if (player.isPlayerInBarrierRange()&& health!=1000f && health>0)
+        float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
+        if (distanceToPlayer<=1f&& health!=1000f && health>0)
         {
-            Repair(100f*Time.deltaTime);
+            Repair(200f*Time.deltaTime);
         }
-        if(player.isPlayerInBarrierRange() && health == 0f)
+        if(distanceToPlayer <= 1f && health == 0f)
         {
-            Build(100f*Time.deltaTime);
+            Build(200f*Time.deltaTime);
         }
         CheckForNearbyEnemies();
         UpdateHealthBar();
@@ -43,12 +45,19 @@ public class Barrier : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             float distance = Vector2.Distance(transform.position, enemy.transform.position);
-            if (distance < 0.1f)
+            if (distance <= 1f)
             {
-                Debug.Log("Enemy touches the barrier");
-                TakeDamage(50f);
-                break; 
+                if (damageCoroutine == null)
+                {
+                    damageCoroutine = StartCoroutine(DamageOverTime());
+                }
+                return;
             }
+        }
+        if (damageCoroutine != null)
+        {
+            StopCoroutine(damageCoroutine);
+            damageCoroutine = null;
         }
     }
     public void Repair(float amount)
@@ -74,6 +83,7 @@ public class Barrier : MonoBehaviour
         health -= damage;
         if (health <= 0f)
         {
+            health = 0f;
             Builtbarrier.SetActive(false);
         }
     }
@@ -92,6 +102,14 @@ public class Barrier : MonoBehaviour
             Vector3 screenPos = uiCamera.WorldToScreenPoint(worldPos);
             barFrame.transform.position = screenPos;
             healthBarUI.transform.position = screenPos;
+        }
+    }
+    private IEnumerator DamageOverTime()
+    {
+        while (true)
+        {
+            TakeDamage(100f);
+            yield return new WaitForSeconds(4f);
         }
     }
 

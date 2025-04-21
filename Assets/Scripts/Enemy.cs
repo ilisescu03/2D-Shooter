@@ -128,6 +128,7 @@ public class Enemy : Character
                 if (GetCollectibleSpawnChance() == 0)
                 {
                     coin = Instantiate(coinPrefab, transform.position, Quaternion.identity);
+                    
                 }
                 enemySpawner.DecreaseZombies();
                 Destroy(gameObject);

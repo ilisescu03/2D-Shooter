@@ -8,7 +8,8 @@ public class Collectible : MonoBehaviour
     [SerializeField]
     private string type;
     private Player player;
-  
+    [SerializeField]
+    private float speed = 6f;
     private Light2D light2D;
     private UIManager uiManager;
     void Start()
@@ -20,6 +21,8 @@ public class Collectible : MonoBehaviour
     }
     void Update()
     {
+        if (type == "Coins") FollowPlayer();
+
         Clear();
     }
     public void OnTriggerEnter2D(Collider2D other)
@@ -102,6 +105,10 @@ public class Collectible : MonoBehaviour
         uiManager.ShowAmmoText();
         Debug.Log("Fire rate reset");
         Destroy(gameObject);
+    }
+    public void FollowPlayer()
+    {
+        transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
     }
     
 }
