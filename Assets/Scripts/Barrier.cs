@@ -7,11 +7,14 @@ public class Barrier : MonoBehaviour
     [SerializeField]
     private GameObject Builtbarrier;
     [SerializeField]
+    private GameObject coinPrefab;
+    [SerializeField]
     private Player player;
     private Coroutine damageCoroutine;
     [SerializeField]
     private Collider2D Trigger;
     private float health = 1000f;
+    private float repairProgress = 0f;
     [SerializeField] private Image barFrame;
     [SerializeField] private Image healthBarUI;
     [SerializeField] private Camera uiCamera;
@@ -29,12 +32,13 @@ public class Barrier : MonoBehaviour
         float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
         if (distanceToPlayer<=1f&& health!=1000f && health>0)
         {
-            Repair(200f*Time.deltaTime);
+            Repair(250f*Time.deltaTime);
         }
         if(distanceToPlayer <= 1f && health == 0f)
         {
-            Build(200f*Time.deltaTime);
+            Build(250f*Time.deltaTime);
         }
+        
         CheckForNearbyEnemies();
         UpdateHealthBar();
     }
@@ -64,16 +68,30 @@ public class Barrier : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.E))
         {
+            repairProgress += amount;
+            while (repairProgress >= 250f) 
+            {
+                repairProgress -= 250f;
+                Instantiate(coinPrefab, transform.position, Quaternion.identity); 
+            }
             health += amount;
             health = Mathf.Clamp(health, 0f, 1000f);
+        
         }
         
     }
     public void Build(float amount)
     {
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E) )
         {
+            repairProgress += amount;
+            while (repairProgress >= 250f) 
+            {
+                repairProgress -= 250f;
+                Instantiate(coinPrefab, transform.position, Quaternion.identity); 
+            }
             health += amount;
+  
             health = Mathf.Clamp(health, 0f, 1000f);
             Builtbarrier.SetActive(true);
         }

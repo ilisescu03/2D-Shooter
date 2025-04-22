@@ -21,6 +21,14 @@ public class Spawner : MonoBehaviour
         
     }
     // Start is called before the first frame update
+    public float retMinTime()
+    {
+        return minTime;
+    }
+    public float retMaxTime()
+    {
+        return maxTime;
+    }
     protected virtual void Start()
     {
         player = FindObjectOfType<Player>();

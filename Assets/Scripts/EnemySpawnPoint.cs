@@ -6,6 +6,8 @@ public class EnemySpawnPoint : MonoBehaviour
 {
     [SerializeField]
     private EnemySpawner spawner;
+    [SerializeField]
+    private Transform[] spawnPoints;
     private List<GameObject> enemies;
     private int numberOfZombies;
     private bool spawnEnabled;
@@ -32,7 +34,8 @@ public class EnemySpawnPoint : MonoBehaviour
     {
         // audioMananger.PlayZombieSpawn();
         int index = Random.Range(0, enemies.Count);
-        Vector2 spawnPoint = new Vector2(transform.position.x, transform.position.y);
+        int spawnpointIndex = Random.Range(0, spawnPoints.Length);
+        Vector2 spawnPoint = new Vector2(spawnPoints[spawnpointIndex].position.x, spawnPoints[spawnpointIndex].position.y);
         if (index != 2)
         {
             enemy = Instantiate(enemies[index], spawnPoint, Quaternion.identity);
@@ -40,9 +43,9 @@ public class EnemySpawnPoint : MonoBehaviour
         numberOfZombies++;
         spawner.IncreaseZombies();
     }
-    int getSpawnTime()
+    float getSpawnTime()
     {
-        int value = Random.Range(5, 25);
+        float value = Random.Range(spawner.retMinTime()/2f, spawner.retMaxTime()/2f);
         return value;
     }
     IEnumerator SpawnLoop()
