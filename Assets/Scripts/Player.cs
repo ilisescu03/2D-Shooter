@@ -217,6 +217,10 @@ using UnityEngine.EventSystems;
         {
             return WeaponBools;
         }
+        public bool IsInvincible()
+        {
+        return invicibility;
+        }
         bool IsCursorOverButton()
         {
             PointerEventData pointerData = new PointerEventData(EventSystem.current)
@@ -373,6 +377,18 @@ using UnityEngine.EventSystems;
             changeWave = 1200;
             spawner.set_spawnTime(6f, 18f);
             spawner.ResetNumberOfZombies();
+        if (invicibility) invicibility = false;
+            if (isUsingMinigun)
+            {
+            isUsingMinigun = false;
+            animator.SetLayerWeight(1, 0);
+            WeaponObject.SetActive(true);
+            fire_rate = weapon.getFireRate();
+            InfiniteFire = false;
+            maxammo = weapon.getAmmo() - ammoPerRound;
+            ammo = ammoPerRound;
+            uiManager.ShowAmmoText();
+            }
             mintime = 6f;
             maxtime = 18f;
             Debug.Log("Dead");
@@ -506,7 +522,7 @@ using UnityEngine.EventSystems;
                     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
                     transform.rotation = Quaternion.Euler(0, 0, angle - 90f);
                 }
-                if (Input.GetKeyDown(KeyCode.R) && !Input.GetKey(KeyCode.Space) && !pause.get_state())
+                if (Input.GetKeyDown(KeyCode.R) && !Input.GetKey(KeyCode.Space) && !pause.get_state() && !isUsingMinigun)
                 {
                     audioManager.PlayReloadSFX();
                     StartCoroutine(Reloading());

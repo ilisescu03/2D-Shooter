@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class Powerup : MonoBehaviour
 {
     [SerializeField]
+    private Player player;
+    [SerializeField]
     private Image image;
     [SerializeField]
     private Image background;
@@ -42,6 +44,10 @@ public class Powerup : MonoBehaviour
         float aux = time;
         while (time > 0)
         {
+            if (!player.get_state())
+            {
+                time = 0;
+            }
             time -= Time.deltaTime;
             if (time < 0) TimeText.text = "0";
             else

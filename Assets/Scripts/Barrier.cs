@@ -38,7 +38,12 @@ public class Barrier : MonoBehaviour
         {
             Build(250f*Time.deltaTime);
         }
-        
+        if(player.get_state() == false)
+        {
+            health = 1000f;
+            repairProgress = 0f;
+            Builtbarrier.SetActive(true);
+        }
         CheckForNearbyEnemies();
         UpdateHealthBar();
     }

@@ -22,7 +22,7 @@ public class Collectible : MonoBehaviour
     void Update()
     {
         if (type == "Coins") FollowPlayer();
-
+        if (!player.get_state()) StopAllCoroutines();
         Clear();
     }
     public void OnTriggerEnter2D(Collider2D other)
@@ -49,13 +49,13 @@ public class Collectible : MonoBehaviour
                 }
                 else if (type == "InfiniteFire" || type == "Armor")
                 {
-                    if (type == "InfiniteFire")
+                    if (type == "InfiniteFire" && !player.IsUsingMinigun())
                     {
                         Powerup powerup = GameObject.Find("InfiniteFire").GetComponent<Powerup>();
                         powerup.StartTimer();
                         StartCoroutine(HandleInfiniteFire());
                     }
-                    else if (type == "Armor")
+                    else if (type == "Armor"&& !player.IsInvincible())
                     {
                         Powerup powerup = GameObject.Find("Armor").GetComponent<Powerup>();
                         powerup.StartTimer();
@@ -75,7 +75,7 @@ public class Collectible : MonoBehaviour
      
     private void Clear()
     {
-      if (player.get_state() == false) Destroy(gameObject);
+     if (player.get_state() == false) Destroy(gameObject);
     }
     private IEnumerator HandleArmor()
     {
