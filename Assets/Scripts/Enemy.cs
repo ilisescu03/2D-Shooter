@@ -7,6 +7,7 @@ public class Enemy : Character
 
    
     private EnemySpawner enemySpawner;
+
     [SerializeField]
     private int ID;
     [SerializeField]
@@ -23,7 +24,6 @@ public class Enemy : Character
         audioSource = gameObject.GetComponent<AudioSource>();
         target = FindObjectOfType<Player>();
         enemySpawner = FindObjectOfType<EnemySpawner>();
-       
         audioSource.Play();
         
         
@@ -35,9 +35,13 @@ public class Enemy : Character
         
         //FollowPlayer();
         FixedAttack();
-        Clear();
+       
         base.Update();
-        if(target.nextWave())
+        if(target.isStartPannelOn())
+        {
+            Clear();
+        }
+        if (target.nextWave())
         {
             Destroy(gameObject);
         }
@@ -66,7 +70,7 @@ public class Enemy : Character
     }
     private void Clear()
     {
-        if (target.get_state()==false) Destroy(gameObject);
+        Destroy(gameObject);
     }
     /*
     private void FollowPlayer()

@@ -19,10 +19,13 @@ public class Barrier : MonoBehaviour
     [SerializeField] private Image healthBarUI;
     [SerializeField] private Camera uiCamera;
     private GameObject[] enemies;
+    [SerializeField] private AudioSource DestroyAudio;
+    [SerializeField] private AudioSource RepairAudio;
     // Start is called before the first frame update
     void Start()
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
+     
     }
 
     // Update is called once per frame
@@ -73,6 +76,7 @@ public class Barrier : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.E))
         {
+            if(!RepairAudio.isPlaying)  RepairAudio.Play();
             repairProgress += amount;
             while (repairProgress >= 250f) 
             {
@@ -83,29 +87,34 @@ public class Barrier : MonoBehaviour
             health = Mathf.Clamp(health, 0f, 1000f);
         
         }
-        
+        else RepairAudio.Stop();
+
     }
     public void Build(float amount)
     {
-        if (Input.GetKey(KeyCode.E) )
+        if (Input.GetKey(KeyCode.E))
         {
             repairProgress += amount;
-            while (repairProgress >= 250f) 
+            if (!RepairAudio.isPlaying) RepairAudio.Play();
+            while (repairProgress >= 250f)
             {
                 repairProgress -= 250f;
-                Instantiate(coinPrefab, transform.position, Quaternion.identity); 
+                Instantiate(coinPrefab, transform.position, Quaternion.identity);
             }
             health += amount;
-  
+
             health = Mathf.Clamp(health, 0f, 1000f);
             Builtbarrier.SetActive(true);
         }
+        else RepairAudio.Stop();
+
     }
     public void TakeDamage(float damage)
     {
         health -= damage;
         if (health <= 0f)
         {
+            DestroyAudio.Play();
             health = 0f;
             Builtbarrier.SetActive(false);
         }

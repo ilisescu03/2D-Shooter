@@ -148,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 2979401495806202208}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -44.751755, y: 9.965965, z: 0}
+  m_LocalPosition: {x: -19.852655, y: -19.10039, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -267,6 +267,7 @@ MonoBehaviour:
   maxhealth: 100
   animator: {fileID: 1518532478087889457}
   angleSliderValue: 0
+  deathAudio: {fileID: 0}
   ControlsIndex: 0
   WaveIndex: 0
   coins: 1000
@@ -276,6 +277,7 @@ MonoBehaviour:
   spawnpoint: {x: 0, y: 0}
   uiManager: {fileID: 0}
   menu: {fileID: 0}
+  mainMenu: {fileID: 0}
   pause: {fileID: 0}
   spawner: {fileID: 0}
   weapon: {fileID: 0}

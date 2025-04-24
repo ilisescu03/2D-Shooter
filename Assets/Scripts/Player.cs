@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
     public class Player : Character
     {
         public float angleSliderValue;
-
+        [SerializeField] private AudioClip deathAudio;
         [SerializeField]
         private int ControlsIndex;
         private bool AutoSave = false;
@@ -40,6 +40,8 @@ using UnityEngine.EventSystems;
         [SerializeField]
         private GameOverMenu menu;
         [SerializeField]
+        private GameObject mainMenu;
+    [SerializeField]
         private Pause pause;
         [SerializeField]
         private EnemySpawner spawner;
@@ -292,6 +294,10 @@ using UnityEngine.EventSystems;
         if (other.tag == "Trigger") inBarrierRange = true;
         else inBarrierRange = false;
         }
+        public bool isStartPannelOn()
+    {
+        return mainMenu.activeSelf;
+    }
         // Update is called once per frame
         protected override void Update()
         {
@@ -353,6 +359,7 @@ using UnityEngine.EventSystems;
         }
         public void AmmoSupply()
         {
+            audioManager.PlayReloadSFX();
             maxammo += 100;
         }
         public void TakeDamage(float damage)
@@ -364,11 +371,14 @@ using UnityEngine.EventSystems;
             if (health == 0)
             {
                 Die();
-                menu.Show();
+                audioManager.PlaySFX(deathAudio);
+                uiManager.HUDChangeValue();
+            menu.Show();
             }
         }
         public void Die()
         {
+            
             isAlive = false;
             WaveIndex = 1;
             scoreCount2 = 0;
@@ -439,6 +449,12 @@ using UnityEngine.EventSystems;
         public void Respawn()
         {
             isAlive = true;
+        if (countingDown)
+        {
+            countingDown = false;
+            uiManager.HideCountdownText();
+            spawner.EnableSpawn();
+        }
             Time.timeScale = 1;
             menu.Hide();
             transform.position = new Vector2(spawnpoint.x, spawnpoint.y);
@@ -452,8 +468,8 @@ using UnityEngine.EventSystems;
             }
             WaveIndex = 1;
             score = 0;
-
-            spawner.set_spawnTime(6f, 18f);
+            Enemy.ClearAll();
+        spawner.set_spawnTime(6f, 18f);
             uiManager.Set_Text(score, high_score, WaveIndex);
         }
         public void Reload()
