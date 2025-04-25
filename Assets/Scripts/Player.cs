@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
     public class Player : Character
     {
+         private List<Barrier> barriers = new List<Barrier>();
+        private List<float> barrierDistances = new List<float>();
         public float angleSliderValue;
         [SerializeField] private AudioClip deathAudio;
         [SerializeField]
@@ -307,7 +309,7 @@ using UnityEngine.EventSystems;
             if (isAlive && !pause.get_state() && ControlsIndex == 1 && IsCursorOverButton()) cursorManager.SetCursorTexture(new Vector2(16, 16));
             if (isAlive && !pause.get_state() && ControlsIndex == 0 && isMouseMoving) cursorManager.SetCursorTexture(new Vector2(16, 16));
             if (isAlive && !pause.get_state() && ControlsIndex == 0 && !isMouseMoving) cursorManager.SetNoCursorTexture(new Vector2(16, 16));
-
+            UpdateBarriersAndDistances();
             if (!isAlive || pause.get_state()) cursorManager.SetCursorTexture(new Vector2(16, 16));
             if (AutoSave) { uiManager.Save(); }
             // else Debug.Log("Autosave is off");
@@ -349,9 +351,55 @@ using UnityEngine.EventSystems;
             if (!isAlive) spawner.set_spawnTime(6f, 18f);
 
         }
-        
-       
-        public void DeleteData()
+
+    public void UpdateBarriersAndDistances()
+    {
+        // Găsim toate obiectele Barrier din scenă
+        barriers.Clear();
+        barrierDistances.Clear();
+
+        Barrier[] allBarriers = FindObjectsOfType<Barrier>();
+        foreach (var barrier in allBarriers)
+        {
+            barriers.Add(barrier);
+            // Calculăm distanța dintre jucător și barieră
+            float distance = Vector2.Distance(transform.position, barrier.transform.position);
+            barrierDistances.Add(distance);
+        }
+    }
+    public bool CheckClosestBarrierDistance()
+    {
+        if (barrierDistances.Count == 0) return false;
+
+        float minDistance = Mathf.Min(barrierDistances.ToArray());
+
+        // Verificăm dacă distanța minimă este <= 1.3f
+        return minDistance <= 1.3f;
+    }
+    public float GetNearestBarrierHealth()
+    {
+        if (barriers == null || barriers.Count == 0)
+            return -1f;
+
+        Barrier nearest = null;
+        float minDistance = Mathf.Infinity;
+
+        foreach (Barrier barrier in barriers)
+        {
+            float distance = Vector2.Distance(transform.position, barrier.transform.position);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                nearest = barrier;
+            }
+        }
+
+        if (nearest != null)
+            return nearest.GetHealth();
+
+        return -1f;
+    }
+    public void DeleteData()
         {
         AutoSave = false;
         uiManager.ToggleAutoSaveButton(AutoSave);

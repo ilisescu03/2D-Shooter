@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +6,9 @@ public class Barrier : MonoBehaviour
 {
     [SerializeField]
     private GameObject Builtbarrier;
+    [SerializeField] private GameObject HUD;
+    [SerializeField] private GameObject EKeyImage;
+    [SerializeField] private GameObject EKeyPressedImage;
     [SerializeField]
     private GameObject coinPrefab;
     [SerializeField]
@@ -21,6 +24,7 @@ public class Barrier : MonoBehaviour
     private GameObject[] enemies;
     [SerializeField] private AudioSource DestroyAudio;
     [SerializeField] private AudioSource RepairAudio;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,24 +36,61 @@ public class Barrier : MonoBehaviour
     void Update()
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
-        if (distanceToPlayer<=1f&& health!=1000f && health>0)
+        
+        bool isInRange = player.CheckClosestBarrierDistance();
+        bool isRepairable = player.GetNearestBarrierHealth() != 1000f && player.GetNearestBarrierHealth() > 0;
+        bool isRebuildable = player.GetNearestBarrierHealth() == 0f;
+   
+        // Gestionare UI pentru E key
+        if (isInRange && (isRepairable || isRebuildable))
         {
-            Repair(250f*Time.deltaTime);
+ 
+            if (Input.GetKey(KeyCode.E))
+            {
+                EKeyImage.SetActive(false);
+                EKeyPressedImage.SetActive(true);
+            }
+            else
+            {
+                EKeyImage.SetActive(true);
+                EKeyPressedImage.SetActive(false);
+            }
         }
-        if(distanceToPlayer <= 1f && health == 0f)
+        
+        else
         {
-            Build(250f*Time.deltaTime);
+            
+                
+             EKeyImage.SetActive(false);
+             EKeyPressedImage.SetActive(false);
+            
         }
-        if(player.get_state() == false)
+
+        // Executare reparare/construire
+        if (isInRange)
+        {
+            if (isRepairable)
+                Repair(250f * Time.deltaTime);
+            else if (isRebuildable)
+                Build(250f * Time.deltaTime);
+        }
+
+        // Resetare dacă player-ul e "mort"
+        if (player.get_state() == false)
         {
             health = 1000f;
             repairProgress = 0f;
             Builtbarrier.SetActive(true);
+            DestroyAudio.Stop();
+            RepairAudio.Stop();
+            EKeyImage.SetActive(false);
+            EKeyPressedImage.SetActive(false);
         }
+
         CheckForNearbyEnemies();
         UpdateHealthBar();
     }
+
     public void CheckForNearbyEnemies()
     {
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
@@ -74,41 +115,51 @@ public class Barrier : MonoBehaviour
     }
     public void Repair(float amount)
     {
-        if(Input.GetKey(KeyCode.E))
+        float distance = Vector2.Distance(transform.position, player.transform.position);
+        if (Input.GetKey(KeyCode.E)&&distance<=1.3f)
         {
-            if(!RepairAudio.isPlaying)  RepairAudio.Play();
-            repairProgress += amount;
-            while (repairProgress >= 250f) 
-            {
-                repairProgress -= 250f;
-                Instantiate(coinPrefab, transform.position, Quaternion.identity); 
-            }
-            health += amount;
-            health = Mathf.Clamp(health, 0f, 1000f);
-        
-        }
-        else RepairAudio.Stop();
-
-    }
-    public void Build(float amount)
-    {
-        if (Input.GetKey(KeyCode.E))
-        {
-            repairProgress += amount;
             if (!RepairAudio.isPlaying) RepairAudio.Play();
+            repairProgress += amount;
+
             while (repairProgress >= 250f)
             {
                 repairProgress -= 250f;
                 Instantiate(coinPrefab, transform.position, Quaternion.identity);
             }
-            health += amount;
 
+            health += amount;
+            health = Mathf.Clamp(health, 0f, 1000f);
+        }
+        else
+        {
+            RepairAudio.Stop();
+        }
+    }
+
+    public void Build(float amount)
+    {
+        float distance = Vector2.Distance(transform.position, player.transform.position);
+        if (Input.GetKey(KeyCode.E) && distance <= 1.3f)
+        {
+            if (!RepairAudio.isPlaying) RepairAudio.Play();
+            repairProgress += amount;
+
+            while (repairProgress >= 250f)
+            {
+                repairProgress -= 250f;
+                Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            }
+
+            health += amount;
             health = Mathf.Clamp(health, 0f, 1000f);
             Builtbarrier.SetActive(true);
         }
-        else RepairAudio.Stop();
-
+        else
+        {
+            RepairAudio.Stop();
+        }
     }
+
     public void TakeDamage(float damage)
     {
         health -= damage;
