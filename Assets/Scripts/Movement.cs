@@ -5,10 +5,10 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
     // Start is called before the first frame update
-    public static void Move(Vector2 direction, Rigidbody2D rb, float speed)
+    public static void Move(Vector2 direction, Rigidbody2D rb, float speed, ref Vector2 currentVelocity, float smoothTime)
     {
-        rb.velocity = direction.normalized * speed;
-        
+        Vector2 targetVelocity = direction.normalized * speed;
+        rb.velocity = Vector2.SmoothDamp(rb.velocity, targetVelocity, ref currentVelocity, smoothTime);
     }
 }
 

@@ -6,10 +6,12 @@ using UnityEngine.EventSystems;
 
     public class Player : Character
     {
-         private List<Barrier> barriers = new List<Barrier>();
+
+    private List<Barrier> barriers = new List<Barrier>();
         private List<float> barrierDistances = new List<float>();
         public float angleSliderValue;
         [SerializeField] private AudioClip deathAudio;
+         [SerializeField] private Toggle HudActiveCheck;
         [SerializeField]
         private int ControlsIndex;
         private bool AutoSave = false;
@@ -410,34 +412,71 @@ using UnityEngine.EventSystems;
             audioManager.PlayReloadSFX();
             maxammo += 100;
         }
-        public void TakeDamage(float damage)
+    public void TakeDamage(float damage)
+    {
+        if (invicibility) return;
+
+        if (health > 0)
         {
-            if (invicibility) return;
             health -= damage;
             StartCoroutine(DamageEffect());
             health = Mathf.Max(health, 0.0f);
-            if (health == 0)
-            {
-                Die();
-                audioManager.PlaySFX(deathAudio);
-                uiManager.HUDChangeValue();
-            menu.Show();
-            }
         }
-        public void Die()
+
+        if (health == 0)
         {
+            Die(); // DOAR Die(), fără sa mai chemi manual menu.Show()
             
-            isAlive = false;
-            WaveIndex = 1;
-            scoreCount2 = 0;
-            scoreCount = 0;
-            spawner.clearVector();
-            changeWave = 1200;
-            spawner.set_spawnTime(6f, 18f);
-            spawner.ResetNumberOfZombies();
+            uiManager.HUDChangeValue();
+            if (uiManager.isHUDActive())
+                uiManager.HUDChangeValue();
+        }
+    }
+    public void Die()
+    {
+        if (!isAlive) return; // prevenim moartea dubla
+
+        isAlive = false;
+
+        animator.SetBool("IsDead", true); // activeaza animatia Death
+        rb.velocity = Vector2.zero; // opreste orice miscare
+        rb.isKinematic = true; // dezactiveaza Rigidbody pentru ca sa nu cada/jump
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        if (sprite != null)
+        {
+            sprite.sortingOrder = -9998; // sau ce valoare vrei tu (mai mare decât ceilalți)
+        }
+        audioManager.PlaySFX(deathAudio);
+        Time.timeScale = 1f; // timpul curge normal in timpul mortii
+
+        StartCoroutine(DeathSequence());
+    }
+    private IEnumerator DeathSequence()
+    {
+        yield return new WaitForSeconds(3f); // asteapta 3 secunde pentru animatia de Death
+        animator.SetBool("IsDead", false);
+        Time.timeScale = 0f; // opreste timpul cand apare DeathScreen-ul
+        menu.Show(); // afiseaza meniul de Game Over
+
+        rb.isKinematic = false; // reactivam Rigidbody-ul pentru reset sau respawn
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        if (sprite != null)
+        {
+            sprite.sortingOrder = 0; // sau ce valoare vrei tu (mai mare decât ceilalți)
+        }
+        // Resetari
+        WaveIndex = 1;
+        scoreCount2 = 0;
+        scoreCount = 0;
+        spawner.clearVector();
+        changeWave = 1200;
+        spawner.set_spawnTime(6f, 18f);
+        spawner.ResetNumberOfZombies();
+
         if (invicibility) invicibility = false;
-            if (isUsingMinigun)
-            {
+
+        if (isUsingMinigun)
+        {
             isUsingMinigun = false;
             animator.SetLayerWeight(1, 0);
             WeaponObject.SetActive(true);
@@ -446,13 +485,14 @@ using UnityEngine.EventSystems;
             maxammo = weapon.getAmmo() - ammoPerRound;
             ammo = ammoPerRound;
             uiManager.ShowAmmoText();
-            }
-            mintime = 6f;
-            maxtime = 18f;
-            Debug.Log("Dead");
-
         }
-        public void Heal(float points)
+
+        mintime = 6f;
+        maxtime = 18f;
+
+        Debug.Log("Dead");
+    }
+    public void Heal(float points)
         {
             health += points;
             if (health > maxhealth) health = maxhealth;
@@ -497,6 +537,7 @@ using UnityEngine.EventSystems;
         public void Respawn()
         {
             isAlive = true;
+        if(HudActiveCheck.isOn==uiManager.isHUDActive()) uiManager.HUDChangeValue();
         if (countingDown)
         {
             countingDown = false;
@@ -556,6 +597,7 @@ using UnityEngine.EventSystems;
                 if (Input.GetKey(keybinds.keys["Up"]))
                 {
                     direction += Vector2.up;
+                    
                 }
                 if (Input.GetKey(keybinds.keys["Down"]))
                 {
@@ -653,6 +695,7 @@ using UnityEngine.EventSystems;
 
         IEnumerator DamageEffect()
         {
+      
             audioManager.PlayHurt();
             SpriteRenderer effect = GetComponent<SpriteRenderer>();
             effect.color = Color.red;

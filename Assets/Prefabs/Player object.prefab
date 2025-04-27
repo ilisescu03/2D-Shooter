@@ -148,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 2979401495806202208}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 31.699047, y: 6.9913116, z: 0}
+  m_LocalPosition: {x: -12.298157, y: -5.5004296, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -266,8 +266,10 @@ MonoBehaviour:
   health: 100
   maxhealth: 100
   animator: {fileID: 1518532478087889457}
+  smoothTime: 0.1
   angleSliderValue: 0
   deathAudio: {fileID: 0}
+  HudActiveCheck: {fileID: 0}
   ControlsIndex: 0
   WaveIndex: 0
   coins: 1000

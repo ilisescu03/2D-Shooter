@@ -263,6 +263,10 @@ public class UIManager : MonoBehaviour
         }
         else HUD.SetActive(true);
     }
+    public bool isHUDActive()
+    {
+        return HUD.activeSelf;
+    }
     public void Save()
     {
         Player player = FindObjectOfType<Player>();

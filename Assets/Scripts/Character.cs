@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +15,9 @@ public class Character : MonoBehaviour
     protected float maxhealth;
     [SerializeField]
     protected Animator animator;
-
+    private Vector2 currentVelocity = Vector2.zero; // ADĂUGAT
+    [SerializeField]
+    private float smoothTime = 0.1f;
     protected Vector2 direction;
     protected Vector2 rotateDirection;
     // Start is called before the first frame update
@@ -27,7 +29,7 @@ public class Character : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        Movement.Move(direction, rb, speed);
+        Movement.Move(direction, rb, speed, ref currentVelocity, smoothTime);
         Rotation.Rotate(transform, rotateDirection);
         
     }
