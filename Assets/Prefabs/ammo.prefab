@@ -182,6 +182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: Ammo
+  speed: 6
 --- !u!61 &-1662897483757503666
 BoxCollider2D:
   m_ObjectHideFlags: 0

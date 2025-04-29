@@ -168,11 +168,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f3d303b85aeeb4cb283ed3d33890b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.7
+  speed: 1.25
   rb: {fileID: 2982082422100333003}
   health: 40
   maxhealth: 40
   animator: {fileID: 495400854704988261}
+  smoothTime: 0.1
+  damageToPlayer: 10
   ID: 1
   ScorePoints: 25
   coinPrefab: {fileID: 2143770215535479528, guid: 3ebd1af3dedd7f742b8e4451f8bb929d, type: 3}

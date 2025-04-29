@@ -6,9 +6,10 @@ using UnityEngine.EventSystems;
 
     public class Player : Character
     {
-
+        private bool playDeathSFXAvailable=true;
     private List<Barrier> barriers = new List<Barrier>();
         private List<float> barrierDistances = new List<float>();
+        private int WeaponTypeIndex;
         public float angleSliderValue;
         [SerializeField] private AudioClip deathAudio;
          [SerializeField] private Toggle HudActiveCheck;
@@ -70,6 +71,9 @@ using UnityEngine.EventSystems;
         private bool InfiniteFire = false;
         private float mintime = 6f;
         private float maxtime = 18f;
+
+        private float currmintime = 6f;
+        private float currmaxtime = 18f;
         [SerializeField]
         private AudioClip gunShot;
         private int scoreCount = 0;
@@ -219,6 +223,10 @@ using UnityEngine.EventSystems;
         {
             return angle;
         }
+        public int getWeaponTypeIndex()
+        {
+            return WeaponTypeIndex;
+        }
         public bool[] get_WeaponBools()
         {
             return WeaponBools;
@@ -251,11 +259,14 @@ using UnityEngine.EventSystems;
         }
         protected override void Start()
         {
+
             keybinds.InitializeKeys();
             cursorManager.SetCursorTexture(new Vector2(16, 16));
             uiManager.HideReloading();
             Time.timeScale = 0;
             MAXValue = Random.Range(75, 225);
+            LoadWeaponByID(SaveManager.LoadWeapon());
+            WeaponTypeIndex=weapon.GetWeaponTypeIndex();
             fire_rate = weapon.getFireRate();
             ShootingDamage = weapon.getDamage();
             // ammoPerRound = weapon.getAmmoPerRound();
@@ -278,7 +289,7 @@ using UnityEngine.EventSystems;
         uiManager.SetRotationSensitivity(angleSliderValue);
 
         WeaponBools = SaveManager.LoadWeapons();
-            LoadWeaponByID(SaveManager.LoadWeapon());
+            
         if (WeaponBools == null)
             {
                 WeaponBools = new bool[3];
@@ -290,7 +301,10 @@ using UnityEngine.EventSystems;
             uiManager.Set_Text(score, high_score, WaveIndex);
             uiManager.Set_Ammo_Text(ammo, maxammo);
             uiManager.HideCountdownText();
-      
+            
+            
+            if(WeaponTypeIndex==0 && !isUsingMinigun) uiManager.setSAmmoImage();
+            else uiManager.setPAmmoImage();
             isInitialized = true;
         }
         private void OnTriggerEnter2D(Collider2D other)
@@ -313,6 +327,7 @@ using UnityEngine.EventSystems;
             if (isAlive && !pause.get_state() && ControlsIndex == 0 && !isMouseMoving) cursorManager.SetNoCursorTexture(new Vector2(16, 16));
             UpdateBarriersAndDistances();
             if (!isAlive || pause.get_state()) cursorManager.SetCursorTexture(new Vector2(16, 16));
+            WeaponTypeIndex = weapon.GetWeaponTypeIndex();
             if (AutoSave) { uiManager.Save(); }
             // else Debug.Log("Autosave is off");
             if (!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
@@ -323,7 +338,8 @@ using UnityEngine.EventSystems;
             base.Update();
              
             prefab.transform.position = transform.position;
-            
+            if(WeaponTypeIndex==0 && !isUsingMinigun) uiManager.setSAmmoImage();
+            else uiManager.setPAmmoImage();
         if (direction != Vector2.zero)
             {
                 animator.SetBool("IsRunning", true);
@@ -343,9 +359,9 @@ using UnityEngine.EventSystems;
                     WaveIndex++;
                     changeWave += 1200;
                     spawner.insertInVector();
-                    mintime = 5f;
-                    maxtime = 15f;
-                    spawner.set_spawnTime(mintime, maxtime);
+                    currmintime /= 1.27f;
+                    currmaxtime /= 1.27f;
+                    spawner.set_spawnTime(currmintime, currmaxtime);
                     spawner.EnableSpawn();
                     uiManager.HideCountdownText();
                 }
@@ -426,7 +442,9 @@ using UnityEngine.EventSystems;
         if (health == 0)
         {
             Die(); // DOAR Die(), fără sa mai chemi manual menu.Show()
-            
+            if(playDeathSFXAvailable){ audioManager.PlaySFX(deathAudio);
+                playDeathSFXAvailable=false;
+            }
             uiManager.HUDChangeValue();
             if (uiManager.isHUDActive())
                 uiManager.HUDChangeValue();
@@ -439,6 +457,8 @@ using UnityEngine.EventSystems;
         isAlive = false;
 
         animator.SetBool("IsDead", true); // activeaza animatia Death
+        WeaponObject.SetActive(false); // dezactiveaza arma
+      
         rb.velocity = Vector2.zero; // opreste orice miscare
         rb.isKinematic = true; // dezactiveaza Rigidbody pentru ca sa nu cada/jump
         SpriteRenderer sprite = GetComponent<SpriteRenderer>();
@@ -446,15 +466,16 @@ using UnityEngine.EventSystems;
         {
             sprite.sortingOrder = -9998; // sau ce valoare vrei tu (mai mare decât ceilalți)
         }
-        audioManager.PlaySFX(deathAudio);
+        
         Time.timeScale = 1f; // timpul curge normal in timpul mortii
 
         StartCoroutine(DeathSequence());
     }
     private IEnumerator DeathSequence()
     {
-        yield return new WaitForSeconds(3f); // asteapta 3 secunde pentru animatia de Death
+        yield return new WaitForSeconds(2f); // asteapta 3 secunde pentru animatia de Death
         animator.SetBool("IsDead", false);
+      
         Time.timeScale = 0f; // opreste timpul cand apare DeathScreen-ul
         menu.Show(); // afiseaza meniul de Game Over
 
@@ -536,7 +557,9 @@ using UnityEngine.EventSystems;
         }
         public void Respawn()
         {
+            playDeathSFXAvailable=true;
             isAlive = true;
+            WeaponObject.SetActive(true);
         if(HudActiveCheck.isOn==uiManager.isHUDActive()) uiManager.HUDChangeValue();
         if (countingDown)
         {
@@ -559,6 +582,8 @@ using UnityEngine.EventSystems;
             score = 0;
             Enemy.ClearAll();
         spawner.set_spawnTime(6f, 18f);
+        currmaxtime = 18f;
+        currmintime = 6f;
             uiManager.Set_Text(score, high_score, WaveIndex);
         }
         public void Reload()

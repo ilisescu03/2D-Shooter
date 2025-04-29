@@ -5,6 +5,8 @@ using UnityEngine;
 public class Weapon : MonoBehaviour
 {
     [SerializeField]
+    private string WeaponType;
+    [SerializeField]
     private SpriteRenderer spriteRenderer;
     [SerializeField]
     private float damage;
@@ -111,5 +113,11 @@ public class Weapon : MonoBehaviour
     public int getID()
     {
         return ID;
+    }
+    public int GetWeaponTypeIndex()
+    {
+        if(WeaponType=="Primary") return 1;
+        if(WeaponType=="Secondary") return 0;
+        return -1;
     }
 }

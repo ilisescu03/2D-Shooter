@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
+    [SerializeField] private GameObject sAmmoImage;
+    [SerializeField] private GameObject pAmmoImage;
     [SerializeField]
     private Toggle AutoSaveToggle;
     [SerializeField]
@@ -55,6 +57,12 @@ public class UIManager : MonoBehaviour
     private GameObject ReloadingImage;
     [SerializeField]
     private GameObject StatsPannel;
+    [SerializeField]
+    private GameObject HammerImage;
+    public float speed = 100f; // viteza de rotire
+    private float targetRotation; // ținta de rotire
+    private float initialRotation; // unghiul inițial
+    private bool HammerRotatingClockWise=true;
     private void Start()
     {
         if(Screen.fullScreen)
@@ -65,17 +73,63 @@ public class UIManager : MonoBehaviour
         {
             FullscreenToggle.isOn = false;
         }
-
+        initialRotation = HammerImage.transform.rotation.eulerAngles.z;
+        targetRotation = initialRotation + 45f;
     }
-    
-    private void Update()
+    public void setSAmmoImage()
     {
-        if (ReloadingImage.activeSelf)
+        sAmmoImage.SetActive(true);
+        pAmmoImage.SetActive(false);
+    }
+    public void setPAmmoImage()
+    {
+        pAmmoImage.SetActive(true);
+        sAmmoImage.SetActive(false);
+    }
+    private void Update()
+{
+    if (ReloadingImage.activeSelf)
+    {
+        ReloadingImage.transform.Rotate(0, 0, 135 * Time.deltaTime);
+    }
+
+    if (HammerImage != null)
+    {
+        float currentRotation = NormalizeAngle(HammerImage.transform.eulerAngles.z);
+        float step = speed * Time.deltaTime;
+
+        if (HammerRotatingClockWise)
         {
-            ReloadingImage.transform.Rotate(0, 0, 135 * Time.deltaTime);
+            currentRotation += step;
+            if (currentRotation >= 0f)
+            {
+                currentRotation = 0f;
+                HammerRotatingClockWise = false;
+            }
+        }
+        else
+        {
+            currentRotation -= step;
+            if (currentRotation <= -45f)
+            {
+                currentRotation = -45f;
+                HammerRotatingClockWise = true;
+            }
         }
 
+        HammerImage.transform.rotation = Quaternion.Euler(0, 0, currentRotation);
     }
+}
+
+// Functie ca sa normalizeze unghiul intre -180 si 180
+private float NormalizeAngle(float angle)
+{
+    angle = angle % 360;
+    if (angle > 180)
+        angle -= 360;
+    return angle;
+}
+    
     public void OnRotationSensitivityChanged()
     {
         Player player = FindObjectOfType<Player>();

@@ -83,7 +83,7 @@ public class Collectible : MonoBehaviour
         GetComponent<SpriteRenderer>().enabled = false;
         light2D.enabled = false;
         GetComponent<Collider2D>().enabled = false;
-        yield return new WaitForSeconds(30f);
+        yield return new WaitForSeconds(15f);
         player.set_invicibility(false);
         Debug.Log("Armor reset");
         Destroy(gameObject);
@@ -98,7 +98,7 @@ public class Collectible : MonoBehaviour
         GetComponent<SpriteRenderer>().enabled = false;
         light2D.enabled = false;
         GetComponent<Collider2D>().enabled = false;
-        yield return new WaitForSeconds(30f);
+        yield return new WaitForSeconds(15f);
         player.set_fire_rate(value);
         player.set_InfiniteFire(false);
         player.enableMinigun(false);

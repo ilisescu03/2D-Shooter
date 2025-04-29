@@ -148,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 2979401495806202208}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -12.298157, y: -5.5004296, z: 0}
+  m_LocalPosition: {x: 25.232779, y: 25.063519, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -230,6 +230,7 @@ MonoBehaviour:
   origin2: {fileID: 2876714168632300065}
   minigunOrigin: {fileID: 5922464857867730426}
   bulletPrefab: {fileID: 7547398375634977513, guid: d6f020606d245cf44986c82689c19810, type: 3}
+  otherBulletPrefab: {fileID: 0}
   effect: {fileID: 8188746055648150859}
   light2D: {fileID: 250234278263890874}
   minigunlight2D: {fileID: 3633382004578838522}

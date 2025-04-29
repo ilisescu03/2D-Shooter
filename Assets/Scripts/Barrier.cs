@@ -98,7 +98,7 @@ public class Barrier : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             float distance = Vector2.Distance(transform.position, enemy.transform.position);
-            if (distance <= 1f)
+            if (distance <= 2f)
             {
                 if (damageCoroutine == null)
                 {

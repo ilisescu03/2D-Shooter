@@ -13,6 +13,9 @@ public class Shooting : MonoBehaviour
     private Transform minigunOrigin;
     [SerializeField]
     private GameObject bulletPrefab;
+
+    [SerializeField]
+    private GameObject otherBulletPrefab;
     private GameObject bullet;
     [SerializeField]
     private GameObject effect;
@@ -56,7 +59,8 @@ public class Shooting : MonoBehaviour
 
         if (!player.IsUsingMinigun())
         {
-            bullet = Instantiate(bulletPrefab, origin.position + origin.up * Offset, origin.rotation);
+            if(player.getWeaponTypeIndex()==0) bullet = Instantiate(bulletPrefab, origin.position + origin.up * Offset, origin.rotation);
+            else bullet = Instantiate(otherBulletPrefab, origin.position + origin.up * Offset, origin.rotation);
             bullet.GetComponent<Bullet>().setDamage(damage);
             rb = bullet.GetComponent<Rigidbody2D>();
             rb.AddForce(origin.up * bulletForce, ForceMode2D.Impulse);
@@ -69,7 +73,8 @@ public class Shooting : MonoBehaviour
         else { 
             minigunEffectRenderer.enabled = true;
             minigunlight2D.enabled = true;
-            bullet = Instantiate(bulletPrefab, minigunOrigin.position, minigunOrigin.rotation);
+            bullet = Instantiate(otherBulletPrefab, minigunOrigin.position, minigunOrigin.rotation);
+            bullet.GetComponent<Bullet>().setDamage(25f);
             rb = bullet.GetComponent<Rigidbody2D>();
             rb.AddForce(minigunOrigin.up * bulletForce, ForceMode2D.Impulse);
             

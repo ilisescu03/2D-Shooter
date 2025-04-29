@@ -7,7 +7,7 @@ public class Enemy : Character
 
    
     private EnemySpawner enemySpawner;
-
+    [SerializeField] private float damageToPlayer;
     [SerializeField]
     private int ID;
     [SerializeField]
@@ -172,7 +172,7 @@ public class Enemy : Character
     {
         while (isAttacking)
         {
-            target.TakeDamage(10);
+            target.TakeDamage(damageToPlayer);
             yield return new WaitForSeconds(2f); 
         }
     }
