@@ -16,7 +16,7 @@ public class Collectible : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
         uiManager = FindObjectOfType<UIManager>();
-        light2D= gameObject.GetComponentInChildren<Light2D>();
+        light2D = gameObject.GetComponentInChildren<Light2D>();
 
     }
     void Update()
@@ -27,7 +27,7 @@ public class Collectible : MonoBehaviour
     }
     public void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag=="Player")
+        if (other.tag == "Player")
         {
             if (type == "Health")
             {
@@ -36,7 +36,7 @@ public class Collectible : MonoBehaviour
                 Destroy(gameObject);
             }
             else
-            {   
+            {
                 if (type == "Coins")
                 {
                     player.AddCoins(1);
@@ -55,7 +55,7 @@ public class Collectible : MonoBehaviour
                         powerup.StartTimer();
                         StartCoroutine(HandleInfiniteFire());
                     }
-                    else if (type == "Armor"&& !player.IsInvincible())
+                    else if (type == "Armor" && !player.IsInvincible())
                     {
                         Powerup powerup = GameObject.Find("Armor").GetComponent<Powerup>();
                         powerup.StartTimer();
@@ -70,12 +70,12 @@ public class Collectible : MonoBehaviour
             }
         }
     }
-        
-        
-     
+
+
+
     private void Clear()
     {
-     if (player.get_state() == false) Destroy(gameObject);
+        if (player.get_state() == false) Destroy(gameObject);
     }
     private IEnumerator HandleArmor()
     {
@@ -110,5 +110,5 @@ public class Collectible : MonoBehaviour
     {
         transform.position = Vector2.MoveTowards(transform.position, player.transform.position, speed * Time.deltaTime);
     }
-    
+
 }
