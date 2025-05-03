@@ -67,6 +67,7 @@ public class Player : Character
     private int ammoPerRound;
     private int MAXValue;
     private float ShootingDamage;
+    [SerializeField] LoadingPannel loadingPannel;
     [SerializeField]
     private Timer timer;
     private bool InfiniteFire = false;
@@ -133,18 +134,20 @@ public class Player : Character
     {
 
         isUsingMinigun = state;
-        WeaponObject.SetActive(!state);
+       
        
         if (state)
         {
             // Activăm layerul pentru minigun și dezactivăm celelalte
             setLayerIndex(0, 1, 0);
+            WeaponObject.SetActive(true);
         }
         else
         {
             // Revenim la animația de bază (presupunem layer 0 ca default)
             if (WeaponTypeIndex == 0) setLayerIndex(1, 0, 0);
             else setLayerIndex(0, 0, 1);
+            WeaponObject.SetActive(false);
         }
     }
     public bool nextWave()
@@ -338,7 +341,7 @@ public class Player : Character
 
         if (WeaponBools == null)
         {
-            WeaponBools = new bool[3];
+            WeaponBools = new bool[4];
         }
         for (int i = 0; i < WeaponBools.Length; i++)
         {
@@ -367,10 +370,10 @@ public class Player : Character
     {
 
         CheckMouseMovement();
-        if (isAlive && !pause.get_state() && ControlsIndex == 1 && !IsCursorOverButton()) cursorManager.SetTargetTexture(new Vector2(16, 16));
+        if (isAlive && !pause.get_state() && ControlsIndex == 1 && !IsCursorOverButton() && !loadingPannel.isLoading()) cursorManager.SetTargetTexture(new Vector2(16, 16));
         if (isAlive && !pause.get_state() && ControlsIndex == 1 && IsCursorOverButton()) cursorManager.SetCursorTexture(new Vector2(16, 16));
-        if (isAlive && !pause.get_state() && ControlsIndex == 0 && isMouseMoving) cursorManager.SetCursorTexture(new Vector2(16, 16));
-        if (isAlive && !pause.get_state() && ControlsIndex == 0 && !isMouseMoving) cursorManager.SetNoCursorTexture(new Vector2(16, 16));
+        if (isAlive && !pause.get_state() && ControlsIndex == 0 && isMouseMoving ) cursorManager.SetCursorTexture(new Vector2(16, 16));
+        if (isAlive && !pause.get_state() && ControlsIndex == 0 && !isMouseMoving && !loadingPannel.isLoading()) cursorManager.SetNoCursorTexture(new Vector2(16, 16));
         UpdateBarriersAndDistances();
         if (!isAlive || pause.get_state()) cursorManager.SetCursorTexture(new Vector2(16, 16));
         WeaponTypeIndex = weapon.GetWeaponTypeIndex();
@@ -391,7 +394,8 @@ public class Player : Character
                
             }
         }
-        WeaponObject.SetActive(true);
+        if(isAlive&&!isUsingMinigun) WeaponObject.SetActive(true);
+        if(isUsingMinigun) WeaponObject.SetActive(false);
         if (AutoSave) { uiManager.Save(); }
         // else Debug.Log("Autosave is off");
         if (!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
@@ -542,6 +546,7 @@ public class Player : Character
     }
     private IEnumerator DeathSequence()
     {
+        WeaponObject.SetActive(false);
         yield return new WaitForSeconds(2f); // asteapta 3 secunde pentru animatia de Death
         animator.SetBool("IsDead", false);
          rb.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -637,6 +642,10 @@ public class Player : Character
         spawner.ResetNumberOfZombies();
         scoreCount2 = 0;
     }
+    public bool isPlayerReloading()
+    {
+        return isReloading;
+    }
     public void Respawn()
     {
         StopAllCoroutines();
@@ -674,9 +683,11 @@ public class Player : Character
         score = 0;
         Enemy.ClearAll();
         spawner.set_spawnTime(6f, 18f);
+        canShoot=true;
         currmaxtime = 18f;
         currmintime = 6f;
         uiManager.Set_Text(score, high_score, WaveIndex);
+        
     }
     public void Reload()
     {
@@ -708,7 +719,7 @@ public class Player : Character
     void GetInput()
     {
         // Primeste de la tastatura input
-        if (isAlive)
+        if (isAlive && !loadingPannel.isLoading())
         {
             direction = Vector2.zero;
             if (Input.GetKey(keybinds.keys["Up"]))
@@ -802,7 +813,7 @@ public class Player : Character
                     StartCoroutine(Timer());
                 }
             }
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.Escape)&&!isReloading)
             {
                 if (pause.get_state() == false) pause.TogglePause();
                 else { pause.ResumeGame(); }

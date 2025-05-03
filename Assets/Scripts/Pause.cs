@@ -33,6 +33,7 @@ public class Pause : MonoBehaviour
     }
     public void TogglePause()
     {
+        if(player.isPlayerReloading()) return ;
         isPaused = true;
         Time.timeScale = 0;
         gameObject.SetActive(true);
