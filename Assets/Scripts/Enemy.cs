@@ -18,6 +18,7 @@ public class Enemy : Character
     [SerializeField]
     private GameObject coinPrefab;
     private AudioSource audioSource;
+    [SerializeField] private AudioSource damageAudioSource;
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -25,6 +26,7 @@ public class Enemy : Character
         target = FindObjectOfType<Player>();
         enemySpawner = FindObjectOfType<EnemySpawner>();
         audioSource.Play();
+        
         
         
     }
@@ -120,11 +122,14 @@ public class Enemy : Character
         int value = Random.Range(0, 4);
         return value;
     }
+  
     public void TakeDamage(float damage, Collider2D other)
     {
         if (other.tag != "Wall")
         {
             health -= damage;
+            
+            if(!damageAudioSource.isPlaying) damageAudioSource.Play();
             StartCoroutine(DamageEffect());
             health = Mathf.Max(health, 0.0f);
             if (health == 0)
@@ -134,6 +139,7 @@ public class Enemy : Character
                     coin = Instantiate(coinPrefab, transform.position, Quaternion.identity);
                     
                 }
+                
                 enemySpawner.DecreaseZombies();
                 Destroy(gameObject);
                 target.Increase_Score(ScorePoints);

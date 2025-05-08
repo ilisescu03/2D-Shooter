@@ -33,6 +33,7 @@ public class Player : Character
     private bool isAlive = false;
     private bool invicibility = false;
 
+    private Coroutine reloadCoroutine;
     private bool inBarrierRange = false;
     private float angle = 2.5f;
     [SerializeField]
@@ -98,6 +99,10 @@ public class Player : Character
     [SerializeField]
     private GameObject prefab;
     // Start is called before the first frame update
+    public int getBulletType()
+    {
+        return weapon.retBulletType();
+    }
     void CheckMouseMovement()
     {
         if (Input.mousePosition != lastMousePosition)
@@ -134,8 +139,8 @@ public class Player : Character
     {
 
         isUsingMinigun = state;
-       
-       
+
+
         if (state)
         {
             // Activăm layerul pentru minigun și dezactivăm celelalte
@@ -204,12 +209,12 @@ public class Player : Character
         WeaponObject.transform.localPosition = Vector3.zero;
         WeaponObject.transform.localRotation = Quaternion.identity;
         WeaponObject.transform.localScale = new Vector3(-1, -1, 1);
-        
-        if(WeaponTypeIndex==1)
+
+        if (WeaponTypeIndex == 1)
         {
-            WeaponObject.transform.localPosition=new Vector3(0.21f, 0.341f, 0f);
-            WeaponObject.transform.localRotation=Quaternion.Euler(0f,0f,0f);
-            WeaponObject.transform.localScale=new Vector3(-1.173769f, -0.768399f, -0.9413083f);
+            WeaponObject.transform.localPosition = new Vector3(0.21f, 0.341f, 0f);
+            WeaponObject.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+
         }
         WeaponObject.SetActive(true);
     }
@@ -292,7 +297,7 @@ public class Player : Character
     }
     protected override void Start()
     {
-
+        reloadCoroutine = null;
         keybinds.InitializeKeys();
         cursorManager.SetCursorTexture(new Vector2(16, 16));
         uiManager.HideReloading();
@@ -305,14 +310,14 @@ public class Player : Character
             animator.SetLayerWeight(1, 0);
             animator.SetLayerWeight(0, 1);
             animator.SetLayerWeight(2, 0);
-            
+
         }
         else
         {
             animator.SetLayerWeight(0, 0);
             animator.SetLayerWeight(1, 0);
             animator.SetLayerWeight(2, 1);
-            
+
         }
         WeaponObject.SetActive(true);
         fire_rate = weapon.getFireRate();
@@ -328,7 +333,7 @@ public class Player : Character
         high_score = SaveManager.LoadHighScore();
         coins = 0;
         coins = SaveManager.LoadCoins();
-        coins=1000;
+        coins = 10000;
         ControlsIndex = SaveManager.LoadAimControlsIndex();
         if (ControlsIndex == 0) { uiManager.SetSelectFrame(1); }
         else { uiManager.SetSelectFrame(0); }
@@ -341,7 +346,16 @@ public class Player : Character
 
         if (WeaponBools == null)
         {
-            WeaponBools = new bool[4];
+            WeaponBools = new bool[7];
+        }
+        Debug.Log("WeaponBools length: " + WeaponBools.Length);
+        Debug.Log("WeaponsManager length: " + weaponsManager.GetNumberOfWeapons());
+        if(WeaponBools.Length + 1 == weaponsManager.GetNumberOfWeapons())
+        {
+            Debug.Log("WeaponBools length is incorrect");
+            List<bool> temp = new List<bool>(WeaponBools);
+            temp.Add(false);
+            WeaponBools = temp.ToArray();
         }
         for (int i = 0; i < WeaponBools.Length; i++)
         {
@@ -372,7 +386,7 @@ public class Player : Character
         CheckMouseMovement();
         if (isAlive && !pause.get_state() && ControlsIndex == 1 && !IsCursorOverButton() && !loadingPannel.isLoading()) cursorManager.SetTargetTexture(new Vector2(16, 16));
         if (isAlive && !pause.get_state() && ControlsIndex == 1 && IsCursorOverButton()) cursorManager.SetCursorTexture(new Vector2(16, 16));
-        if (isAlive && !pause.get_state() && ControlsIndex == 0 && isMouseMoving ) cursorManager.SetCursorTexture(new Vector2(16, 16));
+        if (isAlive && !pause.get_state() && ControlsIndex == 0 && isMouseMoving) cursorManager.SetCursorTexture(new Vector2(16, 16));
         if (isAlive && !pause.get_state() && ControlsIndex == 0 && !isMouseMoving && !loadingPannel.isLoading()) cursorManager.SetNoCursorTexture(new Vector2(16, 16));
         UpdateBarriersAndDistances();
         if (!isAlive || pause.get_state()) cursorManager.SetCursorTexture(new Vector2(16, 16));
@@ -382,7 +396,7 @@ public class Player : Character
             animator.SetLayerWeight(1, 0);
             animator.SetLayerWeight(0, 1);
             animator.SetLayerWeight(2, 0);
-          
+
         }
         else
         {
@@ -391,11 +405,11 @@ public class Player : Character
                 animator.SetLayerWeight(0, 0);
                 animator.SetLayerWeight(1, 0);
                 animator.SetLayerWeight(2, 1);
-               
+
             }
         }
-        if(isAlive&&!isUsingMinigun) WeaponObject.SetActive(true);
-        if(isUsingMinigun) WeaponObject.SetActive(false);
+        if (isAlive && !isUsingMinigun) WeaponObject.SetActive(true);
+        if (isUsingMinigun) WeaponObject.SetActive(false);
         if (AutoSave) { uiManager.Save(); }
         // else Debug.Log("Autosave is off");
         if (!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
@@ -406,7 +420,7 @@ public class Player : Character
         base.Update();
 
         prefab.transform.position = transform.position;
-        if (WeaponTypeIndex == 0 && !isUsingMinigun) uiManager.setSAmmoImage();
+        if (weapon.retBulletType() == 0 && !isUsingMinigun) uiManager.setSAmmoImage();
         else uiManager.setPAmmoImage();
         if (direction != Vector2.zero)
         {
@@ -549,7 +563,7 @@ public class Player : Character
         WeaponObject.SetActive(false);
         yield return new WaitForSeconds(2f); // asteapta 3 secunde pentru animatia de Death
         animator.SetBool("IsDead", false);
-         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         Time.timeScale = 0f; // opreste timpul cand apare DeathScreen-ul
         menu.Show(); // afiseaza meniul de Game Over
 
@@ -578,14 +592,14 @@ public class Player : Character
                 animator.SetLayerWeight(0, 1);
                 animator.SetLayerWeight(1, 0);
                 animator.SetLayerWeight(2, 0);
-                
+
             }
             else
             {
                 animator.SetLayerWeight(0, 0);
                 animator.SetLayerWeight(1, 0);
                 animator.SetLayerWeight(2, 1);
-               
+
             }
             WeaponObject.SetActive(true);
             fire_rate = weapon.getFireRate();
@@ -657,6 +671,10 @@ public class Player : Character
         {
             sprite.sortingOrder = 0; // sau ce valoare vrei tu (mai mare decât ceilalți)
         }
+        if (isReloading)
+        {
+            CancelReload();
+        }
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         playDeathSFXAvailable = true;
         isAlive = true;
@@ -683,11 +701,11 @@ public class Player : Character
         score = 0;
         Enemy.ClearAll();
         spawner.set_spawnTime(6f, 18f);
-        canShoot=true;
+        canShoot = true;
         currmaxtime = 18f;
         currmintime = 6f;
         uiManager.Set_Text(score, high_score, WaveIndex);
-        
+
     }
     public void Reload()
     {
@@ -714,7 +732,21 @@ public class Player : Character
         isReloading = true;
         uiManager.ShowReloading();
         yield return new WaitForSeconds(2f);
+
         Reload();
+        reloadCoroutine = null;
+    }
+    public void CancelReload()
+    {
+        Debug.Log("Function called");
+        if (isReloading && reloadCoroutine != null)
+        {
+            Debug.Log("Reloading stopped");
+            StopCoroutine(reloadCoroutine);
+            reloadCoroutine = null;
+            isReloading = false;
+            uiManager.HideReloading();
+        }
     }
     void GetInput()
     {
@@ -759,7 +791,7 @@ public class Player : Character
             if (Input.GetKeyDown(KeyCode.R) && !Input.GetKey(KeyCode.Space) && !pause.get_state() && !isUsingMinigun)
             {
                 audioManager.PlayReloadSFX();
-                StartCoroutine(Reloading());
+                reloadCoroutine = StartCoroutine(Reloading());
             }
             if (ControlsIndex == 0 && Input.GetKey(KeyCode.Space) && !isReloading && ((canShoot && !pause.get_state() && !InfiniteFire) || (canShoot && InfiniteFire)))
             {
@@ -813,7 +845,7 @@ public class Player : Character
                     StartCoroutine(Timer());
                 }
             }
-            if (Input.GetKeyDown(KeyCode.Escape)&&!isReloading)
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (pause.get_state() == false) pause.TogglePause();
                 else { pause.ResumeGame(); }

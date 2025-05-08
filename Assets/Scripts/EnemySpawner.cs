@@ -140,7 +140,7 @@ public class EnemySpawner : Spawner
             yield return new WaitForSeconds(spawnTime);
             getPosition();
 
-            if(numberOfZombies<=80&&spawnEnabled) Spawn();
+            if(spawnEnabled) Spawn();
         }
 
     }

@@ -50,7 +50,7 @@ public class Shooting : MonoBehaviour
         light2D2.enabled = false;
         minigunlight2D.enabled = false;
         effectRenderer = effect.GetComponent<SpriteRenderer>();
-        effectRenderer2= effect2.GetComponent<SpriteRenderer>();
+        effectRenderer2 = effect2.GetComponent<SpriteRenderer>();
         initialEffect.position = effect.transform.position;
         effectRenderer.enabled = false;
         effectRenderer2.enabled = false;
@@ -71,18 +71,33 @@ public class Shooting : MonoBehaviour
 
         if (!player.IsUsingMinigun())
         {
-            if (player.getWeaponTypeIndex() == 0)
+            if (player.getBulletType() == 0)
             {
+                if (player.getWeaponTypeIndex() == 0)
+                {
+                    bullet = Instantiate(bulletPrefab, origin.position + origin.up * Offset, origin.rotation);
+                    bullet.GetComponent<Bullet>().setDamage(damage);
+                    rb = bullet.GetComponent<Rigidbody2D>();
+                    rb.AddForce(origin.up * bulletForce, ForceMode2D.Impulse);
 
-                bullet = Instantiate(bulletPrefab, origin.position + origin.up * Offset, origin.rotation);
-                bullet.GetComponent<Bullet>().setDamage(damage);
-                rb = bullet.GetComponent<Rigidbody2D>();
-                rb.AddForce(origin.up * bulletForce, ForceMode2D.Impulse);
+                    effect.transform.position = origin2.position + origin2.up * Offset;
+                    light2D.transform.position = origin.position + origin.up * Offset;
+                    effectRenderer.enabled = true;
+                    light2D.enabled = true;
+                }
+                else
+                {
+                    bullet = Instantiate(bulletPrefab, origin4.position + origin4.up * Offset, origin4.rotation);
+                    bullet.GetComponent<Bullet>().setDamage(damage);
+                    rb = bullet.GetComponent<Rigidbody2D>();
+                    rb.AddForce(origin3.up * bulletForce, ForceMode2D.Impulse);
 
-                effect.transform.position = origin2.position + origin2.up * Offset;
-                light2D.transform.position = origin.position + origin.up * Offset;
-                effectRenderer.enabled = true;
-                light2D.enabled = true;
+                    effect2.transform.position = origin3.position + origin3.up * Offset;
+                    light2D2.transform.position = origin4.position + origin4.up * Offset;
+                    effectRenderer2.enabled = true;
+                    light2D2.enabled = true;
+
+                }
             }
 
             else

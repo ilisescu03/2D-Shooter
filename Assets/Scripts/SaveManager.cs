@@ -30,7 +30,12 @@ public class SaveData
 }
 public static class SaveManager
 {
-    private static string path = Application.persistentDataPath + "/save.json";
+    #if UNITY_EDITOR
+        private static string path = Application.dataPath + "/EditorSave/save.json";
+    #else
+        private static string path = Application.persistentDataPath + "/save.json";
+    #endif
+
     public static bool LoadAutoSave()
     {
         Debug.Log(Application.persistentDataPath);
@@ -103,10 +108,10 @@ public static class SaveManager
             catch (System.Exception e)
             {
                 Debug.LogWarning("Failed to load save data");
-                return new bool[4];
+                return new bool[7];
             }
         }
-        return new bool[4];
+        return new bool[7];
     }
     public static int LoadHighScore()
     {
@@ -169,10 +174,11 @@ public static class SaveManager
     {
         SaveData data = new SaveData(new_highScore, new_AngleSliderValue, new_coins, new_WeaponBools, new_WeaponID, new_aimControlsIndex, new_autoSave);
         string json = JsonUtility.ToJson(data);
+        Directory.CreateDirectory(Path.GetDirectoryName(path));
         File.WriteAllText(path, json);
     }
     public static void ResetData()
     {
-        SaveNewData(0,0.7f,0, new bool[4], 0, 0, false);
+        SaveNewData(0,0.7f,0, new bool[7], 0, 0, false);
     }
 }

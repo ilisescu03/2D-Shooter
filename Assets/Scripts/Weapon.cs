@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    [SerializeField] int bulletType;
     [SerializeField]
     private string WeaponType;
     [SerializeField]
@@ -72,6 +73,11 @@ public class Weapon : MonoBehaviour
     {
         isEquiped = true;
         selectingWeapon.ShowSelected();
+    }
+    public int retBulletType()
+    {
+        return bulletType;
+
     }
     public void AssignToPlayer()
     {

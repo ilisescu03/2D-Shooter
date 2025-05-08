@@ -18,4 +18,8 @@ public class WeaponsManager : MonoBehaviour
     {
         Weapons[index].AssignToPlayer();
     }
+    public int GetNumberOfWeapons()
+    {
+        return Weapons.Length;
+    }
 }
