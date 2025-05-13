@@ -108,10 +108,10 @@ public static class SaveManager
             catch (System.Exception e)
             {
                 Debug.LogWarning("Failed to load save data");
-                return new bool[7];
+                return new bool[9];
             }
         }
-        return new bool[7];
+        return new bool[9];
     }
     public static int LoadHighScore()
     {
@@ -179,6 +179,6 @@ public static class SaveManager
     }
     public static void ResetData()
     {
-        SaveNewData(0,0.7f,0, new bool[7], 0, 0, false);
+        SaveNewData(0,0.7f,0, new bool[9], 0, 0, false);
     }
 }

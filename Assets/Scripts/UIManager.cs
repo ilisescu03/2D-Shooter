@@ -58,6 +58,8 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject StatsPannel;
     [SerializeField]
+    private AudioManager audioManager;
+    [SerializeField]
     private GameObject HammerImage;
     public float speed = 100f; // viteza de rotire
     private float targetRotation; // ținta de rotire
@@ -68,10 +70,12 @@ public class UIManager : MonoBehaviour
         if(Screen.fullScreen)
         {
            FullscreenToggle.isOn = true;
+           audioManager.StopSFX();
         }
         else
         {
             FullscreenToggle.isOn = false;
+            audioManager.StopSFX();
         }
         initialRotation = HammerImage.transform.rotation.eulerAngles.z;
         targetRotation = initialRotation + 45f;
@@ -170,11 +174,12 @@ private float NormalizeAngle(float angle)
             else SelectFrame[i].SetActive(false);
         }
     }
-    public void ToggleAutoSaveButton(bool value)
+    public void ToggleAutoSaveButton(bool value, bool value1)
     {
         if(value==true)
         {
             AutoSaveToggle.isOn = true;
+            if(!value1) audioManager.StopSFX();
         }
         else
         {

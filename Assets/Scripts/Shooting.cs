@@ -24,7 +24,10 @@ public class Shooting : MonoBehaviour
     private GameObject bullet;
     [SerializeField]
     private GameObject effect;
-
+    [SerializeField]
+    private Transform[] TreesPositions;
+    
+    private bool isTree=false;
     [SerializeField]
     private GameObject effect2;
     private SpriteRenderer effectRenderer;
@@ -62,9 +65,19 @@ public class Shooting : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+   
+        
     }
-
+   
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Tree"))
+        {
+            
+          if(!isTree) isTree=true;
+          isTree=false;
+        }
+    }
     public void Shoot(float Offset, float damage)
     {
 
@@ -83,7 +96,7 @@ public class Shooting : MonoBehaviour
                     effect.transform.position = origin2.position + origin2.up * Offset;
                     light2D.transform.position = origin.position + origin.up * Offset;
                     effectRenderer.enabled = true;
-                    light2D.enabled = true;
+                    if(!isTree) light2D.enabled = true;
                 }
                 else
                 {
@@ -95,7 +108,7 @@ public class Shooting : MonoBehaviour
                     effect2.transform.position = origin3.position + origin3.up * Offset;
                     light2D2.transform.position = origin4.position + origin4.up * Offset;
                     effectRenderer2.enabled = true;
-                    light2D2.enabled = true;
+                    if(!isTree) light2D2.enabled = true;
 
                 }
             }
@@ -110,7 +123,7 @@ public class Shooting : MonoBehaviour
                 effect2.transform.position = origin3.position + origin3.up * Offset;
                 light2D2.transform.position = origin4.position + origin4.up * Offset;
                 effectRenderer2.enabled = true;
-                light2D2.enabled = true;
+                if(!isTree) light2D2.enabled = true;
 
 
             }
@@ -119,7 +132,7 @@ public class Shooting : MonoBehaviour
         else
         {
             minigunEffectRenderer.enabled = true;
-            minigunlight2D.enabled = true;
+            if(!isTree) minigunlight2D.enabled = true;
             bullet = Instantiate(otherBulletPrefab, minigunOrigin.position, minigunOrigin.rotation);
             bullet.GetComponent<Bullet>().setDamage(25f);
             rb = bullet.GetComponent<Rigidbody2D>();

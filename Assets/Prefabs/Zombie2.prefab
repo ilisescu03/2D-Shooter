@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: -8703702106134921635}
   - component: {fileID: 5913297008202588180}
   - component: {fileID: -8074893202316664691}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Zombie2
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -179,6 +179,8 @@ MonoBehaviour:
   ID: 1
   ScorePoints: 25
   coinPrefab: {fileID: 2143770215535479528, guid: 3ebd1af3dedd7f742b8e4451f8bb929d, type: 3}
+  DeathAudioSource: {fileID: 6201656963836858107, guid: ba765846a1f142245b96326e3b373c98, type: 3}
+  bloodEffect: {fileID: 5711149250192773532, guid: a4e3060b3bd3faa4dafe98cfc4c79d10, type: 3}
   damageAudioSource: {fileID: -8774725991992109095, guid: 5a6ea9db582c544418f9027d3f875e3e, type: 3}
 --- !u!95 &495400854704988261
 Animator:
@@ -488,7 +490,7 @@ GameObject:
   - component: {fileID: 5420989757454198524}
   - component: {fileID: 867548221007953914}
   - component: {fileID: 2364689231994778611}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -607,7 +609,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7923616961780507888}
   - component: {fileID: 358170763812481738}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: shadow (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -193,3 +193,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82909c04dcdecae48bd9c2c0f32cf162, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletHitEffect: {fileID: 5415743281377534589, guid: 74c55409615288842b6f66dd2950018e, type: 3}

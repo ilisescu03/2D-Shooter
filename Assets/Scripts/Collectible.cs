@@ -75,7 +75,11 @@ public class Collectible : MonoBehaviour
 
     private void Clear()
     {
-        if (player.get_state() == false) Destroy(gameObject);
+        if (player.get_state() == false)
+        {
+            if(type=="Coins") player.AddCoins(1);
+             Destroy(gameObject);
+        }
     }
     private IEnumerator HandleArmor()
     {

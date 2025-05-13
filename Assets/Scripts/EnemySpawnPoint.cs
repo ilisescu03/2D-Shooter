@@ -55,7 +55,7 @@ public class EnemySpawnPoint : MonoBehaviour
             yield return new WaitForSeconds(getSpawnTime());
        
 
-            if (spawnEnabled) Spawn();
+            if (spawnEnabled&&numberOfZombies<=140) Spawn();
         }
 
     }

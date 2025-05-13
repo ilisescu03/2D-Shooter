@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Audio;
 public class AudioManager : MonoBehaviour
 {
+    private bool SFXAllowed = false;
     [SerializeField]
     private AudioSource musicSource;
     [SerializeField]
@@ -43,6 +44,8 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField]
     private GameObject startPannel;
+
+    [SerializeField] private Player player;
     void Start()
     {
         if(!musicSource.isPlaying)
@@ -50,7 +53,13 @@ public class AudioManager : MonoBehaviour
             SFXSource.Stop();
         }
         SetMusicVolume();
+        StartCoroutine(AllowSFX());
 
+    }
+    private IEnumerator AllowSFX()
+    {
+        yield return new WaitForSeconds(0.5f);
+        SFXAllowed = true;
     }
     void Update()
     {
@@ -99,6 +108,10 @@ public class AudioManager : MonoBehaviour
     public void PlaySFX(AudioClip clip)
     {
         SFXSource.PlayOneShot(clip);
+    }
+    public void StopSFX()
+    {
+        SFXSource.Stop();
     }
     public void PlayMinigun()
     {

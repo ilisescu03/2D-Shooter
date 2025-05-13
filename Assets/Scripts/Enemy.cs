@@ -17,6 +17,8 @@ public class Enemy : Character
     private GameObject coin;
     [SerializeField]
     private GameObject coinPrefab;
+    [SerializeField] private GameObject DeathAudioSource;
+    [SerializeField] private GameObject bloodEffect;
     private AudioSource audioSource;
     [SerializeField] private AudioSource damageAudioSource;
     // Start is called before the first frame update
@@ -30,7 +32,15 @@ public class Enemy : Character
         
         
     }
+    public void BloodEffect(Vector3 spawnPosition)
+    {
+ 
+        GameObject blood = Instantiate(bloodEffect, spawnPosition, Quaternion.identity);
+        blood.transform.SetParent(transform);
+        
+        
 
+    }
     // Update is called once per frame
     protected override void Update()
     {
@@ -130,10 +140,18 @@ public class Enemy : Character
             health -= damage;
             
             if(!damageAudioSource.isPlaying) damageAudioSource.Play();
+           // else{
+           //    damageAudioSource.Stop();
+           //     damageAudioSource.Play();
+           // }
             StartCoroutine(DamageEffect());
             health = Mathf.Max(health, 0.0f);
             if (health == 0)
             {
+                GameObject blood = Instantiate(bloodEffect, transform.position, Quaternion.identity);
+                GameObject deathAudioSource= Instantiate(DeathAudioSource, transform.position, Quaternion.identity);
+                deathAudioSource.transform.SetParent(null);
+                blood.transform.SetParent(null);
                 if (GetCollectibleSpawnChance() == 0)
                 {
                     coin = Instantiate(coinPrefab, transform.position, Quaternion.identity);

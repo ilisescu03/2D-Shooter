@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class Player : Character
 {
+    private float GameElapsedTime=0;
     private bool playDeathSFXAvailable = true;
     private List<Barrier> barriers = new List<Barrier>();
     private List<float> barrierDistances = new List<float>();
@@ -98,6 +99,12 @@ public class Player : Character
     private float countdown = 0f;
     [SerializeField]
     private GameObject prefab;
+
+    [SerializeField]
+    private float shakeDuration;
+
+    [SerializeField]
+    private float shakeMagnitude;
     // Start is called before the first frame update
     public int getBulletType()
     {
@@ -333,12 +340,14 @@ public class Player : Character
         high_score = SaveManager.LoadHighScore();
         coins = 0;
         coins = SaveManager.LoadCoins();
+        #if UNITY_EDITOR
         coins = 10000;
+        #endif
         ControlsIndex = SaveManager.LoadAimControlsIndex();
         if (ControlsIndex == 0) { uiManager.SetSelectFrame(1); }
         else { uiManager.SetSelectFrame(0); }
         AutoSave = SaveManager.LoadAutoSave();
-        uiManager.ToggleAutoSaveButton(AutoSave);
+        uiManager.ToggleAutoSaveButton(AutoSave, false);
         angleSliderValue = SaveManager.LoadNewAngleSliderValue();
         uiManager.SetRotationSensitivity(angleSliderValue);
 
@@ -346,7 +355,7 @@ public class Player : Character
 
         if (WeaponBools == null)
         {
-            WeaponBools = new bool[7];
+            WeaponBools = new bool[9];
         }
         Debug.Log("WeaponBools length: " + WeaponBools.Length);
         Debug.Log("WeaponsManager length: " + weaponsManager.GetNumberOfWeapons());
@@ -380,6 +389,10 @@ public class Player : Character
         return mainMenu.activeSelf;
     }
     // Update is called once per frame
+    public float GetGameElapsedTime()
+    {
+        return GameElapsedTime;
+    }
     protected override void Update()
     {
 
@@ -408,6 +421,7 @@ public class Player : Character
 
             }
         }
+        GameElapsedTime+=Time.deltaTime;
         if (isAlive && !isUsingMinigun) WeaponObject.SetActive(true);
         if (isUsingMinigun) WeaponObject.SetActive(false);
         if (AutoSave) { uiManager.Save(); }
@@ -441,9 +455,11 @@ public class Player : Character
                 WaveIndex++;
                 changeWave += 1200;
                 spawner.insertInVector();
-                currmintime /= 1.27f;
-                currmaxtime /= 1.27f;
-                spawner.set_spawnTime(currmintime, currmaxtime);
+                currmintime /= 1.17f;
+                currmaxtime /= 1.17f;
+                mintime = currmintime;
+                maxtime = currmaxtime;
+                spawner.set_spawnTime(mintime, maxtime);
                 spawner.EnableSpawn();
                 uiManager.HideCountdownText();
             }
@@ -502,7 +518,7 @@ public class Player : Character
     public void DeleteData()
     {
         AutoSave = false;
-        uiManager.ToggleAutoSaveButton(AutoSave);
+        uiManager.ToggleAutoSaveButton(AutoSave, true);
         uiManager.DeleteData();
     }
     public void AmmoSupply()
@@ -516,6 +532,7 @@ public class Player : Character
 
         if (health > 0)
         {
+            Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
             health -= damage;
             StartCoroutine(DamageEffect());
             health = Mathf.Max(health, 0.0f);
@@ -626,8 +643,8 @@ public class Player : Character
         scoreCount2 += points;
         if (scoreCount >= MAXValue)
         {
-            mintime /= 1.25f;
-            maxtime /= 1.25f;
+            mintime /= 1.12f;
+            maxtime /= 1.12f;
             if (mintime < 1f || maxtime < 3f)
             {
                 mintime = 1f;
@@ -703,6 +720,8 @@ public class Player : Character
         spawner.set_spawnTime(6f, 18f);
         canShoot = true;
         currmaxtime = 18f;
+        mintime = 6f;
+        maxtime = 18f;
         currmintime = 6f;
         uiManager.Set_Text(score, high_score, WaveIndex);
 
@@ -797,6 +816,7 @@ public class Player : Character
             {
                 if (ammo > 0)
                 {
+                    Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
                     Debug.Log("FireRate:" + fire_rate);
                     if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
                     else audioManager.PlayMinigun();
@@ -807,6 +827,7 @@ public class Player : Character
                 }
                 if (ammo == 0 && isUsingMinigun)
                 {
+                     Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
                     audioManager.PlayMinigun();
                     shooting.Shoot(Offset, ShootingDamage);
                     canShoot = false;
@@ -823,6 +844,7 @@ public class Player : Character
             {
                 if (ammo > 0)
                 {
+                    Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
                     Debug.Log("FireRate:" + fire_rate);
                     if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
                     else audioManager.PlayMinigun();
@@ -833,6 +855,7 @@ public class Player : Character
                 }
                 if (ammo == 0 && isUsingMinigun)
                 {
+                    Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
                     audioManager.PlayMinigun();
                     shooting.Shoot(Offset, ShootingDamage);
                     canShoot = false;
@@ -840,6 +863,7 @@ public class Player : Character
                 }
                 if (ammo == 0 && !isUsingMinigun)
                 {
+                    
                     audioManager.PlayEmptySFX();
                     canShoot = false;
                     StartCoroutine(Timer());

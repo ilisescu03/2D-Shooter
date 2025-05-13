@@ -13,6 +13,14 @@ public class CollectibleSpawner : Spawner
         base.Start();
         StartCoroutine(SpawnLoop());
     }
+    private bool isInRestrictedZone(float posx, float posy)
+    {
+        if(posx>1.78&&posy<-4.5&&posx<26.64&&posy>-17.88)
+        {
+            return true;
+        }
+        return false;
+    }
     void getPosition()
     {
         int maxattempts = 10;
@@ -24,7 +32,7 @@ public class CollectibleSpawner : Spawner
             float y = Random.Range(-20f, 20f);
             Vector2 potentialPosition = new Vector2(x, y);
             Collider2D hit = Physics2D.OverlapPoint(potentialPosition, LayerMask.GetMask("Obstacle"));
-            if (hit==null)
+            if (hit==null && !isInRestrictedZone(x,y))
             {
                 SpawnPoint = potentialPosition;
                 positionValid = true;
@@ -47,7 +55,7 @@ public class CollectibleSpawner : Spawner
     {
         while (true)
         {
-            spawnTime = Random.Range(15, 30);
+            spawnTime = Random.Range(25, 125);
             yield return new WaitForSeconds(spawnTime);
             getPosition();
 

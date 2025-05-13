@@ -148,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 2979401495806202208}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -2.7467089, y: -1.7481556, z: 0}
+  m_LocalPosition: {x: 26.64, y: -17.88, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -235,6 +235,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 7547398375634977513, guid: d6f020606d245cf44986c82689c19810, type: 3}
   otherBulletPrefab: {fileID: 0}
   effect: {fileID: 8188746055648150859}
+  TreesPositions: []
   effect2: {fileID: 0}
   light2D: {fileID: 250234278263890874}
   minigunlight2D: {fileID: 3633382004578838522}
@@ -302,6 +303,8 @@ MonoBehaviour:
   button: {fileID: 0}
   keybinds: {fileID: 0}
   prefab: {fileID: 2979401495806202208}
+  shakeDuration: 0
+  shakeMagnitude: 0
 --- !u!50 &7332803071231043531
 Rigidbody2D:
   serializedVersion: 4

@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Edge
   - Trigger
+  - Tree
   layers:
   - Default
   - TransparentFX
@@ -19,8 +20,8 @@ TagManager:
   - Post Processing
   - Obstacle
   - Barrier
-  - 
-  - 
+  - Enemy
+  - Tree
   - 
   - 
   - 
