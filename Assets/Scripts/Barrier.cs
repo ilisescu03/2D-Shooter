@@ -140,6 +140,7 @@ public class Barrier : MonoBehaviour
             {
                 repairProgress -= 250f;
                 Instantiate(coinPrefab, transform.position, Quaternion.identity);
+                player.Increase_Score(10);
             }
 
             health += amount;

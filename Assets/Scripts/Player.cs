@@ -6,6 +6,10 @@ using UnityEngine.EventSystems;
 
 public class Player : Character
 {
+    private bool CameraShakeEnabled=true;
+    private bool SpecialEffectsEnabled=true;
+
+
     private float GameElapsedTime=0;
     private bool playDeathSFXAvailable = true;
     private List<Barrier> barriers = new List<Barrier>();
@@ -304,6 +308,7 @@ public class Player : Character
     }
     protected override void Start()
     {
+        
         reloadCoroutine = null;
         keybinds.InitializeKeys();
         cursorManager.SetCursorTexture(new Vector2(16, 16));
@@ -346,8 +351,12 @@ public class Player : Character
         ControlsIndex = SaveManager.LoadAimControlsIndex();
         if (ControlsIndex == 0) { uiManager.SetSelectFrame(1); }
         else { uiManager.SetSelectFrame(0); }
-        AutoSave = SaveManager.LoadAutoSave();
-        uiManager.ToggleAutoSaveButton(AutoSave, false);
+        
+        CameraShakeEnabled = SaveManager.LoadCameraShake();
+        SpecialEffectsEnabled = SaveManager.LoadSpecialEffects();
+        uiManager.ToggleCameraShakeButton(CameraShakeEnabled, false);
+        uiManager.ToggleSpecialEffectsButton(SpecialEffectsEnabled, false);
+        
         angleSliderValue = SaveManager.LoadNewAngleSliderValue();
         uiManager.SetRotationSensitivity(angleSliderValue);
 
@@ -357,6 +366,8 @@ public class Player : Character
         {
             WeaponBools = new bool[9];
         }
+        AutoSave = SaveManager.LoadAutoSave();
+        uiManager.ToggleAutoSaveButton(AutoSave, false);
         Debug.Log("WeaponBools length: " + WeaponBools.Length);
         Debug.Log("WeaponsManager length: " + weaponsManager.GetNumberOfWeapons());
         if(WeaponBools.Length + 1 == weaponsManager.GetNumberOfWeapons())
@@ -369,6 +380,7 @@ public class Player : Character
         for (int i = 0; i < WeaponBools.Length; i++)
         {
             if (WeaponBools[i]) weaponsManager.setActive(i);
+            Debug.Log("WeaponBools[" + i + "] = " + WeaponBools[i]);
         }
         uiManager.Set_Text(score, high_score, WaveIndex);
         uiManager.Set_Ammo_Text(ammo, maxammo);
@@ -378,6 +390,7 @@ public class Player : Character
         if (WeaponTypeIndex == 0 && !isUsingMinigun) uiManager.setSAmmoImage();
         else uiManager.setPAmmoImage();
         isInitialized = true;
+  
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -393,9 +406,31 @@ public class Player : Character
     {
         return GameElapsedTime;
     }
+    public void CameraShakeToggle(bool value)
+    {
+        CameraShakeEnabled=value;
+    }
+    public void SpecialEffectsToggle(bool value)
+    {
+        SpecialEffectsEnabled=value;
+    }
+    public bool GetCameraShake()
+    {
+        return CameraShakeEnabled;
+    }
+    public bool GetSpeciallEffects()
+    {
+        return SpecialEffectsEnabled;
+    }
     protected override void Update()
     {
+        if(uiManager.isCameraShakeActive()) CameraShakeEnabled=false;
+        else CameraShakeEnabled=true;
 
+        if(uiManager.isSpecialEffectsActive()) SpecialEffectsEnabled=false;
+        else SpecialEffectsEnabled=true;
+        if(uiManager.isAutoSaveActive()) AutoSave=true;
+        else AutoSave=false;
         CheckMouseMovement();
         if (isAlive && !pause.get_state() && ControlsIndex == 1 && !IsCursorOverButton() && !loadingPannel.isLoading()) cursorManager.SetTargetTexture(new Vector2(16, 16));
         if (isAlive && !pause.get_state() && ControlsIndex == 1 && IsCursorOverButton()) cursorManager.SetCursorTexture(new Vector2(16, 16));
@@ -424,7 +459,7 @@ public class Player : Character
         GameElapsedTime+=Time.deltaTime;
         if (isAlive && !isUsingMinigun) WeaponObject.SetActive(true);
         if (isUsingMinigun) WeaponObject.SetActive(false);
-        if (AutoSave) { uiManager.Save(); }
+        if (AutoSave&&isInitialized) { uiManager.Save(); }
         // else Debug.Log("Autosave is off");
         if (!InfiniteFire) uiManager.Set_Ammo_Text(ammo, maxammo);
         uiManager.Set_Text(score, high_score, WaveIndex);
@@ -519,6 +554,8 @@ public class Player : Character
     {
         AutoSave = false;
         uiManager.ToggleAutoSaveButton(AutoSave, true);
+        uiManager.ToggleCameraShakeButton(CameraShakeEnabled, true);
+        uiManager.ToggleSpecialEffectsButton(SpecialEffectsEnabled, true);
         uiManager.DeleteData();
     }
     public void AmmoSupply()
@@ -816,7 +853,7 @@ public class Player : Character
             {
                 if (ammo > 0)
                 {
-                    Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
+                    if(CameraShakeEnabled) Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
                     Debug.Log("FireRate:" + fire_rate);
                     if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
                     else audioManager.PlayMinigun();
@@ -827,7 +864,7 @@ public class Player : Character
                 }
                 if (ammo == 0 && isUsingMinigun)
                 {
-                     Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
+                    if(CameraShakeEnabled) Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
                     audioManager.PlayMinigun();
                     shooting.Shoot(Offset, ShootingDamage);
                     canShoot = false;
@@ -844,7 +881,7 @@ public class Player : Character
             {
                 if (ammo > 0)
                 {
-                    Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
+                    if(CameraShakeEnabled) Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
                     Debug.Log("FireRate:" + fire_rate);
                     if (!isUsingMinigun) audioManager.PlaySFX(gunShot);
                     else audioManager.PlayMinigun();
@@ -855,7 +892,7 @@ public class Player : Character
                 }
                 if (ammo == 0 && isUsingMinigun)
                 {
-                    Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
+                    if(CameraShakeEnabled) Camera.main.GetComponent<CameraMovement>().TriggerShake(shakeDuration, shakeMagnitude);
                     audioManager.PlayMinigun();
                     shooting.Shoot(Offset, ShootingDamage);
                     canShoot = false;

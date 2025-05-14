@@ -5,7 +5,7 @@ using UnityEngine;
 public class Enemy : Character
 {
 
-   
+
     private EnemySpawner enemySpawner;
     [SerializeField] private float damageToPlayer;
     [SerializeField]
@@ -28,28 +28,28 @@ public class Enemy : Character
         target = FindObjectOfType<Player>();
         enemySpawner = FindObjectOfType<EnemySpawner>();
         audioSource.Play();
-        
-        
-        
+
+
+
     }
     public void BloodEffect(Vector3 spawnPosition)
     {
- 
+
         GameObject blood = Instantiate(bloodEffect, spawnPosition, Quaternion.identity);
         blood.transform.SetParent(transform);
-        
-        
+
+
 
     }
     // Update is called once per frame
     protected override void Update()
     {
-        
+
         //FollowPlayer();
         FixedAttack();
-       
+
         base.Update();
-        if(target.isStartPannelOn())
+        if (target.isStartPannelOn())
         {
             Clear();
         }
@@ -58,19 +58,19 @@ public class Enemy : Character
             Destroy(gameObject);
         }
         StartCoroutine(PlayAudioCoroutine());
-        
+
     }
- 
-    
+
+
     public IEnumerator PlayAudioCoroutine()
     {
-       // audioSource = gameObject.GetComponent<AudioSource>();
+        // audioSource = gameObject.GetComponent<AudioSource>();
         yield return new WaitForSeconds(GetRandomAudioPlayTime());
-        if(!audioSource.isPlaying)
+        if (!audioSource.isPlaying)
         {
             audioSource.Play();
         }
-        
+
 
 
 
@@ -132,39 +132,43 @@ public class Enemy : Character
         int value = Random.Range(0, 4);
         return value;
     }
-  
+
     public void TakeDamage(float damage, Collider2D other)
     {
         if (other.tag != "Wall")
         {
             health -= damage;
-            
-            if(!damageAudioSource.isPlaying) damageAudioSource.Play();
-           // else{
-           //    damageAudioSource.Stop();
-           //     damageAudioSource.Play();
-           // }
+
+            if (!damageAudioSource.isPlaying) damageAudioSource.Play();
+            // else{
+            //    damageAudioSource.Stop();
+            //     damageAudioSource.Play();
+            // }
             StartCoroutine(DamageEffect());
             health = Mathf.Max(health, 0.0f);
             if (health == 0)
             {
-                GameObject blood = Instantiate(bloodEffect, transform.position, Quaternion.identity);
-                GameObject deathAudioSource= Instantiate(DeathAudioSource, transform.position, Quaternion.identity);
+                if (target.GetSpeciallEffects())
+                {
+                    GameObject blood = Instantiate(bloodEffect, transform.position, Quaternion.identity);
+                    blood.transform.SetParent(null);
+                }
+                GameObject deathAudioSource = Instantiate(DeathAudioSource, transform.position, Quaternion.identity);
                 deathAudioSource.transform.SetParent(null);
-                blood.transform.SetParent(null);
+
                 if (GetCollectibleSpawnChance() == 0)
                 {
                     coin = Instantiate(coinPrefab, transform.position, Quaternion.identity);
-                    
+
                 }
-                
+
                 enemySpawner.DecreaseZombies();
                 Destroy(gameObject);
                 target.Increase_Score(ScorePoints);
             }
         }
     }
-   
+
     IEnumerator DamageEffect()
     {
         SpriteRenderer effect = GetComponent<SpriteRenderer>();
@@ -197,7 +201,7 @@ public class Enemy : Character
         while (isAttacking)
         {
             target.TakeDamage(damageToPlayer);
-            yield return new WaitForSeconds(2f); 
+            yield return new WaitForSeconds(2f);
         }
     }
 

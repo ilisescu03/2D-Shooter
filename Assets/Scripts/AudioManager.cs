@@ -32,7 +32,8 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField]
     private AudioClip CoinCollect;
-
+    [SerializeField]
+    private AudioClip ItemCollect;
 
     [SerializeField]
     private AudioClip Purchase;
@@ -104,7 +105,12 @@ public class AudioManager : MonoBehaviour
         float volume = SFXSlider.value;
         audioMixer.SetFloat("sfx", Mathf.Log10(volume) * 20);
     }
-
+    public void PlayItemCollect()
+    {
+        
+        SFXSource.PlayOneShot(ItemCollect);
+        
+    }
     public void PlaySFX(AudioClip clip)
     {
         SFXSource.PlayOneShot(clip);

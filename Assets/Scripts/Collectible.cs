@@ -12,10 +12,13 @@ public class Collectible : MonoBehaviour
     private float speed = 6f;
     private Light2D light2D;
     private UIManager uiManager;
+
+    private AudioManager audioManager;
     void Start()
     {
         player = FindObjectOfType<Player>();
         uiManager = FindObjectOfType<UIManager>();
+        audioManager = FindObjectOfType<AudioManager>();
         light2D = gameObject.GetComponentInChildren<Light2D>();
 
     }
@@ -31,7 +34,7 @@ public class Collectible : MonoBehaviour
         {
             if (type == "Health")
             {
-
+                audioManager.PlayItemCollect();
                 player.Heal(20);
                 Destroy(gameObject);
             }
@@ -52,11 +55,13 @@ public class Collectible : MonoBehaviour
                     if (type == "InfiniteFire" && !player.IsUsingMinigun())
                     {
                         Powerup powerup = GameObject.Find("InfiniteFire").GetComponent<Powerup>();
+                        audioManager.PlayReloadSFX();
                         powerup.StartTimer();
                         StartCoroutine(HandleInfiniteFire());
                     }
                     else if (type == "Armor" && !player.IsInvincible())
                     {
+                        audioManager.PlayItemCollect();
                         Powerup powerup = GameObject.Find("Armor").GetComponent<Powerup>();
                         powerup.StartTimer();
                         StartCoroutine(HandleArmor());
@@ -78,7 +83,7 @@ public class Collectible : MonoBehaviour
         if (player.get_state() == false)
         {
             if(type=="Coins") player.AddCoins(1);
-             Destroy(gameObject);
+            Destroy(gameObject);
         }
     }
     private IEnumerator HandleArmor()

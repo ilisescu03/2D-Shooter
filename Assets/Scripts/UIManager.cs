@@ -8,6 +8,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject pAmmoImage;
     [SerializeField]
     private Toggle AutoSaveToggle;
+    [SerializeField] private Toggle CameraShakeToggle;
+    [SerializeField] private Toggle SpecialEffectsToggle;
     [SerializeField]
     private Toggle FullscreenToggle;
     [SerializeField]
@@ -84,6 +86,14 @@ public class UIManager : MonoBehaviour
     {
         sAmmoImage.SetActive(true);
         pAmmoImage.SetActive(false);
+    }
+    public bool isCameraShakeActive()
+    {
+        return CameraShakeToggle.isOn;
+    }
+    public bool isSpecialEffectsActive()
+    {
+        return SpecialEffectsToggle.isOn;
     }
     public void setPAmmoImage()
     {
@@ -185,6 +195,34 @@ private float NormalizeAngle(float angle)
         {
             AutoSaveToggle.isOn = false;
         }
+    }
+    public void ToggleCameraShakeButton(bool value, bool value1)
+    {
+        if(value==true)
+        {
+            CameraShakeToggle.isOn = true;
+            if(!value1) audioManager.StopSFX();
+        }
+        else
+        {
+            CameraShakeToggle.isOn = false;
+        }
+    }
+    public void ToggleSpecialEffectsButton(bool value, bool value1)
+    {
+        if(value==true)
+        {
+            SpecialEffectsToggle.isOn = true;
+            if(!value1) audioManager.StopSFX();
+        }
+        else
+        {
+            SpecialEffectsToggle.isOn = false;
+        }
+    }
+    public bool isAutoSaveActive()
+    {
+        return AutoSaveToggle.isOn;
     }
     public void Fullscreen(bool isFullscreen)
     {
@@ -336,7 +374,9 @@ private float NormalizeAngle(float angle)
         int WeaponID = player.getWeaponID();
         int AimControlsIndex = player.get_AimControlsIndex();
         bool AutoSave = AutoSaveToggle.isOn;
-        SaveManager.SaveNewData(high_score, _angleSliderValue, coins,  WeaponBools, WeaponID, AimControlsIndex, AutoSave);
+        bool CameraShake = CameraShakeToggle.isOn;
+        bool SpecialEffects = SpecialEffectsToggle.isOn;
+        SaveManager.SaveNewData(high_score, _angleSliderValue, coins,  WeaponBools, WeaponID, AimControlsIndex, AutoSave, CameraShake, SpecialEffects);
     }
     public void DeleteData()
     {
