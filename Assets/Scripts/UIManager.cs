@@ -189,7 +189,7 @@ private float NormalizeAngle(float angle)
         if(value==true)
         {
             AutoSaveToggle.isOn = true;
-            if(!value1) audioManager.StopSFX();
+            audioManager.StopSFX();
         }
         else
         {
@@ -201,7 +201,7 @@ private float NormalizeAngle(float angle)
         if(value==true)
         {
             CameraShakeToggle.isOn = true;
-            if(!value1) audioManager.StopSFX();
+            audioManager.StopSFX();
         }
         else
         {
@@ -213,7 +213,7 @@ private float NormalizeAngle(float angle)
         if(value==true)
         {
             SpecialEffectsToggle.isOn = true;
-            if(!value1) audioManager.StopSFX();
+            audioManager.StopSFX();
         }
         else
         {

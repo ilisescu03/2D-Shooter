@@ -177,7 +177,7 @@ MonoBehaviour:
   smoothTime: 0.1
   damageToPlayer: 25
   ID: 2
-  ScorePoints: 10
+  ScorePoints: 20
   coinPrefab: {fileID: 2143770215535479528, guid: 3ebd1af3dedd7f742b8e4451f8bb929d, type: 3}
   DeathAudioSource: {fileID: 6201656963836858107, guid: ba765846a1f142245b96326e3b373c98, type: 3}
   bloodEffect: {fileID: 5711149250192773532, guid: a4e3060b3bd3faa4dafe98cfc4c79d10, type: 3}

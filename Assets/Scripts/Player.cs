@@ -254,8 +254,8 @@ public class Player : Character
         coins = value;
     }
     public bool RemoveCoins(int value)
-    {
-
+    {   
+        if(!isInitialized) return true;
         if (value <= coins)
         {
             coins -= value;
@@ -344,10 +344,11 @@ public class Player : Character
         shooting = GetComponent<Shooting>();
         high_score = SaveManager.LoadHighScore();
         coins = 0;
-        coins = SaveManager.LoadCoins();
+        
         #if UNITY_EDITOR
-        coins = 10000;
+        coins = 75;
         #endif
+        coins = SaveManager.LoadCoins();
         ControlsIndex = SaveManager.LoadAimControlsIndex();
         if (ControlsIndex == 0) { uiManager.SetSelectFrame(1); }
         else { uiManager.SetSelectFrame(0); }
@@ -424,6 +425,7 @@ public class Player : Character
     }
     protected override void Update()
     {
+        if(!isInitialized) audioManager.StopSFX();
         if(uiManager.isCameraShakeActive()) CameraShakeEnabled=false;
         else CameraShakeEnabled=true;
 
@@ -694,6 +696,7 @@ public class Player : Character
         }
         if (scoreCount2 >= changeWave)
         {
+            scoreCount2 = 0;
             StartCountdown();
         }
         if (score > high_score) high_score = score;
@@ -708,7 +711,7 @@ public class Player : Character
         uiManager.ShowCountdownText();
         Enemy.ClearAll();
         spawner.ResetNumberOfZombies();
-        scoreCount2 = 0;
+        
     }
     public bool isPlayerReloading()
     {
@@ -716,6 +719,8 @@ public class Player : Character
     }
     public void Respawn()
     {
+        scoreCount2=0;
+        scoreCount=0;
         StopAllCoroutines();
         animator.SetBool("IsDead", false);
         rb.isKinematic = false;
