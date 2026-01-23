@@ -1,7 +1,7 @@
 <h1 align="center">ZombCity Survival</h1>
 
 <p align="center">
-  <b>A 2D Pixel-Art Top-Down Shooter made in Unity/b><br/>
+ <br> <b>A 2D Pixel-Art Top-Down Shooter made in Unity/b><br/>
 
 </p>
 
